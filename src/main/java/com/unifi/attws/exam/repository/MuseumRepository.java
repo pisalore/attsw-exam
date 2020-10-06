@@ -8,7 +8,7 @@ public interface MuseumRepository {
 	
 	public List<Museum> findAllMuseums();
 	public Museum retrieveMuseumById(Long id);
-	public void createMuseum(String museumName, int numberOfRooms);
+	public void addMuseum(Museum museum);
 	public Museum updateMuseum(Museum updatedMuseum);
 	public void deleteMuseum();
 	
