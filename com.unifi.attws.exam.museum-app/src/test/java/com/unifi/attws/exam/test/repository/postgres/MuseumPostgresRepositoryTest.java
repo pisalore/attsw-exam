@@ -20,7 +20,7 @@ public class MuseumPostgresRepositoryTest {
 	
 	MuseumRepository postgresMuseumRepository;
 	
-	private static final Logger LOGGER = LogManager.getLogger(Museum.class);
+	private static final Logger LOGGER = LogManager.getLogger(MuseumPostgresRepositoryTest.class);
 
 	@Before
 	public void setUp() throws Exception {

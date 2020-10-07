@@ -25,7 +25,6 @@ public final class Museum {
 	private int occupiedRooms;
 
 	public Museum(String name, int rooms) {
-		super();
 		this.name = name;
 		this.rooms = rooms;
 		this.occupiedRooms = 0;

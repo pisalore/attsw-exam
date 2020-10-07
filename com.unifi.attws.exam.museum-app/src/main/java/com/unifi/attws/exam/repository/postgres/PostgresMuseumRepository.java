@@ -2,18 +2,19 @@ package com.unifi.attws.exam.repository.postgres;
 
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 
 import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
 
-public class PostgresMuseumRepository implements MuseumRepository{
-	
+public class PostgresMuseumRepository implements MuseumRepository {
+
 	private EntityManager entityManager;
-	
+
 	public PostgresMuseumRepository(EntityManager entityManager) {
 		this.entityManager = entityManager;
-		
+
 	}
 
 	@Override
@@ -25,18 +26,21 @@ public class PostgresMuseumRepository implements MuseumRepository{
 	@Override
 	public Museum retrieveMuseumById(Long id) {
 		List<Museum> museums = findAllMuseums();
-		return museums.stream()
-		.filter(m -> m.getId() == id)
-		.findFirst()
-		.orElse(null);
+		return museums.stream().filter(m -> m.getId() == id).findFirst().orElse(null);
 	}
 
 	@Override
-	public void addMuseum(Museum museum) {
-		entityManager.getTransaction().begin();
-		entityManager.persist(museum);
-		entityManager.flush();
-		entityManager.getTransaction().commit();
+	public RepoException addMuseum(Museum museum) {
+		try {
+			entityManager.persist(museum);
+		
+		} catch (EntityExistsException ex) {
+			
+			return new RepoException(ex.getMessage());
+		}
+		
+		return new RepoException("ok");
+
 	}
 
 	@Override
@@ -54,7 +58,7 @@ public class PostgresMuseumRepository implements MuseumRepository{
 		entityManager.remove(museumToRemove);
 		entityManager.flush();
 		entityManager.getTransaction().commit();
-		
+
 	}
 
 }
