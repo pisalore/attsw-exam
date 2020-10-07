@@ -47,8 +47,11 @@ public class PostgresMuseumRepository implements MuseumRepository{
 
 	@Override
 	public Museum updateMuseum(Museum updatedMuseum) {
-		// TODO Auto-generated method stub
-		return null;
+		entityManager.getTransaction().begin();
+		entityManager.merge(updatedMuseum);
+		entityManager.flush();
+		entityManager.getTransaction().commit();
+		return updatedMuseum;
 	}
 
 	@Override
