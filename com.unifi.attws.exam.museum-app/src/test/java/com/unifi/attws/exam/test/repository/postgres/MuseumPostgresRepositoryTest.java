@@ -27,7 +27,7 @@ public class MuseumPostgresRepositoryTest {
 	
 	@Test
 	public void testfindAllMuseumsMuseumsWhenSeveralMuseumsArePersisted() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
+		Museum museum1 = createTestMuseum("Uffizi", 50);
 		Museum museum2 = createTestMuseum("Louvre", 10);
 		postgresMuseumRepository.addMuseum(museum1);
 		postgresMuseumRepository.addMuseum(museum2);
