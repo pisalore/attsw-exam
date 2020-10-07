@@ -3,22 +3,16 @@ package com.unifi.attws.exam.repository.postgres;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
 
 public class PostgresMuseumRepository implements MuseumRepository{
 	
-	private EntityManagerFactory sessionFactory;
 	private EntityManager entityManager;
 	
-	
-
-	public PostgresMuseumRepository() {
-		sessionFactory = Persistence.createEntityManagerFactory("postgres");
-		entityManager = sessionFactory.createEntityManager();
+	public PostgresMuseumRepository(EntityManager entityManager) {
+		this.entityManager = entityManager;
 		
 	}
 
@@ -55,8 +49,11 @@ public class PostgresMuseumRepository implements MuseumRepository{
 	}
 
 	@Override
-	public void deleteMuseum() {
-		// TODO Auto-generated method stub
+	public void deleteMuseum(Museum museumToRemove) {
+		entityManager.getTransaction().begin();
+		entityManager.remove(museumToRemove);
+		entityManager.flush();
+		entityManager.getTransaction().commit();
 		
 	}
 

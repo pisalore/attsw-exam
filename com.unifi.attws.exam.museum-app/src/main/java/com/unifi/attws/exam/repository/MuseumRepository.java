@@ -10,6 +10,6 @@ public interface MuseumRepository {
 	public Museum retrieveMuseumById(Long id);
 	public void addMuseum(Museum museum);
 	public Museum updateMuseum(Museum updatedMuseum);
-	public void deleteMuseum();
+	public void deleteMuseum(Museum museumToRemove);
 	
 }

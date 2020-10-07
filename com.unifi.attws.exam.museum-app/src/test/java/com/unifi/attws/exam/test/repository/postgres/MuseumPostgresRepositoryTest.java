@@ -2,6 +2,10 @@ package com.unifi.attws.exam.test.repository.postgres;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,13 +13,20 @@ import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
 import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class MuseumPostgresRepositoryTest {
 	
 	MuseumRepository postgresMuseumRepository;
+	
+	private static final Logger LOGGER = LogManager.getLogger(Museum.class);
 
 	@Before
 	public void setUp() throws Exception {
-		postgresMuseumRepository = new PostgresMuseumRepository();
+		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres");
+		EntityManager entityManager = sessionFactory.createEntityManager();
+		postgresMuseumRepository = new PostgresMuseumRepository(entityManager);
 
 	}
 
@@ -67,6 +78,14 @@ public class MuseumPostgresRepositoryTest {
 		postgresMuseumRepository.updateMuseum(museum2);
 		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1)).getOccupiedRooms()).isEqualTo(1);
 
+	}
+	
+	@Test
+	public void testMuseumToRemoveWhenTheMuseumExists() {
+		Museum museum1 = createTestMuseum("Pompidou", 50);
+		postgresMuseumRepository.addMuseum(museum1);
+		postgresMuseumRepository.deleteMuseum(museum1);
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
 	
 	
