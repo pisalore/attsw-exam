@@ -26,8 +26,7 @@ public class PostgresMuseumRepository implements MuseumRepository {
 
 	@Override
 	public Museum retrieveMuseumById(UUID id) {
-		List<Museum> museums = findAllMuseums();
-		return museums.stream().filter(m -> m.getId() == id).findFirst().orElse(null);
+		return entityManager.find(Museum.class, id);
 	}
 
 	@Override
