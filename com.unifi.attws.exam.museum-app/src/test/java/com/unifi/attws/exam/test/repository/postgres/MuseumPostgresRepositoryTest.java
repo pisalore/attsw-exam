@@ -2,6 +2,8 @@ package com.unifi.attws.exam.test.repository.postgres;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.UUID;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -40,7 +42,7 @@ public class MuseumPostgresRepositoryTest {
 
 	@Test
 	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
-		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1))).isNull();
+		assertThat(postgresMuseumRepository.retrieveMuseumById(UUID.randomUUID())).isNull();
 	}
 
 	@Test
@@ -68,17 +70,18 @@ public class MuseumPostgresRepositoryTest {
 		Museum museum2 = createTestMuseum("Louvre", 10);
 		addMuseumToPostgresDButility(museum1);
 		addMuseumToPostgresDButility(museum2);
-		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1))).isEqualTo(museum1);
+		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId())).isEqualTo(museum1);
 	}
 
 	@Test
 	public void testUpdateMuseumWhenExists() {
 		Museum museum1 = createTestMuseum("Pompidou", 50);
 		addMuseumToPostgresDButility(museum1);
-		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(new Long(1));
+		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(museum1.getId());
 		museum2.setOccupiedRooms(1);
 		addMuseumToPostgresDButility(museum2);
-		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1)).getOccupiedRooms()).isEqualTo(1);
+		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId()).getOccupiedRooms()).isEqualTo(1);
+		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1);
 
 	}
 

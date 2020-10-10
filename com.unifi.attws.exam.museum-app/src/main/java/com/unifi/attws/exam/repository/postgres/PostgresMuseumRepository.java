@@ -1,6 +1,7 @@
 package com.unifi.attws.exam.repository.postgres;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -24,7 +25,7 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	}
 
 	@Override
-	public Museum retrieveMuseumById(Long id) {
+	public Museum retrieveMuseumById(UUID id) {
 		List<Museum> museums = findAllMuseums();
 		return museums.stream().filter(m -> m.getId() == id).findFirst().orElse(null);
 	}

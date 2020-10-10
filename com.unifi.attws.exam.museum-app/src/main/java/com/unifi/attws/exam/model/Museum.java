@@ -1,5 +1,7 @@
 package com.unifi.attws.exam.model;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,8 +14,8 @@ import javax.persistence.Table;
 public final class Museum {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(generator = "UUID")
+	private UUID id;
 
 	@Column(name = "Museum_Name", unique=true)
 	private String name;
@@ -35,11 +37,11 @@ public final class Museum {
 		
 	}
 
-	public long getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
