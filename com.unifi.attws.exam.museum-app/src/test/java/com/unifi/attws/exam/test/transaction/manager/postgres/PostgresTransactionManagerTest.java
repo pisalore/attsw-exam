@@ -26,7 +26,7 @@ public class PostgresTransactionManagerTest {
 	}
 	
 	@Test
-	public void testInsertNewMuseumInPostgresDatabseTransactionally() {
+	public void testInsertNewMuseumInPostgresDatabaseTransactionally() {
 		Museum museum = createTestMuseum("Uffizi", 10);
 		PostgresMuseumRepository repository = new PostgresMuseumRepository(transactionManager.getEntityManager());
 		transactionManager.doInTransaction(

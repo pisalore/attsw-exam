@@ -44,12 +44,16 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	}
 
 	@Override
-	public Museum updateMuseum(Museum updatedMuseum) {
-		entityManager.getTransaction().begin();
-		entityManager.merge(updatedMuseum);
-		entityManager.flush();
-		entityManager.getTransaction().commit();
-		return updatedMuseum;
+	public RepoException updateMuseum(Museum updatedMuseum) {
+		try {
+			entityManager.merge(updatedMuseum);
+		
+		} catch (IllegalArgumentException ex) {
+			
+			return new RepoException(ex.getMessage());
+		}
+		
+		return new RepoException("ok");
 	}
 
 	@Override

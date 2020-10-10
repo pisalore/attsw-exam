@@ -12,7 +12,7 @@ public interface MuseumRepository {
 	public List<Museum> findAllMuseums();
 	public Museum retrieveMuseumById(Long id);
 	public RepoException addMuseum(Museum museum) throws EntityExistsException;
-	public Museum updateMuseum(Museum updatedMuseum);
+	public RepoException updateMuseum(Museum updatedMuseum);
 	public void deleteMuseum(Museum museumToRemove);
 	
 }
