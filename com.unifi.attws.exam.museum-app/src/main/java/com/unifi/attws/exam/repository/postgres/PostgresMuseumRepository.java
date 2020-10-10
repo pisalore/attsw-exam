@@ -35,8 +35,8 @@ public class PostgresMuseumRepository implements MuseumRepository {
 			entityManager.persist(museum);
 		
 		} catch (EntityExistsException ex) {
-			
-			return new RepoException(ex.getMessage());
+			throw new EntityExistsException();
+//			return new RepoException(ex.getMessage());
 		}
 		
 		return new RepoException("ok");

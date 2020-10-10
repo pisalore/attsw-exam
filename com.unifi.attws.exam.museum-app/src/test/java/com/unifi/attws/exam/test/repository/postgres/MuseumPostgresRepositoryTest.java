@@ -2,6 +2,7 @@ package com.unifi.attws.exam.test.repository.postgres;
 
 import static org.assertj.core.api.Assertions.*;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -18,10 +19,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MuseumPostgresRepositoryTest {
-	
+
 	MuseumRepository postgresMuseumRepository;
 	static EntityManager entityManager;
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(MuseumPostgresRepositoryTest.class);
 
 	@Before
@@ -36,12 +37,12 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 
 	}
-	
+
 	@Test
 	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
 		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1))).isNull();
 	}
-	
+
 	@Test
 	public void testAddNewMuseumToPostgresDBWhenTransactionSuccess() {
 		entityManager.getTransaction().begin();
@@ -49,10 +50,10 @@ public class MuseumPostgresRepositoryTest {
 		postgresMuseumRepository.addMuseum(museum);
 		entityManager.getTransaction().commit();
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
-		
+
 	}
-	
-	
+
+
 	@Test
 	public void testFindAllMuseumsWhenSeveralMuseumsArePersisted() {
 		Museum museum1 = createTestMuseum("Uffizi", 50);
@@ -64,8 +65,7 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
 
 	}
-	
-	
+
 	@Test
 	public void testFindMuseumByIdWhenMuseumIsPresent() {
 		Museum museum1 = createTestMuseum("Pompidou", 50);
@@ -76,38 +76,41 @@ public class MuseumPostgresRepositoryTest {
 		entityManager.getTransaction().commit();
 		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1))).isEqualTo(museum1);
 	}
-	
-	//@Test
+
+	@Test
 	public void testUpdateMuseumWhenExists() {
 		Museum museum1 = createTestMuseum("Pompidou", 50);
+		entityManager.getTransaction().begin();
 		postgresMuseumRepository.addMuseum(museum1);
+		entityManager.getTransaction().commit();
 		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(new Long(1));
 		museum2.setOccupiedRooms(1);
+		entityManager.getTransaction().begin();
 		postgresMuseumRepository.updateMuseum(museum2);
+		entityManager.getTransaction().commit();
 		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1)).getOccupiedRooms()).isEqualTo(1);
 
 	}
-	
-	//@Test
+
+	// @Test
 	public void testMuseumToRemoveWhenTheMuseumExists() {
 		Museum museum1 = createTestMuseum("Pompidou", 50);
 		postgresMuseumRepository.addMuseum(museum1);
 		postgresMuseumRepository.deleteMuseum(museum1);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
-	
+
 	@AfterClass
 	public static void closeEntityManager() {
 		entityManager.close();
 	}
-	
+
 	/*
 	 * Museum utility
 	 */
-	
+
 	public Museum createTestMuseum(String museumName, int numOfRooms) {
 		return new Museum(museumName, numOfRooms);
 	}
-	
 
 }
