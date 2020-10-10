@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TransactionRequiredException;
+import javax.persistence.PersistenceException;
 
 import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
@@ -31,8 +31,13 @@ public class PostgresMuseumRepository implements MuseumRepository {
 
 	@Override
 	public RepoException addMuseum(Museum museum) {
-		entityManager.persist(museum);
-		entityManager.flush();
+		try {
+			entityManager.persist(museum);
+		}
+		catch (PersistenceException ex) {
+			throw new PersistenceException();
+		}
+		//entityManager.flush();
 		return new RepoException("ok");
 
 	}
