@@ -1,8 +1,10 @@
 package com.unifi.attws.exam.test.repository.postgres;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -35,7 +37,8 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 		entityManager.getTransaction().begin();
 
 	}
-
+	
+	//Check if the sql script has been executed.
 	@Test
 	public void testfindAllMuseumsMuseumsWhenNoMuseumsArePersisted() {
 		LOGGER.info(postgresMuseumRepository.findAllMuseums());
@@ -45,15 +48,14 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	@Test
 	public void testAddMuseumWithExistingIdShouldThrow() {
-		Museum museum1 = postgresMuseumRepository
-				.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
+		List<Museum> persistedMuseums = postgresMuseumRepository.findAllMuseums();
+		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
 		Museum museum2 = new Museum("test3", 20);
 		museum2.setId(museum1.getId());
 
 		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(museum2))
 			.isInstanceOf(PersistenceException.class);
-		
-		assertThat(postgresMuseumRepository.findAllMuseums()).hasSize(2);
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
 		
 	}
 
@@ -61,7 +63,9 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	public void closeEntityManager() {
 		entityManager.getTransaction().rollback();
 		entityManager.clear();
+		LOGGER.info(postgresMuseumRepository.findAllMuseums());
 		entityManager.close();
+		
 	}
 
 }

@@ -30,23 +30,21 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	}
 
 	@Override
-	public RepoException addMuseum(Museum museum) {
+	public Museum addMuseum(Museum museum) {
 		try {
 			entityManager.persist(museum);
 		}
 		catch (PersistenceException ex) {
 			throw new PersistenceException();
 		}
-		//entityManager.flush();
-		return new RepoException("ok");
+		return museum;
 
 	}
 
 	@Override
-	public RepoException updateMuseum(Museum updatedMuseum) {
+	public void updateMuseum(Museum updatedMuseum) {
 		entityManager.merge(updatedMuseum);
 		entityManager.flush();
-		return new RepoException("ok");
 	}
 
 	@Override

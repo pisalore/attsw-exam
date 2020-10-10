@@ -17,15 +17,11 @@ import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
 import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class MuseumPostgresRepositoryTest {
 
 	private MuseumRepository postgresMuseumRepository;
 	private static EntityManager entityManager;
 
-	private static final Logger LOGGER = LogManager.getLogger(MuseumPostgresRepositoryTest.class);
 
 	@Before
 	public void setUp() throws Exception {
