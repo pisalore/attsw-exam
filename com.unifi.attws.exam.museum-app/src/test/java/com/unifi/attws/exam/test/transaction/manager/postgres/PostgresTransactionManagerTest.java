@@ -26,7 +26,7 @@ public class PostgresTransactionManagerTest {
 	}
 	
 	@Test
-	public void testInsertNewMuseumInPostgresDatabseTransactionallyMatte() {
+	public void testInsertNewMuseumInPostgresDatabseTransactionally() {
 		Museum museum = createTestMuseum("Uffizi", 10);
 		PostgresMuseumRepository repository = new PostgresMuseumRepository(transactionManager.getEntityManager());
 		transactionManager.doInTransaction(
@@ -36,20 +36,6 @@ public class PostgresTransactionManagerTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
 	}
 	
-//	@Test
-//	public void testInsertNewMuseumInPostgresDatabseTransactionally() {
-//		Museum museum = createTestMuseum("Uffizi", 10);
-//		transactionManager.doInTransaction(repository -> {
-//			transactionManager.getEntityManager().getTransaction().begin();
-//			repository = new PostgresMuseumRepository(transactionManager.getEntityManager());
-//			repository.addMuseum(museum);
-//			LOGGER.info(repository.findAllMuseums());
-//			transactionManager.getEntityManager().getTransaction().commit();
-//			return null;
-//		});
-//		
-//		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
-//	}
 	
 	public Museum createTestMuseum(String museumName, int numOfRooms) {
 		return new Museum(museumName, numOfRooms);

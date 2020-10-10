@@ -15,7 +15,7 @@ public final class Museum {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "Museum_Name")
+	@Column(name = "Museum_Name", unique=true)
 	private String name;
 
 	@Column(name = "Number_Of_Rooms")
@@ -29,6 +29,10 @@ public final class Museum {
 		this.rooms = rooms;
 		this.occupiedRooms = 0;
 
+	}
+	
+	public Museum() {
+		
 	}
 
 	public long getId() {
