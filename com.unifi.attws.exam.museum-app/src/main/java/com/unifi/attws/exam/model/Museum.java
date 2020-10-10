@@ -33,10 +33,6 @@ public final class Museum {
 
 	}
 	
-	public Museum() {
-		
-	}
-
 	public UUID getId() {
 		return id;
 	}
@@ -68,5 +64,44 @@ public final class Museum {
 	public void setOccupiedRooms(int availableRooms) {
 		this.occupiedRooms = availableRooms;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + occupiedRooms;
+		result = prime * result + rooms;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Museum other = (Museum) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (occupiedRooms != other.occupiedRooms)
+			return false;
+		if (rooms != other.rooms)
+			return false;
+		return true;
+	}
+	
+	
 
 }
