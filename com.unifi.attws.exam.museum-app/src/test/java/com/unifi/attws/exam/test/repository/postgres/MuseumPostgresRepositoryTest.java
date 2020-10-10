@@ -45,10 +45,8 @@ public class MuseumPostgresRepositoryTest {
 
 	@Test
 	public void testAddNewMuseumToPostgresDBWhenTransactionSuccess() {
-		entityManager.getTransaction().begin();
 		Museum museum = createTestMuseum("MoMa", 10);
-		postgresMuseumRepository.addMuseum(museum);
-		entityManager.getTransaction().commit();
+		addMuseumToPostgresDButility(museum);
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
 
 	}
@@ -58,10 +56,8 @@ public class MuseumPostgresRepositoryTest {
 	public void testFindAllMuseumsWhenSeveralMuseumsArePersisted() {
 		Museum museum1 = createTestMuseum("Uffizi", 50);
 		Museum museum2 = createTestMuseum("Louvre", 10);
-		entityManager.getTransaction().begin();
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.addMuseum(museum2);
-		entityManager.getTransaction().commit();
+		addMuseumToPostgresDButility(museum1);
+		addMuseumToPostgresDButility(museum2);
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
 
 	}
@@ -70,24 +66,18 @@ public class MuseumPostgresRepositoryTest {
 	public void testFindMuseumByIdWhenMuseumIsPresent() {
 		Museum museum1 = createTestMuseum("Pompidou", 50);
 		Museum museum2 = createTestMuseum("Louvre", 10);
-		entityManager.getTransaction().begin();
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.addMuseum(museum2);
-		entityManager.getTransaction().commit();
+		addMuseumToPostgresDButility(museum1);
+		addMuseumToPostgresDButility(museum2);
 		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1))).isEqualTo(museum1);
 	}
 
 	@Test
 	public void testUpdateMuseumWhenExists() {
 		Museum museum1 = createTestMuseum("Pompidou", 50);
-		entityManager.getTransaction().begin();
-		postgresMuseumRepository.addMuseum(museum1);
-		entityManager.getTransaction().commit();
+		addMuseumToPostgresDButility(museum1);
 		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(new Long(1));
 		museum2.setOccupiedRooms(1);
-		entityManager.getTransaction().begin();
-		postgresMuseumRepository.updateMuseum(museum2);
-		entityManager.getTransaction().commit();
+		addMuseumToPostgresDButility(museum2);
 		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1)).getOccupiedRooms()).isEqualTo(1);
 
 	}
@@ -111,6 +101,13 @@ public class MuseumPostgresRepositoryTest {
 
 	public Museum createTestMuseum(String museumName, int numOfRooms) {
 		return new Museum(museumName, numOfRooms);
+	}
+	
+	public void addMuseumToPostgresDButility(Museum museum) {
+		entityManager.getTransaction().begin();
+		postgresMuseumRepository.addMuseum(museum);
+		entityManager.getTransaction().commit();
+		
 	}
 
 }
