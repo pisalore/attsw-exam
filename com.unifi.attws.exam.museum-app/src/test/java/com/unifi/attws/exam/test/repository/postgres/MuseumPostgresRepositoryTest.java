@@ -76,7 +76,7 @@ public class MuseumPostgresRepositoryTest {
 		postgresMuseumRepository.addMuseum(museum1);
 		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(museum1.getId());
 		museum2.setOccupiedRooms(1);
-		postgresMuseumRepository.addMuseum(museum2);
+		postgresMuseumRepository.updateMuseum(museum2);
 		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId()).getOccupiedRooms()).isEqualTo(1);
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1);
 

@@ -2,7 +2,6 @@ package com.unifi.attws.exam.test.repository.postgres;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,7 +55,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(museum2))
 			.isInstanceOf(PersistenceException.class);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
-		
+
 	}
 
 	@After
