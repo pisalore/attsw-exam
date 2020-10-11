@@ -26,7 +26,11 @@ public class PostgresMuseumRepository implements MuseumRepository {
 
 	@Override
 	public Museum retrieveMuseumById(UUID id) {
-		return entityManager.find(Museum.class, id);
+		try {
+			return entityManager.find(Museum.class, id);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
@@ -53,7 +57,6 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	public void deleteMuseum(Museum museumToRemove) {
 		try {
 			entityManager.remove(museumToRemove);
-
 		} catch (PersistenceException ex) {
 			throw new PersistenceException();
 		}

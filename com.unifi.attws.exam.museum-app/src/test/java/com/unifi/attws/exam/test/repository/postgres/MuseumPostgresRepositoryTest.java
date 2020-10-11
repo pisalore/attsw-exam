@@ -45,6 +45,7 @@ public class MuseumPostgresRepositoryTest {
 	public void testAddNewMuseumToPostgresDBWhenTransactionSuccess() {
 		Museum museum = createTestMuseum("MoMa", 10);
 		postgresMuseumRepository.addMuseum(museum);
+		entityManager.flush();
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
 
 	}
@@ -55,6 +56,7 @@ public class MuseumPostgresRepositoryTest {
 		Museum museum2 = createTestMuseum("Louvre", 10);
 		postgresMuseumRepository.addMuseum(museum1);
 		postgresMuseumRepository.addMuseum(museum2);
+		entityManager.flush();
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
 
 	}
@@ -65,7 +67,15 @@ public class MuseumPostgresRepositoryTest {
 		Museum museum2 = createTestMuseum("Louvre", 10);
 		postgresMuseumRepository.addMuseum(museum1);
 		postgresMuseumRepository.addMuseum(museum2);
+		entityManager.flush();
 		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId())).isEqualTo(museum1);
+	}
+	
+	@Test
+	public void testFindMuseumByNullIdShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.retrieveMuseumById(null))
+		.isInstanceOf(IllegalArgumentException.class);
+		
 	}
 
 	@Test
@@ -75,16 +85,18 @@ public class MuseumPostgresRepositoryTest {
 		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(museum1.getId());
 		museum2.setOccupiedRooms(1);
 		postgresMuseumRepository.updateMuseum(museum2);
+		entityManager.flush();
 		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId()).getOccupiedRooms()).isEqualTo(1);
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1);
 
 	}
 
 	@Test
-	public void testMuseumToRemoveWhenTheMuseumExists() {
+	public void testRemoveMuseumWhenTheMuseumExists() {
 		Museum museum1 = createTestMuseum("Pompidou", 50);
 		postgresMuseumRepository.addMuseum(museum1);
 		postgresMuseumRepository.deleteMuseum(museum1);
+		entityManager.flush();
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
 	

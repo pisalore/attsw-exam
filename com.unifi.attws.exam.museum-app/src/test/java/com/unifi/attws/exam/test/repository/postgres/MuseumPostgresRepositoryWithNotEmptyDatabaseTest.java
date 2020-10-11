@@ -24,7 +24,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	private MuseumRepository postgresMuseumRepository;
 	private static EntityManager entityManager;
 	private List<Museum> persistedMuseums;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
@@ -47,7 +47,6 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 				.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
 		Museum museum2 = new Museum("test3", 20);
 		museum2.setId(museum1.getId());
-
 		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(museum2)).isInstanceOf(PersistenceException.class);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
 	}
@@ -82,7 +81,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
 
 	}
-	
+
 	@Test
 	public void testRemoveNonEntityObjectShouldThrow() {
 		assertThatThrownBy(() -> postgresMuseumRepository.deleteMuseum(null))
