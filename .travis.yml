@@ -16,4 +16,4 @@ cache:
       - $HOME/.m2
 
 script:
-   - mvn -f com.unifi.attws.exam.museum-app/pom.xml clean verify
+   - mvn -f com.unifi.attws.exam.museum-app/pom.xml clean verify -Pjacoco
