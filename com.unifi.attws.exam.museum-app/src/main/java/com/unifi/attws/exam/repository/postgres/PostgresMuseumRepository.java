@@ -33,8 +33,7 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	public Museum addMuseum(Museum museum) {
 		try {
 			entityManager.persist(museum);
-		}
-		catch (PersistenceException ex) {
+		} catch (PersistenceException ex) {
 			throw new PersistenceException();
 		}
 		return museum;
@@ -43,14 +42,21 @@ public class PostgresMuseumRepository implements MuseumRepository {
 
 	@Override
 	public void updateMuseum(Museum updatedMuseum) {
-		entityManager.merge(updatedMuseum);
-		entityManager.flush();
+		try {
+			entityManager.merge(updatedMuseum);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
 	public void deleteMuseum(Museum museumToRemove) {
-		entityManager.remove(museumToRemove);
-		entityManager.flush();
+		try {
+			entityManager.remove(museumToRemove);
+
+		} catch (PersistenceException ex) {
+			throw new PersistenceException();
+		}
 
 	}
 

@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +20,7 @@ public class MuseumPostgresRepositoryTest {
 
 	private MuseumRepository postgresMuseumRepository;
 	private static EntityManager entityManager;
-
-
+	
 	@Before
 	public void setUp() throws Exception {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres");

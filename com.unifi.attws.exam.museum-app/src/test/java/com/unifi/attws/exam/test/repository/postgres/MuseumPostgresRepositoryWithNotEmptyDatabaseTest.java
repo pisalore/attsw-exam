@@ -11,8 +11,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,46 +23,83 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	private MuseumRepository postgresMuseumRepository;
 	private static EntityManager entityManager;
-
-	private static final Logger LOGGER = LogManager.getLogger(MuseumPostgresRepositoryTest.class);
-
+	private List<Museum> persistedMuseums;
+	
 	@Before
 	public void setUp() throws Exception {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
 		entityManager = sessionFactory.createEntityManager();
 		postgresMuseumRepository = new PostgresMuseumRepository(entityManager);
+		persistedMuseums = postgresMuseumRepository.findAllMuseums();
 		entityManager.getTransaction().begin();
-
 	}
-	
-	//Check if the sql script has been executed.
+
+	// Check if the sql script has been executed.
 	@Test
 	public void testfindAllMuseumsMuseumsWhenNoMuseumsArePersisted() {
-		LOGGER.info(postgresMuseumRepository.findAllMuseums());
 		assertThat(postgresMuseumRepository.findAllMuseums()).isNotEmpty();
 
 	}
 
 	@Test
-	public void testAddMuseumWithExistingIdShouldThrow() {
-		List<Museum> persistedMuseums = postgresMuseumRepository.findAllMuseums();
-		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
+	public void testAddDetachedEntityMuseumShouldThrow() {
+		Museum museum1 = postgresMuseumRepository
+				.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
 		Museum museum2 = new Museum("test3", 20);
 		museum2.setId(museum1.getId());
 
-		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(museum2))
-			.isInstanceOf(PersistenceException.class);
+		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(museum2)).isInstanceOf(PersistenceException.class);
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
+	}
+
+	@Test
+	public void testUpdateMuseumWhenEntityHasBeenRemovedShouldThrow() {
+		Museum museum1 = postgresMuseumRepository
+				.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
+		entityManager.remove(museum1);
+		museum1.setName("test_update");
+		assertThatThrownBy(() -> postgresMuseumRepository.updateMuseum(museum1))
+				.isInstanceOf(IllegalArgumentException.class);
+
+	}
+
+	@Test
+	public void testUpdateMuseumWithNonEntityObjectShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.updateMuseum(null))
+				.isInstanceOf(IllegalArgumentException.class);
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
+	}
+
+	@Test
+	public void testRemoveDetachedEntityMuseumShouldThrow() {
+		Museum museum1 = postgresMuseumRepository
+				.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
+		Museum museum2 = new Museum("test3", 20);
+		museum2.setId(museum1.getId());
+
+		assertThatThrownBy(() -> postgresMuseumRepository.deleteMuseum(museum2))
+				.isInstanceOf(IllegalArgumentException.class);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
 
+	}
+	
+	@Test
+	public void testRemoveNonEntityObjectShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.deleteMuseum(null))
+				.isInstanceOf(IllegalArgumentException.class);
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
 	}
 
 	@After
 	public void closeEntityManager() {
 		entityManager.getTransaction().rollback();
 		entityManager.clear();
-		LOGGER.info(postgresMuseumRepository.findAllMuseums());
 		entityManager.close();
-		
+
+	}
+
+	public Museum createTestMuseum(String museumName, int numOfRooms) {
+		return new Museum(museumName, numOfRooms);
 	}
 
 }
