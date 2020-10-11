@@ -7,7 +7,8 @@
 
 	<persistence-unit name="postgres">
 		<class>com.unifi.attws.exam.model.Museum</class>
-
+		<class>com.unifi.attws.exam.model.Exhibition</class>
+		
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
@@ -21,7 +22,8 @@
 	
 	<persistence-unit name="postgres.not-empty.database">
 		<class>com.unifi.attws.exam.model.Museum</class>
-
+		<class>com.unifi.attws.exam.model.Exhibition</class>
+		
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
@@ -29,6 +31,7 @@
 				value="jdbc:tc:postgresql:9.6.8:///databasename?TC_INITSCRIPT=file:src/test/resources/META-INF/init_postgresql.sql" />
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />
+				<!-- This line is commented since I want to use a non empty db, which is created executing an sql script -->
 <!-- 			<property name="hibernate.hbm2ddl.auto" value="create" /> -->
 		</properties>
 	</persistence-unit>
@@ -36,16 +39,16 @@
 
 <!-- 	<persistence-unit name="postgres"> -->
 <!-- 		<class>com.unifi.attws.exam.model.Museum</class> -->
-
+<!-- 		<class>com.unifi.attws.exam.model.Exhibition</class> -->
+		
 <!-- 		<properties> -->
 <!-- 			<property name="javax.persistence.jdbc.driver" -->
 <!-- 				value="org.postgresql.Driver" /> -->
 <!-- 			<property name="javax.persistence.jdbc.url" -->
 <!-- 				value="jdbc:postgresql://localhost:5432/ATTWS_DB" /> -->
 <!-- 			<property name="javax.persistence.jdbc.user" value="attws" /> -->
-<!-- 			<property name="javax.persistence.jdbc.password" -->
-<!-- 				value="attws" /> -->
-<!-- 			<property name="hibernate.hbm2ddl.auto" value="create" /> -->
+<!-- 			<property name="javax.persistence.jdbc.password" value="attws" /> -->
+<!-- 			<property name="hibernate.hbm2ddl.auto" value="create-drop" /> -->
 <!-- 			<property name="hibernate.dialect" -->
 <!-- 				value="org.hibernate.dialect.PostgreSQLDialect" /> -->
 <!-- 		</properties> -->

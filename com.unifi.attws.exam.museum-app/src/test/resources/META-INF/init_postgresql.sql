@@ -8,6 +8,19 @@ CREATE TABLE museums(
 
 );
 
+
+CREATE TABLE exhibitions(
+   ID UUID  NOT NULL,
+   museum_id UUID NOT NULL,
+   exhibition_name TEXT NOT NULL,
+   total_seats INT NOT NULL,
+   booked_seats INT NOT NULL,
+   UNIQUE (exhibition_name),
+   PRIMARY KEY (ID)
+
+);
+
+
 INSERT INTO museums (id, museum_name, number_of_occupied_rooms, number_of_rooms)
 VALUES ( 'b433da18-ba5a-4b86-92af-ba11be6314e7' , 'test1', 0, 10);
 

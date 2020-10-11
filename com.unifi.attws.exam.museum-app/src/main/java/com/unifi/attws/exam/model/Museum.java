@@ -1,11 +1,15 @@
 package com.unifi.attws.exam.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity(name = "Museum")
@@ -24,11 +28,15 @@ public final class Museum {
 
 	@Column(name = "Number_Of_Occupied_Rooms")
 	private int occupiedRooms;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "museum", orphanRemoval = true)
+	private List<Exhibition> exhibitions;
 
 	public Museum(String name, int rooms) {
 		this.name = name;
 		this.rooms = rooms;
 		this.occupiedRooms = 0;
+		this.exhibitions = new ArrayList<Exhibition>();
 
 	}
 
@@ -67,11 +75,22 @@ public final class Museum {
 	public void setOccupiedRooms(int availableRooms) {
 		this.occupiedRooms = availableRooms;
 	}
+	
+	
+
+	public List<Exhibition> getExhibitions() {
+		return exhibitions;
+	}
+
+	public void setExhibitions(List<Exhibition> exhibitions) {
+		this.exhibitions = exhibitions;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((exhibitions == null) ? 0 : exhibitions.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + occupiedRooms;
@@ -88,6 +107,11 @@ public final class Museum {
 		if (getClass() != obj.getClass())
 			return false;
 		Museum other = (Museum) obj;
+		if (exhibitions == null) {
+			if (other.exhibitions != null)
+				return false;
+		} else if (!exhibitions.equals(other.exhibitions))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -104,6 +128,7 @@ public final class Museum {
 			return false;
 		return true;
 	}
+
 	
 	
 
