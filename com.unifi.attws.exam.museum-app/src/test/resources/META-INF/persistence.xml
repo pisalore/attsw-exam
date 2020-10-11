@@ -18,6 +18,20 @@
 			<property name="hibernate.hbm2ddl.auto" value="create" />
 		</properties>
 	</persistence-unit>
+	
+	<persistence-unit name="postgres.not-empty.database">
+		<class>com.unifi.attws.exam.model.Museum</class>
+
+		<properties>
+			<property name="javax.persistence.jdbc.driver"
+				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:tc:postgresql:9.6.8:///databasename?TC_INITSCRIPT=file:src/test/resources/META-INF/init_postgresql.sql" />
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.PostgreSQLDialect" />
+<!-- 			<property name="hibernate.hbm2ddl.auto" value="create" /> -->
+		</properties>
+	</persistence-unit>
 
 
 <!-- 	<persistence-unit name="postgres"> -->
