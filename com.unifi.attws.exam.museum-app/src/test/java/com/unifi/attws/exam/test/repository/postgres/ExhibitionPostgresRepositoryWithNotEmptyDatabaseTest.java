@@ -29,6 +29,7 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
 		entityManager = sessionFactory.createEntityManager();
 		postgresExhibitionRepository = new PostgresExhibitionRepository(entityManager);
+		
 	}
 
 	@Test

@@ -39,11 +39,13 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isNotEmpty();
 
 	}
-	
+
 	@Test
 	public void testFindAllMuseumsWhenSeveralMuseumsArePersisted() {
-		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
-		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString("94fe3013-9ebb-432e-ab55-e612dc797851"));
+		Museum museum1 = postgresMuseumRepository
+				.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
+		Museum museum2 = postgresMuseumRepository
+				.retrieveMuseumById(UUID.fromString("94fe3013-9ebb-432e-ab55-e612dc797851"));
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
 
 	}
@@ -56,6 +58,12 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 		museum2.setId(museum1.getId());
 		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(museum2)).isInstanceOf(PersistenceException.class);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
+	}
+
+	@Test
+	public void testAddNullEntityShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(null)).isInstanceOf(IllegalArgumentException.class);
+		
 	}
 
 	@Test

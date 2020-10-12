@@ -18,29 +18,24 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 		List<Exhibition> exhibitions = entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
 		return exhibitions;
 	}
+	
+	@Override
+	public Exhibition findExhibitionById(UUID exhibitionId) {
+			return entityManager.find(Exhibition.class, exhibitionId);
+
+		
+	}
 
 	@Override
 	public List<Exhibition> findExhibitionsByMuseumId(UUID museumId) {
 		if (museumId == null) {
 			throw new IllegalArgumentException("Museum ID cannot be null.");
 		}
-		try {
-			return findAllExhibitions().stream()
-					.filter(e -> e.getMuseumId().equals(museumId))
-					.collect(Collectors.toList());
 
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	@Override
-	public Exhibition findExhibitionById(UUID exhibitionId) {
-		try {
-			return entityManager.find(Exhibition.class, exhibitionId);
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException();
-		}
+		return findAllExhibitions()
+				.stream()
+				.filter(e -> e.getMuseumId().equals(museumId))
+				.collect(Collectors.toList());
 
 	}
 
