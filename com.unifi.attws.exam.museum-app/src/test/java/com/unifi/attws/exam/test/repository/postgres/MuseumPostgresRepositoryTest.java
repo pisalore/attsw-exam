@@ -59,16 +59,6 @@ public class MuseumPostgresRepositoryTest {
 		.contains(museum.getId());
 	}
 
-	@Test
-	public void testFindAllMuseumsWhenSeveralMuseumsArePersisted() {
-		Museum museum1 = createTestMuseum("Uffizi", 50);
-		Museum museum2 = createTestMuseum("Louvre", 10);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.addMuseum(museum2);
-		entityManager.flush();
-		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
-
-	}
 
 	@Test
 	public void testFindMuseumByIdWhenMuseumIsPresent() {
@@ -100,14 +90,6 @@ public class MuseumPostgresRepositoryTest {
 
 	}
 
-	@Test
-	public void testRemoveMuseumWhenTheMuseumExists() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.deleteMuseum(museum1);
-		entityManager.flush();
-		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
-	}
 	
 	@After
 	public void closeEntityManager() {

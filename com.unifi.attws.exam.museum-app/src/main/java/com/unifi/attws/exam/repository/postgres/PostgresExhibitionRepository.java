@@ -22,7 +22,6 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 	@Override
 	public Exhibition findExhibitionById(UUID exhibitionId) {
 			return entityManager.find(Exhibition.class, exhibitionId);
-
 		
 	}
 

@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,8 +19,8 @@ import com.unifi.attws.exam.repository.postgres.PostgresExhibitionRepository;
 public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	private static final String MUSEUM_1 = "b433da18-ba5a-4b86-92af-ba11be6314e7";
-	private static final String EXHIBITION_2 = "b2cb1474-24ff-41eb-a8d7-963f32f6822d";
 	private static final String EXHIBITION_1 = "49d13e51-2277-4911-929f-c9c067e2e8b4";
+	private static final String EXHIBITION_2 = "b2cb1474-24ff-41eb-a8d7-963f32f6822d";
 
 	private ExhibitionRepository postgresExhibitionRepository;
 	private static EntityManager entityManager;
@@ -29,9 +30,10 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
 		entityManager = sessionFactory.createEntityManager();
 		postgresExhibitionRepository = new PostgresExhibitionRepository(entityManager);
-		
+		entityManager.getTransaction().begin();
+
 	}
-	
+
 	// Check if the sql script has been executed.
 	@Test
 	public void testfindAllMuseumsMuseumsWhenNoMuseumsArePersisted() {
@@ -61,10 +63,9 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	@Test
 	public void testFindExhibitionByMuseumIdWhenGivenIdIsNullShouldThrow() {
-		
+
 		assertThatThrownBy(() -> postgresExhibitionRepository.findExhibitionsByMuseumId(null))
-		.isInstanceOf(IllegalArgumentException.class)
-		.hasMessage("Museum ID cannot be null.");
+				.isInstanceOf(IllegalArgumentException.class).hasMessage("Museum ID cannot be null.");
 	}
 
 	@Test
@@ -75,6 +76,25 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 		assertThat(postgresExhibitionRepository.findExhibitionsByMuseumId(UUID.fromString(MUSEUM_1)))
 				.containsExactly(exhibition1, exhibition2);
 
+	}
+
+	@Test
+	public void testAddNewExhibitionWhenArelatedMuseumIdExists() {
+		Exhibition exhibition = new Exhibition("test exhibition", 100);
+		exhibition.setMuseumId(UUID.fromString(MUSEUM_1));
+		postgresExhibitionRepository.addNewExhibition(exhibition);
+		entityManager.flush();
+
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(3).extracting(Exhibition::getId)
+				.contains(exhibition.getId());
+	}
+
+
+	@After
+	public void closeEntityManager() {
+		entityManager.getTransaction().commit();
+		entityManager.clear();
+		entityManager.close();
 	}
 
 }

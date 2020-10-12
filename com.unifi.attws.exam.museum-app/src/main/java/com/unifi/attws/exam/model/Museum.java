@@ -25,14 +25,11 @@ public final class Museum{
 	@Column(name = "Number_Of_Occupied_Rooms")
 	private int occupiedRooms;
 	
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "museum", orphanRemoval = true)
-//	private List<Exhibition> exhibitions;
 
 	public Museum(String name, int rooms) {
 		this.name = name;
 		this.rooms = rooms;
 		this.occupiedRooms = 0;
-//		this.exhibitions = new ArrayList<Exhibition>();
 
 	}
 
