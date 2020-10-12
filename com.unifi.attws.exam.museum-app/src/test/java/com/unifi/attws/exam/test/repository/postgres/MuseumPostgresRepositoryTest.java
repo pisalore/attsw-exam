@@ -40,14 +40,23 @@ public class MuseumPostgresRepositoryTest {
 	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
 		assertThat(postgresMuseumRepository.retrieveMuseumById(UUID.randomUUID())).isNull();
 	}
+	
+	@Test
+	public void testAddNewNullMuseumEntityShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(null)).isInstanceOf(IllegalArgumentException.class);
+		
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
+	}
 
 	@Test
-	public void testAddNewMuseumToPostgresDBWhenTransactionSuccess() {
+	public void testAddNewMuseum() {
 		Museum museum = createTestMuseum("MoMa", 10);
 		postgresMuseumRepository.addMuseum(museum);
 		entityManager.flush();
-		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
-
+		assertThat(postgresMuseumRepository.findAllMuseums())
+		.hasSize(1)
+		.extracting(Museum::getId)
+		.contains(museum.getId());
 	}
 
 	@Test

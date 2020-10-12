@@ -40,8 +40,9 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 	}
 
 	@Override
-	public void addNewExhibition(Exhibition newExhibition) {
-		// TODO Auto-generated method stub
+	public Exhibition addNewExhibition(Exhibition newExhibition) {
+		entityManager.persist(newExhibition);
+		return newExhibition;
 
 	}
 

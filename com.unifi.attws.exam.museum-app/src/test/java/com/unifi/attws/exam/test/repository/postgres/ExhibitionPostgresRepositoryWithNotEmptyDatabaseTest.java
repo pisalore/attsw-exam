@@ -31,6 +31,13 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 		postgresExhibitionRepository = new PostgresExhibitionRepository(entityManager);
 		
 	}
+	
+	// Check if the sql script has been executed.
+	@Test
+	public void testfindAllMuseumsMuseumsWhenNoMuseumsArePersisted() {
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).isNotEmpty();
+
+	}
 
 	@Test
 	public void testFindAllExhibitionsWhenSeveralExhibitionsArePersisted() {
