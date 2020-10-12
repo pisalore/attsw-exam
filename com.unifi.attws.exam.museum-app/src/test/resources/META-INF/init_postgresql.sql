@@ -8,10 +8,9 @@ CREATE TABLE museums(
 
 );
 
-
 CREATE TABLE exhibitions(
    ID UUID  NOT NULL,
-   museum_id UUID NOT NULL,
+   museum_id UUID NOT NULL references museums(ID),
    exhibition_name TEXT NOT NULL,
    total_seats INT NOT NULL,
    booked_seats INT NOT NULL,

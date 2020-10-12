@@ -12,7 +12,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.unifi.attws.exam.model.Exhibition;
 import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
 import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
@@ -45,8 +44,6 @@ public class MuseumPostgresRepositoryTest {
 	@Test
 	public void testAddNewMuseumToPostgresDBWhenTransactionSuccess() {
 		Museum museum = createTestMuseum("MoMa", 10);
-//		Exhibition ex = new Exhibition(museum, "Permanent exhibition", 100);
-//		museum.getExhibitions().add(ex);
 		postgresMuseumRepository.addMuseum(museum);
 		entityManager.flush();
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
