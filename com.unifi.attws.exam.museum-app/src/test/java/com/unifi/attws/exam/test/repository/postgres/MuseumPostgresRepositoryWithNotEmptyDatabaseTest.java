@@ -1,7 +1,6 @@
 package com.unifi.attws.exam.test.repository.postgres;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +37,14 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	@Test
 	public void testfindAllMuseumsMuseumsWhenNoMuseumsArePersisted() {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isNotEmpty();
+
+	}
+	
+	@Test
+	public void testFindAllMuseumsWhenSeveralMuseumsArePersisted() {
+		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
+		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString("94fe3013-9ebb-432e-ab55-e612dc797851"));
+		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
 
 	}
 

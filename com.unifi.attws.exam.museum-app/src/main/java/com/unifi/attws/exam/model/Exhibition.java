@@ -15,10 +15,6 @@ public class Exhibition {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
-
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	private Museum museum;
-//	
 	
 	@Column(name = "Exhibition_Name", unique=true)
 	private String name;
@@ -36,6 +32,10 @@ public class Exhibition {
 	public Exhibition(String name, int totalSeats) {
 		this.name = name;
 		this.totalSeats = totalSeats;
+	}
+	
+	public Exhibition() {
+		
 	}
 
 	public UUID getId() {

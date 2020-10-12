@@ -2,61 +2,74 @@ package com.unifi.attws.exam.repository.postgres;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
 import com.unifi.attws.exam.model.Exhibition;
 import com.unifi.attws.exam.repository.ExhibitionRepository;
 
-public class PostgresExhibitionRepository implements ExhibitionRepository{
-	
+public class PostgresExhibitionRepository implements ExhibitionRepository {
+
 	private EntityManager entityManager;
 
-
 	@Override
-	public List<Exhibition> findAllExhibition() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Exhibition> findAllExhibitions() {
+		List<Exhibition> exhibitions = entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
+		return exhibitions;
 	}
 
 	@Override
-	public List<Exhibition> findExhibitionsByMuseum(UUID museumId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Exhibition> findExhibitionsByMuseumId(UUID museumId) {
+		if (museumId == null) {
+			throw new IllegalArgumentException("Museum ID cannot be null.");
+		}
+		try {
+			return findAllExhibitions().stream()
+					.filter(e -> e.getMuseumId().equals(museumId))
+					.collect(Collectors.toList());
+
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
 	public Exhibition findExhibitionById(UUID exhibitionId) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return entityManager.find(Exhibition.class, exhibitionId);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
+
 	}
 
 	@Override
 	public void addNewExhibition(Exhibition newExhibition) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void updateExhibition(Exhibition updatedExhibition) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteExhibition(Exhibition deletedExhibition) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public PostgresExhibitionRepository(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
-	
+
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
