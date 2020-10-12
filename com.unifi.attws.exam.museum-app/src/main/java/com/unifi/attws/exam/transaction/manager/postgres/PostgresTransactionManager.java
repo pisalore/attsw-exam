@@ -6,20 +6,23 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 import com.unifi.attws.exam.repository.MuseumRepository;
+import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
 import com.unifi.attws.exam.transaction.manager.TransactionCode;
 import com.unifi.attws.exam.transaction.manager.TransactionManager;
 
 public class PostgresTransactionManager implements TransactionManager {
 
 	EntityManager entityManager;
+	MuseumRepository repoInstance;
 
 	public PostgresTransactionManager() {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
 		entityManager = sessionFactory.createEntityManager();
+		repoInstance = new PostgresMuseumRepository(entityManager);
 	}
 
 	@Override
-	public <T> T doInTransaction(TransactionCode<T> query, MuseumRepository repoInstance) {
+	public <T> T doInTransaction(TransactionCode<T> query) {
 		this.entityManager.getTransaction().begin();
 
 		try {
