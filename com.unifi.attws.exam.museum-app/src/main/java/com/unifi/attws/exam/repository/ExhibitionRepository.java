@@ -10,7 +10,7 @@ public interface ExhibitionRepository {
 	public Exhibition findExhibitionById(UUID exhibitionId);
 	public List<Exhibition> findExhibitionsByMuseumId(UUID museumId);
 	public Exhibition addNewExhibition(Exhibition newExhibition);
-	public void updateExhibition(Exhibition updatedExhibition);
+	public Exhibition updateExhibition(Exhibition updatedExhibition);
 	public void deleteExhibition(Exhibition deletedExhibition);
 	
 }

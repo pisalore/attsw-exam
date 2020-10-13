@@ -35,7 +35,13 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 
 	}
-
+	
+	@Test
+	public void testFindMuseumByNullIdShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.retrieveMuseumById(null))
+		.isInstanceOf(IllegalArgumentException.class);	
+	}
+	
 	@Test
 	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
 		assertThat(postgresMuseumRepository.retrieveMuseumById(UUID.randomUUID())).isNull();
@@ -70,12 +76,6 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId())).isEqualTo(museum1);
 	}
 	
-	@Test
-	public void testFindMuseumByNullIdShouldThrow() {
-		assertThatThrownBy(() -> postgresMuseumRepository.retrieveMuseumById(null))
-		.isInstanceOf(IllegalArgumentException.class);
-		
-	}
 
 	@Test
 	public void testUpdateMuseumWhenExists() {

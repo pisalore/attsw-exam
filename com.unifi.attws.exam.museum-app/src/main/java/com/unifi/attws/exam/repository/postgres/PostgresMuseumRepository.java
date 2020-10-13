@@ -25,25 +25,40 @@ public class PostgresMuseumRepository implements MuseumRepository {
 
 	@Override
 	public Museum retrieveMuseumById(UUID id) {
+		try {
 			return entityManager.find(Museum.class, id);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
 	public Museum addMuseum(Museum museum) {
+		try {
 			entityManager.persist(museum);
-		return museum;
+			return museum;
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 
 	}
 
 	@Override
-	public void updateMuseum(Museum updatedMuseum) {
-			entityManager.merge(updatedMuseum);
+	public Museum updateMuseum(Museum updatedMuseum) {
+		try {
+			return entityManager.merge(updatedMuseum);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 	}
-
 
 	@Override
 	public void deleteMuseum(Museum museumToRemove) {
+		try {
 			entityManager.remove(museumToRemove);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 
 	}
 

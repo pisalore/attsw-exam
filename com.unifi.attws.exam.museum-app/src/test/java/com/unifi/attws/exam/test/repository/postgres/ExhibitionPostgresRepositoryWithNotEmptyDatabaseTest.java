@@ -79,7 +79,7 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 	}
 
 	@Test
-	public void testAddNewExhibitionWhenArelatedMuseumIdExists() {
+	public void testAddNewExhibitionWhenRelatedMuseumIdExists() {
 		Exhibition exhibition = new Exhibition("test exhibition", 100);
 		exhibition.setMuseumId(UUID.fromString(MUSEUM_1));
 		postgresExhibitionRepository.addNewExhibition(exhibition);
@@ -89,10 +89,52 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 				.contains(exhibition.getId());
 	}
 
+	@Test
+	public void testUpdateExhibitionWithNullEntityShouldThrow() {
+		assertThatThrownBy(() -> postgresExhibitionRepository.updateExhibition(null))
+				.isInstanceOf(IllegalArgumentException.class);
+
+	}
+
+	@Test
+	public void testUpdateExhibition() {
+		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionById(UUID.fromString(EXHIBITION_1));
+		exhibition1.setBookedSeats(10);
+		postgresExhibitionRepository.updateExhibition(exhibition1);
+
+		assertThat(postgresExhibitionRepository.findExhibitionById(UUID.fromString(EXHIBITION_1)).getBookedSeats())
+				.isEqualTo(10);
+
+	}
+
+	@Test
+	public void testUpdateExhibitionWithDetachedEntityShouldThrow() {
+		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionById(UUID.fromString(EXHIBITION_1));
+		exhibition1.setId(UUID.randomUUID());
+
+		assertThatThrownBy(() -> postgresExhibitionRepository.updateExhibition(null))
+				.isInstanceOf(IllegalArgumentException.class);
+
+	}
+
+	@Test
+	public void testRemoveNullExhibitionShouldThrow() {
+		assertThatThrownBy(() -> postgresExhibitionRepository.deleteExhibition(null))
+				.isInstanceOf(IllegalArgumentException.class);
+	}
+	
+	@Test
+	public void testRemoveExhibition() {
+		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionById(UUID.fromString(EXHIBITION_1));
+		Exhibition exhibition2 = postgresExhibitionRepository.findExhibitionById(UUID.fromString(EXHIBITION_2));
+		postgresExhibitionRepository.deleteExhibition(exhibition1);
+		
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).containsExactly(exhibition2);
+	}
 
 	@After
 	public void closeEntityManager() {
-		entityManager.getTransaction().commit();
+		entityManager.getTransaction().rollback();
 		entityManager.clear();
 		entityManager.close();
 	}

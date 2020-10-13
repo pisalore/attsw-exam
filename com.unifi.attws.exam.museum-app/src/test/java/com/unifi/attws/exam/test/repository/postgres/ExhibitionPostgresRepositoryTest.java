@@ -56,7 +56,7 @@ public class ExhibitionPostgresRepositoryTest {
 	
 	@After
 	public void closeEntityManager() {
-		entityManager.getTransaction().commit();
+		entityManager.getTransaction().rollback();
 		entityManager.clear();
 		entityManager.close();
 	}

@@ -18,11 +18,15 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 		List<Exhibition> exhibitions = entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
 		return exhibitions;
 	}
-	
+
 	@Override
 	public Exhibition findExhibitionById(UUID exhibitionId) {
+		try {
 			return entityManager.find(Exhibition.class, exhibitionId);
-		
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
+
 	}
 
 	@Override
@@ -31,29 +35,38 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 			throw new IllegalArgumentException("Museum ID cannot be null.");
 		}
 
-		return findAllExhibitions()
-				.stream()
-				.filter(e -> e.getMuseumId().equals(museumId))
-				.collect(Collectors.toList());
+		return findAllExhibitions().stream().filter(e -> e.getMuseumId().equals(museumId)).collect(Collectors.toList());
 
 	}
 
 	@Override
 	public Exhibition addNewExhibition(Exhibition newExhibition) {
-		entityManager.persist(newExhibition);
-		return newExhibition;
+		try {
+			entityManager.persist(newExhibition);
+			return newExhibition;
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 
 	}
 
 	@Override
-	public void updateExhibition(Exhibition updatedExhibition) {
-		// TODO Auto-generated method stub
+	public Exhibition updateExhibition(Exhibition updatedExhibition) {
+		try {
+			return entityManager.merge(updatedExhibition);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 
 	}
 
 	@Override
 	public void deleteExhibition(Exhibition deletedExhibition) {
-		// TODO Auto-generated method stub
+		try {
+			entityManager.remove(deletedExhibition);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 
 	}
 
