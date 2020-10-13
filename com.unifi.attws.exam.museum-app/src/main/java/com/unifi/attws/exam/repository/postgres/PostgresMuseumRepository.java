@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 
 import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
@@ -37,17 +36,17 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	public Museum addMuseum(Museum museum) {
 		try {
 			entityManager.persist(museum);
-		} catch (PersistenceException ex) {
-			throw new PersistenceException();
+			return museum;
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
 		}
-		return museum;
 
 	}
 
 	@Override
-	public void updateMuseum(Museum updatedMuseum) {
+	public Museum updateMuseum(Museum updatedMuseum) {
 		try {
-			entityManager.merge(updatedMuseum);
+			return entityManager.merge(updatedMuseum);
 		} catch (IllegalArgumentException ex) {
 			throw new IllegalArgumentException();
 		}
@@ -57,8 +56,8 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	public void deleteMuseum(Museum museumToRemove) {
 		try {
 			entityManager.remove(museumToRemove);
-		} catch (PersistenceException ex) {
-			throw new PersistenceException();
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
 		}
 
 	}

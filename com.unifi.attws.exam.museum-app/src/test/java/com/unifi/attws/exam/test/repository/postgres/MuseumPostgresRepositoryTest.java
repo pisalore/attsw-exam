@@ -35,31 +35,36 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 
 	}
-
+	
+	@Test
+	public void testFindMuseumByNullIdShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.retrieveMuseumById(null))
+		.isInstanceOf(IllegalArgumentException.class);	
+	}
+	
 	@Test
 	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
 		assertThat(postgresMuseumRepository.retrieveMuseumById(UUID.randomUUID())).isNull();
 	}
+	
+	@Test
+	public void testAddNewNullMuseumEntityShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(null)).isInstanceOf(IllegalArgumentException.class);
+		
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
+	}
 
 	@Test
-	public void testAddNewMuseumToPostgresDBWhenTransactionSuccess() {
+	public void testAddNewMuseum() {
 		Museum museum = createTestMuseum("MoMa", 10);
 		postgresMuseumRepository.addMuseum(museum);
 		entityManager.flush();
-		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
-
+		assertThat(postgresMuseumRepository.findAllMuseums())
+		.hasSize(1)
+		.extracting(Museum::getId)
+		.contains(museum.getId());
 	}
 
-	@Test
-	public void testFindAllMuseumsWhenSeveralMuseumsArePersisted() {
-		Museum museum1 = createTestMuseum("Uffizi", 50);
-		Museum museum2 = createTestMuseum("Louvre", 10);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.addMuseum(museum2);
-		entityManager.flush();
-		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
-
-	}
 
 	@Test
 	public void testFindMuseumByIdWhenMuseumIsPresent() {
@@ -71,12 +76,6 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId())).isEqualTo(museum1);
 	}
 	
-	@Test
-	public void testFindMuseumByNullIdShouldThrow() {
-		assertThatThrownBy(() -> postgresMuseumRepository.retrieveMuseumById(null))
-		.isInstanceOf(IllegalArgumentException.class);
-		
-	}
 
 	@Test
 	public void testUpdateMuseumWhenExists() {
@@ -91,14 +90,6 @@ public class MuseumPostgresRepositoryTest {
 
 	}
 
-	@Test
-	public void testRemoveMuseumWhenTheMuseumExists() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.deleteMuseum(museum1);
-		entityManager.flush();
-		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
-	}
 	
 	@After
 	public void closeEntityManager() {

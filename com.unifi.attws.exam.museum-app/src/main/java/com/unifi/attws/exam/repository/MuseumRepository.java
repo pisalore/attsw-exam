@@ -10,7 +10,7 @@ public interface MuseumRepository {
 	public List<Museum> findAllMuseums();
 	public Museum retrieveMuseumById(UUID id);
 	public Museum addMuseum(Museum museum);
-	public void updateMuseum(Museum updatedMuseum);
+	public Museum updateMuseum(Museum updatedMuseum);
 	public void deleteMuseum(Museum museumToRemove);
 	
 }
