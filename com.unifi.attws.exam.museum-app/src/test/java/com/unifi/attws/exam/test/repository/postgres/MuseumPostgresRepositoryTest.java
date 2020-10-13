@@ -44,7 +44,7 @@ public class MuseumPostgresRepositoryTest {
 	public void testFindMuseumByNullIdShouldThrow() {
 		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumById(null))
 				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("Cannot find entity: invalid or null id: " + null);
+				.hasMessage("Cannot find entity, invalid or null id: " + null);
 
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}

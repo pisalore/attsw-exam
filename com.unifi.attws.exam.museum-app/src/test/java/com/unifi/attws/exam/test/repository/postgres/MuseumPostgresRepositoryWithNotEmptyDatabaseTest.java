@@ -48,7 +48,6 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	}
 
-
 	@Test
 	public void testFindMuseumByIdWhenMuseumIsPresent() {
 		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
@@ -73,7 +72,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	@Test
 	public void testUpdateMuseumWhenEntityHasBeenRemovedShouldThrow() {
 		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
-		entityManager.remove(museum1);
+		postgresMuseumRepository.deleteMuseum(museum1);
 		museum1.setName(MUSEUM_TEST_2);
 		assertThatThrownBy(() -> postgresMuseumRepository.updateMuseum(museum1))
 				.isInstanceOf(IllegalArgumentException.class);

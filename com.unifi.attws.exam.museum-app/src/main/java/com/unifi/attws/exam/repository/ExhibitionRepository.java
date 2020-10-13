@@ -7,10 +7,15 @@ import com.unifi.attws.exam.model.Exhibition;;
 
 public interface ExhibitionRepository {
 	public List<Exhibition> findAllExhibitions();
+
 	public Exhibition findExhibitionById(UUID exhibitionId);
+
 	public List<Exhibition> findExhibitionsByMuseumId(UUID museumId);
+
 	public Exhibition addNewExhibition(Exhibition newExhibition);
+
 	public Exhibition updateExhibition(Exhibition updatedExhibition);
+
 	public void deleteExhibition(Exhibition deletedExhibition);
-	
+
 }

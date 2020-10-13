@@ -28,7 +28,7 @@ public class PostgresMuseumRepository implements MuseumRepository {
 		try {
 			return entityManager.find(Museum.class, id);
 		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException("Cannot find entity: invalid or null id: " + id);
+			throw new IllegalArgumentException("Cannot find entity, invalid or null id: " + id);
 		}
 	}
 

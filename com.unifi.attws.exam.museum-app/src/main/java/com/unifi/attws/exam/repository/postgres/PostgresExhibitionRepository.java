@@ -24,7 +24,7 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 		try {
 			return entityManager.find(Exhibition.class, exhibitionId);
 		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Cannot find entity, invalid or null id: " + exhibitionId);
 		}
 
 	}
