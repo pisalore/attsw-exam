@@ -12,6 +12,10 @@ import com.unifi.attws.exam.repository.ExhibitionRepository;
 public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	private EntityManager entityManager;
+	
+	public PostgresExhibitionRepository(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
 	@Override
 	public List<Exhibition> findAllExhibitions() {
@@ -70,9 +74,6 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	}
 
-	public PostgresExhibitionRepository(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
 
 	public EntityManager getEntityManager() {
 		return entityManager;

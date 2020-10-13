@@ -26,7 +26,7 @@ public class PostgresTransactionManagerTest {
 	@Test
 	public void testInsertNewMuseumInPostgresDatabaseTransactionallyCommit() {
 		Museum museum = createTestMuseum("Uffizi", 10);
-		transactionManager.doInTransaction(repoInstance -> {
+		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 			return postgresMuseumRepository.addMuseum(museum);
 		});
 
@@ -40,8 +40,8 @@ public class PostgresTransactionManagerTest {
 				.findMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
 		Museum museum2 = new Museum("test3", 20);
 		museum2.setId(museum1.getId());
-		transactionManager.doInTransaction(repoInstance -> {
-			return repoInstance.addMuseum(museum2);
+		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			return museumRepository.addMuseum(museum2);
 		});
 
 		assertThat(postgresMuseumRepository.findAllMuseums()).doesNotContain(museum2);

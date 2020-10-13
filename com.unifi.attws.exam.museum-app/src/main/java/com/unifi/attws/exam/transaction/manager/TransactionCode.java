@@ -1,10 +1,10 @@
 package com.unifi.attws.exam.transaction.manager;
 
-import java.util.function.Function;
 
+import com.unifi.attws.exam.repository.ExhibitionRepository;
 import com.unifi.attws.exam.repository.MuseumRepository;
 
 @FunctionalInterface
-public interface TransactionCode<T> extends Function<MuseumRepository, T> {
+public interface TransactionCode<T> extends RepositoryFunction<MuseumRepository, ExhibitionRepository, T> {
 
 }
