@@ -1,19 +1,20 @@
 package com.unifi.attws.exam.repository.postgres;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
 
-public class PostgresMuseumRepository implements MuseumRepository{
-	
+public class PostgresMuseumRepository implements MuseumRepository {
+
 	private EntityManager entityManager;
-	
+
 	public PostgresMuseumRepository(EntityManager entityManager) {
 		this.entityManager = entityManager;
-		
+
 	}
 
 	@Override
@@ -23,38 +24,42 @@ public class PostgresMuseumRepository implements MuseumRepository{
 	}
 
 	@Override
-	public Museum retrieveMuseumById(Long id) {
-		List<Museum> museums = findAllMuseums();
-		return museums.stream()
-		.filter(m -> m.getId() == id)
-		.findFirst()
-		.orElse(null);
+	public Museum findMuseumById(UUID id) {
+		try {
+			return entityManager.find(Museum.class, id);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException("Cannot find entity, invalid or null id: " + id);
+		}
 	}
 
 	@Override
-	public void addMuseum(Museum museum) {
-		entityManager.getTransaction().begin();
-		entityManager.persist(museum);
-		entityManager.flush();
-		entityManager.getTransaction().commit();
+	public Museum addMuseum(Museum museum) {
+		try {
+			entityManager.persist(museum);
+			return museum;
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
+
 	}
 
 	@Override
 	public Museum updateMuseum(Museum updatedMuseum) {
-		entityManager.getTransaction().begin();
-		entityManager.merge(updatedMuseum);
-		entityManager.flush();
-		entityManager.getTransaction().commit();
-		return updatedMuseum;
+		try {
+			return entityManager.merge(updatedMuseum);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
 	public void deleteMuseum(Museum museumToRemove) {
-		entityManager.getTransaction().begin();
-		entityManager.remove(museumToRemove);
-		entityManager.flush();
-		entityManager.getTransaction().commit();
-		
+		try {
+			entityManager.remove(museumToRemove);
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException();
+		}
+
 	}
 
 }

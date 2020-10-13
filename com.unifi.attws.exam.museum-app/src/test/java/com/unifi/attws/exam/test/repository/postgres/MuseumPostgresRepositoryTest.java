@@ -1,11 +1,14 @@
 package com.unifi.attws.exam.test.repository.postgres;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,20 +16,21 @@ import com.unifi.attws.exam.model.Museum;
 import com.unifi.attws.exam.repository.MuseumRepository;
 import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class MuseumPostgresRepositoryTest {
-	
-	MuseumRepository postgresMuseumRepository;
-	
-	private static final Logger LOGGER = LogManager.getLogger(Museum.class);
+
+	private static final String MUSEUM_TEST_1 = "Museum_test_1";
+	private static final int NUM_OF_ROOMS = 10;
+	private static final UUID invalidUUID = UUID.fromString("2796027d-21cc-4883-b088-514d4b3090a1");
+
+	private MuseumRepository postgresMuseumRepository;
+	private static EntityManager entityManager;
 
 	@Before
 	public void setUp() throws Exception {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres");
-		EntityManager entityManager = sessionFactory.createEntityManager();
+		entityManager = sessionFactory.createEntityManager();
 		postgresMuseumRepository = new PostgresMuseumRepository(entityManager);
+		entityManager.getTransaction().begin();
 
 	}
 
@@ -35,67 +39,49 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 
 	}
-	
-	@Test
-	public void testfindAllMuseumsMuseumsWhenSeveralMuseumsArePersisted() {
-		Museum museum1 = createTestMuseum("Uffizi", 50);
-		Museum museum2 = createTestMuseum("Louvre", 10);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.addMuseum(museum2);
-		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
 
-	}
-	
-	
 	@Test
-	public void testAddNewMuseumToPostgresDB() {
-		Museum museum = createTestMuseum("MoMa", 10);
-		postgresMuseumRepository.addMuseum(museum);
-		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
-		
-	}
-	
-	@Test
-	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
-		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1))).isNull();
-	}
-	
-	@Test
-	public void testFindMuseumByIdWhenMuseumIsPresent() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
-		Museum museum2 = createTestMuseum("Louvre", 10);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.addMuseum(museum2);
-		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1))).isEqualTo(museum1);
-	}
-	
-	@Test
-	public void testUpdateMuseumWhenExists() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
-		postgresMuseumRepository.addMuseum(museum1);
-		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(new Long(1));
-		museum2.setOccupiedRooms(1);
-		postgresMuseumRepository.updateMuseum(museum2);
-		assertThat(postgresMuseumRepository.retrieveMuseumById(new Long(1)).getOccupiedRooms()).isEqualTo(1);
+	public void testFindMuseumByNullIdShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumById(null))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Cannot find entity, invalid or null id: " + null);
 
-	}
-	
-	@Test
-	public void testMuseumToRemoveWhenTheMuseumExists() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.deleteMuseum(museum1);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
-	
-	
+
+	@Test
+	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
+		assertThat(postgresMuseumRepository.findMuseumById(invalidUUID)).isNull();
+	}
+
+	@Test
+	public void testAddNewNullMuseumEntityShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(null)).isInstanceOf(IllegalArgumentException.class);
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
+	}
+
+	@Test
+	public void testAddNewMuseum() {
+		Museum museum = createTestMuseum(MUSEUM_TEST_1, NUM_OF_ROOMS);
+		postgresMuseumRepository.addMuseum(museum);
+		entityManager.flush();
+		assertThat(postgresMuseumRepository.findAllMuseums()).hasSize(1).extracting(Museum::getId)
+				.contains(museum.getId());
+	}
+
+	@After
+	public void closeEntityManager() {
+		entityManager.getTransaction().rollback();
+		entityManager.clear();
+		entityManager.close();
+	}
+
 	/*
 	 * Museum utility
 	 */
-	
+
 	public Museum createTestMuseum(String museumName, int numOfRooms) {
 		return new Museum(museumName, numOfRooms);
 	}
-	
 
 }

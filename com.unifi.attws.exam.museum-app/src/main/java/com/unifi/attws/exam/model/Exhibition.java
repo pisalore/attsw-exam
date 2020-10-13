@@ -8,35 +8,36 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity(name = "Museum")
-@Table(name = "museums")
-public final class Museum{
+@Entity(name = "Exhibition")
+@Table(name = "exhibitions")
+public class Exhibition {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
-
-	@Column(name = "Museum_Name", unique=true)
+	
+	@Column(name = "Exhibition_Name", unique=true)
 	private String name;
-
-	@Column(name = "Number_Of_Rooms")
-	private int rooms;
-
-	@Column(name = "Number_Of_Occupied_Rooms")
-	private int occupiedRooms;
+	
+	@Column(name = "Total_seats")
+	private int totalSeats;
+	
+	@Column(name = "Booked_seats")
+	private int bookedSeats;
+	
+	@Column(name = "Museum_id")
+	UUID museumId;
 	
 
-	public Museum(String name, int rooms) {
+	public Exhibition(String name, int totalSeats) {
 		this.name = name;
-		this.rooms = rooms;
-		this.occupiedRooms = 0;
-
+		this.totalSeats = totalSeats;
 	}
-
-	public Museum() {
+	
+	public Exhibition() {
 		
 	}
-	
+
 	public UUID getId() {
 		return id;
 	}
@@ -53,30 +54,39 @@ public final class Museum{
 		this.name = name;
 	}
 
-	public int getRooms() {
-		return rooms;
+	public int getTotalSeats() {
+		return totalSeats;
 	}
 
-	public void setRooms(int rooms) {
-		this.rooms = rooms;
+	public void setTotalSeats(int totalSeats) {
+		this.totalSeats = totalSeats;
 	}
 
-	public int getOccupiedRooms() {
-		return occupiedRooms;
+	public int getBookedSeats() {
+		return bookedSeats;
 	}
 
-	public void setOccupiedRooms(int availableRooms) {
-		this.occupiedRooms = availableRooms;
+	public void setBookedSeats(int bookedSeats) {
+		this.bookedSeats = bookedSeats;
+	}
+
+	public UUID getMuseumId() {
+		return museumId;
+	}
+
+	public void setMuseumId(UUID museumId) {
+		this.museumId = museumId;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + bookedSeats;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((museumId == null) ? 0 : museumId.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + occupiedRooms;
-		result = prime * result + rooms;
+		result = prime * result + totalSeats;
 		return result;
 	}
 
@@ -88,35 +98,29 @@ public final class Museum{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Museum other = (Museum) obj;
+		Exhibition other = (Exhibition) obj;
+		if (bookedSeats != other.bookedSeats)
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (museumId == null) {
+			if (other.museumId != null)
+				return false;
+		} else if (!museumId.equals(other.museumId))
 			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (occupiedRooms != other.occupiedRooms)
-			return false;
-		if (rooms != other.rooms)
+		if (totalSeats != other.totalSeats)
 			return false;
 		return true;
 	}
 	
 	
-
-//	public List<Exhibition> getExhibitions() {
-//		return exhibitions;
-//	}
-//
-//	public void setExhibitions(List<Exhibition> exhibitions) {
-//		this.exhibitions = exhibitions;
-//	}
-	
-	
-
 
 }
