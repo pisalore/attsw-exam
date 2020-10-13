@@ -20,8 +20,11 @@ import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
 
 public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
-	private static final String MUSEUM_2 = "94fe3013-9ebb-432e-ab55-e612dc797851";
-	private static final String MUSEUM_1 = "b433da18-ba5a-4b86-92af-ba11be6314e7";
+	private static final UUID MUSEUM_ID_1 = UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7");
+	private static final UUID MUSEUM_ID_2 = UUID.fromString("94fe3013-9ebb-432e-ab55-e612dc797851");
+	private static final String MUSEUM_TEST_1 = "Museum_test_1";
+	private static final String MUSEUM_TEST_2 = "Museum_test_2";
+	private static final int NUM_OF_ROOMS = 10;
 
 	private MuseumRepository postgresMuseumRepository;
 	private static EntityManager entityManager;
@@ -38,23 +41,24 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	// Check if the sql script has been executed.
 	@Test
-	public void testfindAllMuseumsMuseumsWhenNoMuseumsArePersisted() {
-		assertThat(postgresMuseumRepository.findAllMuseums()).isNotEmpty();
-
-	}
-
-	@Test
-	public void testFindAllMuseumsWhenSeveralMuseumsArePersisted() {
-		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString(MUSEUM_1));
-		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString(MUSEUM_2));
+	public void testfindAllMuseumsWhenMuseumsArePersisted() {
+		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
+		Museum museum2 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_2);
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);
 
 	}
 
+
 	@Test
-	public void testAddDetachedEntityMuseumShouldThrow() {
-		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString(MUSEUM_1));
-		Museum museum2 = new Museum("test3", 20);
+	public void testFindMuseumByIdWhenMuseumIsPresent() {
+		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
+		assertThat(postgresMuseumRepository.findMuseumById(museum1.getId())).isEqualTo(museum1);
+	}
+
+	@Test
+	public void testAddDetachedEntityMuseumChangingIdShouldThrow() {
+		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
+		Museum museum2 = createTestMuseum(MUSEUM_TEST_1, NUM_OF_ROOMS);
 		museum2.setId(museum1.getId());
 		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(museum2)).isInstanceOf(PersistenceException.class);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
@@ -68,25 +72,36 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	@Test
 	public void testUpdateMuseumWhenEntityHasBeenRemovedShouldThrow() {
-		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString(MUSEUM_1));
+		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
 		entityManager.remove(museum1);
-		museum1.setName("test_update");
+		museum1.setName(MUSEUM_TEST_2);
 		assertThatThrownBy(() -> postgresMuseumRepository.updateMuseum(museum1))
 				.isInstanceOf(IllegalArgumentException.class);
 
 	}
 
 	@Test
-	public void testUpdateMuseumWithNonEntityObjectShouldThrow() {
+	public void testUpdateMuseumWithNullEntityObjectShouldThrow() {
 		assertThatThrownBy(() -> postgresMuseumRepository.updateMuseum(null))
 				.isInstanceOf(IllegalArgumentException.class);
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEqualTo(persistedMuseums);
 	}
 
 	@Test
-	public void testRemoveDetachedEntityMuseumShouldThrow() {
-		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString(MUSEUM_1));
-		Museum museum2 = new Museum("test3", 20);
+	public void testUpdateMuseumWhenExists() {
+		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
+		museum1.setOccupiedRooms(1);
+		postgresMuseumRepository.updateMuseum(museum1);
+		entityManager.flush();
+		assertThat(postgresMuseumRepository.findMuseumById(museum1.getId()).getOccupiedRooms()).isEqualTo(1);
+		assertThat(postgresMuseumRepository.findAllMuseums()).containsAll(persistedMuseums);
+
+	}
+
+	@Test
+	public void testRemoveDetachedEntityMuseumChangingIdShouldThrow() {
+		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
+		Museum museum2 = new Museum(MUSEUM_TEST_2, NUM_OF_ROOMS);
 		museum2.setId(museum1.getId());
 
 		assertThatThrownBy(() -> postgresMuseumRepository.deleteMuseum(museum2))
@@ -104,7 +119,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	@Test
 	public void testRemoveMuseumWhenTheMuseumExistsAndHasNotExhibitions() {
-		Museum museum1 = postgresMuseumRepository.retrieveMuseumById(UUID.fromString(MUSEUM_2));
+		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_2);
 		postgresMuseumRepository.deleteMuseum(museum1);
 		entityManager.flush();
 		assertThat(postgresMuseumRepository.findAllMuseums()).hasSize(1);
