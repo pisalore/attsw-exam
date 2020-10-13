@@ -24,11 +24,11 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	}
 
 	@Override
-	public Museum retrieveMuseumById(UUID id) {
+	public Museum findMuseumById(UUID id) {
 		try {
 			return entityManager.find(Museum.class, id);
 		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Cannot find entity: invalid or null id: " + id);
 		}
 	}
 

@@ -37,7 +37,7 @@ public class PostgresTransactionManagerTest {
 	@Test
 	public void testInsertNewMuseumInPostgresDatabaseTransactionallyRollBack() {
 		Museum museum1 = postgresMuseumRepository
-				.retrieveMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
+				.findMuseumById(UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7"));
 		Museum museum2 = new Museum("test3", 20);
 		museum2.setId(museum1.getId());
 		transactionManager.doInTransaction(repoInstance -> {

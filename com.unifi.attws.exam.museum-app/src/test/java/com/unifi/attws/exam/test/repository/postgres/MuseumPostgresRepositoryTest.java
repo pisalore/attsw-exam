@@ -18,9 +18,13 @@ import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
 
 public class MuseumPostgresRepositoryTest {
 
+	private static final String MUSEUM_TEST_1 = "Museum_test_1";
+	private static final int NUM_OF_ROOMS = 10;
+	private static final UUID invalidUUID = UUID.fromString("2796027d-21cc-4883-b088-514d4b3090a1");
+
 	private MuseumRepository postgresMuseumRepository;
 	private static EntityManager entityManager;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("postgres");
@@ -35,65 +39,39 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 
 	}
-	
+
 	@Test
 	public void testFindMuseumByNullIdShouldThrow() {
-		assertThatThrownBy(() -> postgresMuseumRepository.retrieveMuseumById(null))
-		.isInstanceOf(IllegalArgumentException.class);	
+		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumById(null))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Cannot find entity: invalid or null id: " + null);
+
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
-	
+
 	@Test
 	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
-		assertThat(postgresMuseumRepository.retrieveMuseumById(UUID.randomUUID())).isNull();
+		assertThat(postgresMuseumRepository.findMuseumById(invalidUUID)).isNull();
 	}
-	
+
 	@Test
 	public void testAddNewNullMuseumEntityShouldThrow() {
 		assertThatThrownBy(() -> postgresMuseumRepository.addMuseum(null)).isInstanceOf(IllegalArgumentException.class);
-		
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
 
 	@Test
 	public void testAddNewMuseum() {
-		Museum museum = createTestMuseum("MoMa", 10);
+		Museum museum = createTestMuseum(MUSEUM_TEST_1, NUM_OF_ROOMS);
 		postgresMuseumRepository.addMuseum(museum);
 		entityManager.flush();
-		assertThat(postgresMuseumRepository.findAllMuseums())
-		.hasSize(1)
-		.extracting(Museum::getId)
-		.contains(museum.getId());
+		assertThat(postgresMuseumRepository.findAllMuseums()).hasSize(1).extracting(Museum::getId)
+				.contains(museum.getId());
 	}
 
-
-	@Test
-	public void testFindMuseumByIdWhenMuseumIsPresent() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
-		Museum museum2 = createTestMuseum("Louvre", 10);
-		postgresMuseumRepository.addMuseum(museum1);
-		postgresMuseumRepository.addMuseum(museum2);
-		entityManager.flush();
-		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId())).isEqualTo(museum1);
-	}
-	
-
-	@Test
-	public void testUpdateMuseumWhenExists() {
-		Museum museum1 = createTestMuseum("Pompidou", 50);
-		postgresMuseumRepository.addMuseum(museum1);
-		Museum museum2 = postgresMuseumRepository.retrieveMuseumById(museum1.getId());
-		museum2.setOccupiedRooms(1);
-		postgresMuseumRepository.updateMuseum(museum2);
-		entityManager.flush();
-		assertThat(postgresMuseumRepository.retrieveMuseumById(museum1.getId()).getOccupiedRooms()).isEqualTo(1);
-		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1);
-
-	}
-
-	
 	@After
 	public void closeEntityManager() {
-		entityManager.getTransaction().commit();
+		entityManager.getTransaction().rollback();
 		entityManager.clear();
 		entityManager.close();
 	}
