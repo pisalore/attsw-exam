@@ -65,7 +65,7 @@ public class PostgresTransactionManagerTest {
 	public void testInsertNewMuseumInPostgresDatabaseTransactionallyCommit() throws RepositoryException {
 		Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			return postgresMuseumRepository.addMuseum(museum);
+			return museumRepository.addMuseum(museum);
 		});
 
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
@@ -75,11 +75,10 @@ public class PostgresTransactionManagerTest {
 	public void testInsertNullMuseumInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
 
 		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			return postgresMuseumRepository.addMuseum(null);
+			return museumRepository.addMuseum(null);
 		})).isInstanceOf(RepositoryException.class);
 
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
-
 	}
 
 	@Test
@@ -88,14 +87,24 @@ public class PostgresTransactionManagerTest {
 		Museum museum2 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 
 		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			return postgresMuseumRepository.addMuseum(museum1);
+			return museumRepository.addMuseum(museum1);
 		});
 
 		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			return postgresMuseumRepository.addMuseum(museum2);
+			return museumRepository.addMuseum(museum2);
 		})).isInstanceOf(RepositoryException.class);
 
 		assertThat(postgresMuseumRepository.findAllMuseums()).contains(museum1);
+	}
+	
+	@Test
+	public void testInsertNullExhibitionInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
+
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			return exhibitionRepository.addNewExhibition(null);
+		})).isInstanceOf(RepositoryException.class);
+
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).isEmpty();
 	}
 
 	@Test
@@ -113,7 +122,7 @@ public class PostgresTransactionManagerTest {
 		Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 
 		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			postgresMuseumRepository.addMuseum(museum);
+			museumRepository.addMuseum(museum);
 			exhibition.setMuseumId(museum.getId());
 			return exhibitionRepository.addNewExhibition(exhibition);
 		});
