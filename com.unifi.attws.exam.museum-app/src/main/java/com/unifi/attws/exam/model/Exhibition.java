@@ -25,7 +25,7 @@ public class Exhibition {
 	@Column(name = "Booked_seats")
 	private int bookedSeats;
 	
-	@Column(name = "Museum_id")
+	@Column(name = "Museum_id", nullable = false)
 	UUID museumId;
 	
 
