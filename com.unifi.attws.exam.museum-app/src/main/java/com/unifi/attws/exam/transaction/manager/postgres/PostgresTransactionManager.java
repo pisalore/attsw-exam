@@ -31,7 +31,7 @@ public class PostgresTransactionManager implements TransactionManager {
 			query.apply(museumRepository, exhibitionRepository);
 			this.entityManager.flush();
 			this.entityManager.getTransaction().commit();
-		} catch (PersistenceException ex) {
+		} catch (PersistenceException | IllegalArgumentException ex) {
 			this.entityManager.getTransaction().rollback();
 			throw new RepositoryException("rollback");
 		}

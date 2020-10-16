@@ -27,6 +27,10 @@ import com.unifi.attws.exam.transaction.manager.postgres.PostgresTransactionMana
 
 public class PostgresTransactionManagerTest {
 
+	private static final int NUM_CONSTANT1 = 10;
+	private static final String MUSEUM1_TEST = "Museum1_test";
+	private static final String EXHIBITION1_TEST = "exhibition1_test";
+
 	private MuseumRepository postgresMuseumRepository;
 	private ExhibitionRepository postgresExhibitionRepository;
 	private PostgresTransactionManager transactionManager;
@@ -59,7 +63,7 @@ public class PostgresTransactionManagerTest {
 
 	@Test
 	public void testInsertNewMuseumInPostgresDatabaseTransactionallyCommit() throws RepositoryException {
-		Museum museum = createTestMuseum("Uffizi", 10);
+		Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 			return postgresMuseumRepository.addMuseum(museum);
 		});
@@ -68,9 +72,20 @@ public class PostgresTransactionManagerTest {
 	}
 
 	@Test
+	public void testInsertNullMuseumInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
+
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			return postgresMuseumRepository.addMuseum(null);
+		})).isInstanceOf(RepositoryException.class);
+
+		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
+
+	}
+
+	@Test
 	public void testInsertMuseumWithSameNameInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
-		Museum museum1 = createTestMuseum("Uffizi", 10);
-		Museum museum2 = createTestMuseum("Uffizi", 10);
+		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
+		Museum museum2 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 
 		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 			return postgresMuseumRepository.addMuseum(museum1);
@@ -85,7 +100,7 @@ public class PostgresTransactionManagerTest {
 
 	@Test
 	public void testInsertNewExhibitionWithoutMuseumShouldRollbackAndThrow() throws RepositoryException {
-		Exhibition exhibition = createExhibition("exhibition", 10);
+		Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 
 		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 			return exhibitionRepository.addNewExhibition(exhibition);
@@ -94,8 +109,8 @@ public class PostgresTransactionManagerTest {
 
 	@Test
 	public void testInsertNewExhibitionTransactionallyCommit() throws RepositoryException {
-		Museum museum = createTestMuseum("Uffizi", 10);
-		Exhibition exhibition = createExhibition("exhibition", 10);
+		Museum museum = createTestMuseum(MUSEUM1_TEST, 10);
+		Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 
 		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 			postgresMuseumRepository.addMuseum(museum);
@@ -104,10 +119,8 @@ public class PostgresTransactionManagerTest {
 		});
 
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum);
-		assertThat(postgresExhibitionRepository.findAllExhibitions())
-			.containsExactly(exhibition)
-			.extracting(Exhibition::getMuseumId)
-			.contains(museum.getId());
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).containsExactly(exhibition)
+				.extracting(Exhibition::getMuseumId).contains(museum.getId());
 	}
 
 	@After
