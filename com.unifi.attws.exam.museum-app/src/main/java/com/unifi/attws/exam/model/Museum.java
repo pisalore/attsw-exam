@@ -65,8 +65,8 @@ public final class Museum{
 		return occupiedRooms;
 	}
 
-	public void setOccupiedRooms(int availableRooms) {
-		this.occupiedRooms = availableRooms;
+	public void setOccupiedRooms(int occupiedRooms) {
+		this.occupiedRooms = occupiedRooms;
 	}
 
 	@Override
