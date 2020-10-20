@@ -31,8 +31,10 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 	private static final UUID EXHIBITION_ID_1 = UUID.fromString("49d13e51-2277-4911-929f-c9c067e2e8b4");
 	private static final UUID EXHIBITION_ID_2 = UUID.fromString("b2cb1474-24ff-41eb-a8d7-963f32f6822d");
 
-	private static final int NUM_CONSTANT1 = 10;
 	private static final String MUSEUM1_TEST = "museum1_test";
+	private static final String EXHIBITION1_TEST = "exhibition1_test";
+
+	private static final int NUM_CONSTANT1 = 10;
 
 	private MuseumRepository postgresMuseumRepository;
 	private ExhibitionRepository postgresExhibitionRepository;
@@ -48,6 +50,18 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 
 		postgresMuseumRepository = new PostgresMuseumRepository(transactionManager.getEntityManager());
 		postgresExhibitionRepository = new PostgresExhibitionRepository(entityManager);
+	}
+
+	@Test
+	public void testInsertExhibitionWithSameNameInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
+		Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			return exhibitionRepository.addNewExhibition(exhibition);
+		})).isInstanceOf(RepositoryException.class);
+
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(2).extracting(Exhibition::getName)
+				.contains(exhibition.getName());
 	}
 
 	@Test
@@ -73,20 +87,6 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 	}
 
 	@Test
-	public void testDeleteExhibitionInPostgresDatabaseCommit() throws RepositoryException {
-		Exhibition exhibition = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
-
-		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			exhibitionRepository.deleteExhibition(exhibition);
-			return null;
-		});
-
-		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(1).extracting(Exhibition::getId)
-				.containsExactly(EXHIBITION_ID_2);
-
-	}
-
-	@Test
 	public void testDeleteRemovedExhibitionInPostgresDatabaseShouldThrowAndRollback() throws RepositoryException {
 		Exhibition exhibition = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
 
@@ -102,6 +102,20 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 
 		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(1).extracting(Exhibition::getId)
 				.doesNotContain(exhibition.getId()).contains(EXHIBITION_ID_2);
+	}
+
+	@Test
+	public void testDeleteExhibitionInPostgresDatabaseCommit() throws RepositoryException {
+		Exhibition exhibition = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
+
+		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			exhibitionRepository.deleteExhibition(exhibition);
+			return null;
+		});
+
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(1).extracting(Exhibition::getId)
+				.containsExactly(EXHIBITION_ID_2);
+
 	}
 
 	@Test
@@ -180,11 +194,67 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 			museumRepository.deleteMuseum(museum);
 			return museumRepository.updateMuseum(museum);
 		})).isInstanceOf(RepositoryException.class);
+		
+		assertThat(postgresMuseumRepository.findAllMuseums())
+				.hasSize(2)
+				.extracting(Museum::getId)
+				.contains(MUSEUM_ID_1, MUSEUM_ID_2);
+		
+	}
+
+	@Test
+	public void testUpdateMuseumInPostgresDatabaseCommit() throws RepositoryException {
+		Museum museum = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
+		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			museum.setOccupiedRooms(5);
+			museum.setRooms(50);
+			return museumRepository.updateMuseum(museum);
+		});
+
+		assertThat(postgresMuseumRepository.findMuseumById(MUSEUM_ID_1).getOccupiedRooms()).isEqualTo(5);
+		assertThat(postgresMuseumRepository.findMuseumById(MUSEUM_ID_1).getRooms()).isEqualTo(50);
+	}
+
+	@Test
+	public void testUpdateNullExhibitionInPostgresDatabaseShouldRollbackAndThrow() {
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			return exhibitionRepository.updateExhibition(null);
+		})).isInstanceOf(RepositoryException.class);
+	}
+
+	@Test
+	public void testUpdateRemovedExhibitionInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
+		Exhibition exhibition = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
+
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			exhibitionRepository.deleteExhibition(exhibition);
+			return exhibitionRepository.updateExhibition(exhibition);
+		})).isInstanceOf(RepositoryException.class);
+
+		assertThat(postgresExhibitionRepository.findAllExhibitions())
+				.hasSize(2)
+				.extracting(Exhibition::getId)
+				.contains(EXHIBITION_ID_1, EXHIBITION_ID_2);
+	}
+	
+	@Test
+	public void testUpdateExhibitionInPostgresDatabaseCommit() throws RepositoryException {
+		Exhibition exhibition = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
+		
+		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+			exhibition.setBookedSeats(5);
+			exhibition.setTotalSeats(50);
+			return exhibitionRepository.updateExhibition(exhibition);
+		});
+		
+		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getBookedSeats()).isEqualTo(5);
+		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getTotalSeats()).isEqualTo(50);
 	}
 
 	@After
 	public void tearDown() {
-		// THis force to restart a docker container and re-execute the initialization script provided for not empty database.
+		// This force to restart a docker container and re-execute the initialization
+		// script provided for not empty database.
 		ContainerDatabaseDriver.killContainer(JDBC_CONTAINER_URL);
 
 		entityManager.clear();
