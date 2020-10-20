@@ -22,8 +22,8 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	private static final UUID MUSEUM_ID_1 = UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7");
 	private static final UUID MUSEUM_ID_2 = UUID.fromString("94fe3013-9ebb-432e-ab55-e612dc797851");
-	private static final String MUSEUM_TEST_1 = "Museum_test_1";
-	private static final String MUSEUM_TEST_2 = "Museum_test_2";
+	private static final String MUSEUM_TEST_1 = "museum1_test";
+	private static final String MUSEUM_TEST_2 = "museum2_test";
 	private static final int NUM_OF_ROOMS = 10;
 
 	private MuseumRepository postgresMuseumRepository;

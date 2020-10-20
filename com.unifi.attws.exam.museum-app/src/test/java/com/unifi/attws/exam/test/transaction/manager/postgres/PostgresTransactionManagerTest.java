@@ -28,7 +28,7 @@ import com.unifi.attws.exam.transaction.manager.postgres.PostgresTransactionMana
 public class PostgresTransactionManagerTest {
 
 	private static final int NUM_CONSTANT1 = 10;
-	private static final String MUSEUM1_TEST = "Museum1_test";
+	private static final String MUSEUM1_TEST = "museum1_test";
 	private static final String EXHIBITION1_TEST = "exhibition1_test";
 
 	private MuseumRepository postgresMuseumRepository;
@@ -37,23 +37,11 @@ public class PostgresTransactionManagerTest {
 	private static EntityManagerFactory sessionFactory;
 	private static EntityManager entityManager;
 
-	@Rule
-	public final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>().withDatabaseName("attws")
-			.withUsername("attws").withPassword("attws");
-
 	@Before
 	public void setUp() throws Exception {
-		Map<String, String> properties = new HashMap<>();
-		properties.put("javax.persistence.jdbc.url", POSTGRE_SQL_CONTAINER.getJdbcUrl());
-		properties.put("javax.persistence.jdbc.user", POSTGRE_SQL_CONTAINER.getUsername());
-		properties.put("javax.persistence.jdbc.password", POSTGRE_SQL_CONTAINER.getPassword());
-		properties.put("javax.persistence.jdbc.driver", POSTGRE_SQL_CONTAINER.getDriverClassName());
-		properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-		properties.put("hibernate.hbm2ddl.auto", "create");
-
-		sessionFactory = Persistence.createEntityManagerFactory("postgres.transaction-manager", properties);
-
+		sessionFactory = Persistence.createEntityManagerFactory("postgres");
 		entityManager = sessionFactory.createEntityManager();
+		postgresExhibitionRepository = new PostgresExhibitionRepository(entityManager);
 
 		transactionManager = new PostgresTransactionManager(entityManager);
 		postgresMuseumRepository = new PostgresMuseumRepository(transactionManager.getEntityManager());
@@ -81,7 +69,7 @@ public class PostgresTransactionManagerTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
 
-	@Test
+	// @Test
 	public void testInsertMuseumWithSameNameInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
 		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 		Museum museum2 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
@@ -96,7 +84,7 @@ public class PostgresTransactionManagerTest {
 
 		assertThat(postgresMuseumRepository.findAllMuseums()).contains(museum1);
 	}
-	
+
 	@Test
 	public void testInsertNullExhibitionInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
 
@@ -136,10 +124,6 @@ public class PostgresTransactionManagerTest {
 	public void closeEntityManager() {
 		entityManager.clear();
 		entityManager.close();
-	}
-
-	@AfterClass
-	public static void closeSessionFactory() {
 		sessionFactory.close();
 	}
 

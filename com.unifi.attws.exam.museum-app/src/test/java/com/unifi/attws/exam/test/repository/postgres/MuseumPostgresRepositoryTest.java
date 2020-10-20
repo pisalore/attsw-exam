@@ -18,7 +18,7 @@ import com.unifi.attws.exam.repository.postgres.PostgresMuseumRepository;
 
 public class MuseumPostgresRepositoryTest {
 
-	private static final String MUSEUM_TEST_1 = "Museum_test_1";
+	private static final String MUSEUM_TEST_1 = "museum1_test";
 	private static final int NUM_OF_ROOMS = 10;
 	private static final UUID invalidUUID = UUID.fromString("2796027d-21cc-4883-b088-514d4b3090a1");
 
