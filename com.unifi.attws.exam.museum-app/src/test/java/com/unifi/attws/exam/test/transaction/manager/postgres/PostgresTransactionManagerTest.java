@@ -2,19 +2,13 @@ package com.unifi.attws.exam.test.transaction.manager.postgres;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import com.unifi.attws.exam.exception.RepositoryException;
 import com.unifi.attws.exam.model.Exhibition;
@@ -69,22 +63,6 @@ public class PostgresTransactionManagerTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
 
-	// @Test
-	public void testInsertMuseumWithSameNameInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
-		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
-		Museum museum2 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
-
-		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			return museumRepository.addMuseum(museum1);
-		});
-
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-			return museumRepository.addMuseum(museum2);
-		})).isInstanceOf(RepositoryException.class);
-
-		assertThat(postgresMuseumRepository.findAllMuseums()).contains(museum1);
-	}
-
 	@Test
 	public void testInsertNullExhibitionInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
 
@@ -121,7 +99,7 @@ public class PostgresTransactionManagerTest {
 	}
 
 	@After
-	public void closeEntityManager() {
+	public void tearDown() {
 		entityManager.clear();
 		entityManager.close();
 		sessionFactory.close();
