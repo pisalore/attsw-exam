@@ -23,7 +23,7 @@ import com.unifi.attsw.exam.repository.postgres.PostgresMuseumRepository;
 import com.unifi.attsw.exam.transaction.manager.postgres.PostgresTransactionManager;
 
 public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
-	private final String JDBC_CONTAINER_URL = "jdbc:tc:postgresql:9.6.8:///databasename?TC_INITSCRIPT=file:src/test/resources/META-INF/init_postgresql.sql";
+	private final String JDBC_CONTAINER_URL = "jdbc:tc:postgresql:9.6.8:///databasename?TC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_not_empty.sql";
 
 	private static final UUID MUSEUM_ID_1 = UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7");
 	private static final UUID MUSEUM_ID_2 = UUID.fromString("94fe3013-9ebb-432e-ab55-e612dc797851");
@@ -194,12 +194,10 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 			museumRepository.deleteMuseum(museum);
 			return museumRepository.updateMuseum(museum);
 		})).isInstanceOf(RepositoryException.class);
-		
-		assertThat(postgresMuseumRepository.findAllMuseums())
-				.hasSize(2)
-				.extracting(Museum::getId)
-				.contains(MUSEUM_ID_1, MUSEUM_ID_2);
-		
+
+		assertThat(postgresMuseumRepository.findAllMuseums()).hasSize(2).extracting(Museum::getId).contains(MUSEUM_ID_1,
+				MUSEUM_ID_2);
+
 	}
 
 	@Test
@@ -231,35 +229,33 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 			return exhibitionRepository.updateExhibition(exhibition);
 		})).isInstanceOf(RepositoryException.class);
 
-		assertThat(postgresExhibitionRepository.findAllExhibitions())
-				.hasSize(2)
-				.extracting(Exhibition::getId)
+		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(2).extracting(Exhibition::getId)
 				.contains(EXHIBITION_ID_1, EXHIBITION_ID_2);
 	}
-	
+
 	@Test
 	public void testUpdateExhibitionInPostgresDatabaseCommit() throws RepositoryException {
 		Exhibition exhibition = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
-		
+
 		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 			exhibition.setBookedSeats(5);
 			exhibition.setTotalSeats(50);
 			return exhibitionRepository.updateExhibition(exhibition);
 		});
-		
+
 		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getBookedSeats()).isEqualTo(5);
 		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getTotalSeats()).isEqualTo(50);
 	}
 
 	@After
 	public void tearDown() {
+		entityManager.clear();
+		entityManager.close();
+		sessionFactory.close();
 		// This force to restart a docker container and re-execute the initialization
 		// script provided for not empty database.
 		ContainerDatabaseDriver.killContainer(JDBC_CONTAINER_URL);
 
-		entityManager.clear();
-		entityManager.close();
-		sessionFactory.close();
 	}
 
 	/**

@@ -13,10 +13,10 @@
 			<property name="javax.persistence.jdbc.driver"
 				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:tc:postgresql:9.6.8:///databasename" />
+				value="jdbc:tc:postgresql:9.6.8:///databasenameTC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_empty.sql" />
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create" />
+<!-- 			<property name="hibernate.hbm2ddl.auto" value="create" /> -->
 		</properties>
 	</persistence-unit>
 
@@ -28,7 +28,7 @@
 			<property name="javax.persistence.jdbc.driver"
 				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:tc:postgresql:9.6.8:///databasename?TC_INITSCRIPT=file:src/test/resources/META-INF/init_postgresql.sql" />
+				value="jdbc:tc:postgresql:9.6.8:///databasename?TC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_not_empty.sql" />
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />
 			<!-- This line is commented since I want to use a non empty db, which 
@@ -37,13 +37,6 @@
 		</properties>
 	</persistence-unit>
 
-	<!-- Persistence unit used only for transaction manager testing (start a custom postgres 
-	test container before each test in order to have a cleaned up db-->
-	<persistence-unit name="postgres.transaction-manager">
-		<class>com.unifi.attsw.exam.model.Museum</class>
-		<class>com.unifi.attsw.exam.model.Exhibition</class>
-
-	</persistence-unit>
 	
 	<!-- LOCALHOST REAL DB -->
 	<!-- <persistence-unit name="postgres"> -->

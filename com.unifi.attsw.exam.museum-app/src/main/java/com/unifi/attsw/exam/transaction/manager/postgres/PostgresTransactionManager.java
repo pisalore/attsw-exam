@@ -33,7 +33,7 @@ public class PostgresTransactionManager implements TransactionManager {
 			this.entityManager.getTransaction().commit();
 		} catch (PersistenceException | IllegalArgumentException ex) {
 			this.entityManager.getTransaction().rollback();
-			throw new RepositoryException("rollback");
+			throw new RepositoryException("Something went wrong committing to database, rollback");
 		}
 		
 		return null;
