@@ -15,7 +15,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService{
 
 	@Override
 	public Museum saveMuseum(Museum museum) throws RepositoryException {
-		return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		return transactionManager.doInTransactionMuseum(museumRepository -> {
 			return museumRepository.addMuseum(museum);
 		});
 	}
