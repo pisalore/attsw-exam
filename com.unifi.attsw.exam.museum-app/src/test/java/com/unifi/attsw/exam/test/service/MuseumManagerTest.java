@@ -1,7 +1,5 @@
 package com.unifi.attsw.exam.test.service;
 
-import javax.persistence.EntityManager;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,8 +15,8 @@ import com.unifi.attsw.exam.repository.ExhibitionRepository;
 import com.unifi.attsw.exam.repository.MuseumRepository;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.service.impl.MuseumManagerServiceImpl;
-import com.unifi.attsw.exam.transaction.manager.TransactionCode;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
+import com.unifi.attsw.exam.transaction.manager.code.MuseumTransactionCode;
 
 public class MuseumManagerTest {
 
@@ -37,8 +35,8 @@ public class MuseumManagerTest {
 	public void setUp() throws RepositoryException {
 		MockitoAnnotations.initMocks(this);
 
-		when(transactionManager.doInTransaction(any()))
-				.thenAnswer(answer((TransactionCode<?> code) -> code.apply(museumRepository, exhibitionRepository)));
+		when(transactionManager.doInTransactionMuseum(any()))
+				.thenAnswer(answer((MuseumTransactionCode<?> code) -> code.apply(museumRepository)));
 
 		museumManager = new MuseumManagerServiceImpl(transactionManager);
 	}
