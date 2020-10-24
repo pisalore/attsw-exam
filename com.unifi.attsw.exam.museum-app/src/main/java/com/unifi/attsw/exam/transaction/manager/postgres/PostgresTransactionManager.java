@@ -9,6 +9,7 @@ import com.unifi.attsw.exam.repository.MuseumRepository;
 import com.unifi.attsw.exam.repository.postgres.PostgresExhibitionRepository;
 import com.unifi.attsw.exam.repository.postgres.PostgresMuseumRepository;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
+import com.unifi.attsw.exam.transaction.manager.code.ExhibitionTransactionCode;
 import com.unifi.attsw.exam.transaction.manager.code.MuseumTransactionCode;
 import com.unifi.attsw.exam.transaction.manager.code.TransactionCode;
 
@@ -44,11 +45,26 @@ public class PostgresTransactionManager implements TransactionManager {
 	}
 
 	@Override
-	public <T> T doInTransaction(MuseumTransactionCode<T> query) throws RepositoryException {
+	public <T> T doInTransactionMuseum(MuseumTransactionCode<T> query) throws RepositoryException {
 		startTransaction();
 
 		try {
 			query.apply(museumRepository);
+			commit();
+		} catch (PersistenceException | IllegalArgumentException ex) {
+			rollback();
+			throw new RepositoryException("Something went wrong committing to database, rollback");
+		}
+
+		return null;
+	}
+	
+	@Override
+	public <T> T doInTransactionExhibition(ExhibitionTransactionCode<T> query) throws RepositoryException {
+		startTransaction();
+
+		try {
+			query.apply(exhibitionRepository);
 			commit();
 		} catch (PersistenceException | IllegalArgumentException ex) {
 			rollback();
