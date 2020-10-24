@@ -8,8 +8,9 @@ import com.unifi.attsw.exam.repository.ExhibitionRepository;
 import com.unifi.attsw.exam.repository.MuseumRepository;
 import com.unifi.attsw.exam.repository.postgres.PostgresExhibitionRepository;
 import com.unifi.attsw.exam.repository.postgres.PostgresMuseumRepository;
-import com.unifi.attsw.exam.transaction.manager.TransactionCode;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
+import com.unifi.attsw.exam.transaction.manager.code.MuseumTransactionCode;
+import com.unifi.attsw.exam.transaction.manager.code.TransactionCode;
 
 public class PostgresTransactionManager implements TransactionManager {
 
@@ -25,22 +26,49 @@ public class PostgresTransactionManager implements TransactionManager {
 
 	@Override
 	public <T> T doInTransaction(TransactionCode<T> query) throws RepositoryException {
-		this.entityManager.getTransaction().begin();
+		startTransaction();
 
 		try {
 			query.apply(museumRepository, exhibitionRepository);
-			this.entityManager.flush();
-			this.entityManager.getTransaction().commit();
+			commit();
 		} catch (PersistenceException | IllegalArgumentException ex) {
-			this.entityManager.getTransaction().rollback();
+			rollback();
 			throw new RepositoryException("Something went wrong committing to database, rollback");
 		}
-		
+
 		return null;
 	}
 
 	public EntityManager getEntityManager() {
 		return entityManager;
+	}
+
+	@Override
+	public <T> T doInTransaction(MuseumTransactionCode<T> query) throws RepositoryException {
+		startTransaction();
+
+		try {
+			query.apply(museumRepository);
+			commit();
+		} catch (PersistenceException | IllegalArgumentException ex) {
+			rollback();
+			throw new RepositoryException("Something went wrong committing to database, rollback");
+		}
+
+		return null;
+	}
+
+	public void startTransaction() {
+		this.entityManager.getTransaction().begin();
+	}
+
+	public void commit() {
+		this.entityManager.flush();
+		this.entityManager.getTransaction().commit();
+	}
+
+	public void rollback() {
+		this.entityManager.getTransaction().rollback();
 	}
 
 }

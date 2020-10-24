@@ -68,7 +68,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 	public void testInsertMuseumWithSameNameInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
 		Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository) -> {
 			return museumRepository.addMuseum(museum);
 		})).isInstanceOf(RepositoryException.class);
 
@@ -120,7 +120,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 
 	@Test
 	public void testDeleteNullMuseumInPostgresDatabaseShouldThrowAndRollback() {
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository) -> {
 			museumRepository.deleteMuseum(null);
 			return null;
 		})).isInstanceOf(RepositoryException.class);
@@ -132,7 +132,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 	public void testDeleteMuseumReferencedMuseumByExhibitionInPostgresDatabaseShouldThrowAndRollback()
 			throws RepositoryException {
 		Museum museum = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository) -> {
 			museumRepository.deleteMuseum(museum);
 			return null;
 		})).isInstanceOf(RepositoryException.class);
@@ -149,7 +149,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
 		Exhibition exhibition2 = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_2);
 
-		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		transactionManager.doInTransaction((museumRepository) -> {
 			museumRepository.deleteMuseum(museumToBeDeleted);
 			return null;
 		});
@@ -182,7 +182,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 
 	@Test
 	public void testUpdateNullMuseumInPostgresDatabaseShouldThrowAndRollback() {
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository) -> {
 			return museumRepository.updateMuseum(null);
 		})).isInstanceOf(RepositoryException.class);
 	}
@@ -190,7 +190,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 	@Test
 	public void testUpdateRemovedMuseumInPosgresDatabaseShouldThrowAndRollback() {
 		Museum museum = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository) -> {
 			museumRepository.deleteMuseum(museum);
 			return museumRepository.updateMuseum(museum);
 		})).isInstanceOf(RepositoryException.class);
@@ -203,7 +203,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 	@Test
 	public void testUpdateMuseumInPostgresDatabaseCommit() throws RepositoryException {
 		Museum museum = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
-		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		transactionManager.doInTransaction((museumRepository) -> {
 			museum.setOccupiedRooms(5);
 			museum.setRooms(50);
 			return museumRepository.updateMuseum(museum);
