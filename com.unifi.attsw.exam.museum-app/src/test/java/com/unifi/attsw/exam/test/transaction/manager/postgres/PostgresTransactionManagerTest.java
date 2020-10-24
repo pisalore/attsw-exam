@@ -54,7 +54,7 @@ public class PostgresTransactionManagerTest {
 	@Test
 	public void testInsertNewMuseumInPostgresDatabaseTransactionallyCommit() throws RepositoryException {
 		Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
-		transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		transactionManager.doInTransactionMuseum(museumRepository -> {
 			return museumRepository.addMuseum(museum);
 		});
 
@@ -64,7 +64,7 @@ public class PostgresTransactionManagerTest {
 	@Test
 	public void testInsertNullMuseumInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
 
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransactionMuseum((museumRepository) -> {
 			return museumRepository.addMuseum(null);
 		})).isInstanceOf(RepositoryException.class);
 
@@ -74,7 +74,7 @@ public class PostgresTransactionManagerTest {
 	@Test
 	public void testInsertNullExhibitionInPostgresDatabaseShouldRollbackAndThrow() throws RepositoryException {
 
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransactionExhibition(exhibitionRepository -> {
 			return exhibitionRepository.addNewExhibition(null);
 		})).isInstanceOf(RepositoryException.class);
 
@@ -85,7 +85,7 @@ public class PostgresTransactionManagerTest {
 	public void testInsertNewExhibitionWithoutMuseumShouldRollbackAndThrow() throws RepositoryException {
 		Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 
-		assertThatThrownBy(() -> transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+		assertThatThrownBy(() -> transactionManager.doInTransactionExhibition(exhibitionRepository -> {
 			return exhibitionRepository.addNewExhibition(exhibition);
 		})).isInstanceOf(RepositoryException.class);
 	}
