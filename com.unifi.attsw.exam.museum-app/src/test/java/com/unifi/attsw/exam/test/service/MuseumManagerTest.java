@@ -2,9 +2,15 @@ package com.unifi.attsw.exam.test.service;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.*;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,11 +27,10 @@ import com.unifi.attsw.exam.transaction.manager.TransactionManager;
 import com.unifi.attsw.exam.transaction.manager.code.MuseumTransactionCode;
 
 public class MuseumManagerTest {
-	
+
 	private static final String MUSEUM1_TEST = "museum1_test";
 	private static final String MUSEUM2_TEST = "museum2_test";
 	private static final int NUM_CONSTANT1 = 10;
-
 
 	@Mock
 	TransactionManager transactionManager;
@@ -49,20 +54,30 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testSaveMuseumWhenUpdate() throws RepositoryException {
+	public void testGetAllMuseums() throws RepositoryException {
 		Museum museum1 = createTestMuseum("Museum", 10);
-		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
-		museumManager.saveMuseum(museum1);
-		verify(museumRepository).updateMuseum(museum1);
+		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1);
+		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1, museum2));
+		List<Museum> museums = museumManager.getAllMuseums();
+		verify(museumRepository).findAllMuseums();
+		assertThat(museums).containsAll(asList(museum1, museum2));
 	}
 
 	@Test
-	public void testSaveMuseumWhenAddNewMuseum() throws RepositoryException {
+	public void testSaveMuseumWhenMuseumDoesNotExistAddNew() throws RepositoryException {
 		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1);
 		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
 		museumManager.saveMuseum(museum2);
 		verify(museumRepository).addMuseum(museum2);
+	}
+
+	@Test
+	public void testSaveMuseumWhenMuseumExistsUpdate() throws RepositoryException {
+		Museum museum1 = createTestMuseum("Museum", 10);
+		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
+		museumManager.saveMuseum(museum1);
+		verify(museumRepository).updateMuseum(museum1);
 	}
 
 	/**

@@ -30,4 +30,11 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 	}
 
+	@Override
+	public List<Museum> getAllMuseums() throws RepositoryException {
+		return transactionManager.doInTransactionMuseum(museumRepository -> {
+			return museumRepository.findAllMuseums();
+		});
+	}
+
 }
