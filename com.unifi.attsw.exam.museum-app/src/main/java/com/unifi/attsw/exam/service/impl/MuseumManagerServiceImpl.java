@@ -8,7 +8,7 @@ import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
 
 public class MuseumManagerServiceImpl implements MuseumManagerService {
-	
+
 	private TransactionManager transactionManager;
 
 	public MuseumManagerServiceImpl(TransactionManager transactionManager) {
@@ -35,6 +35,18 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 		return transactionManager.doInTransactionMuseum(museumRepository -> {
 			return museumRepository.findAllMuseums();
 		});
+	}
+
+	@Override
+	public void deleteMuseum(Museum museum) throws RepositoryException {
+		transactionManager.doInTransactionMuseum(museumRepository -> {
+			List<Museum> museums = museumRepository.findAllMuseums();
+			Museum museumToRemove = museums.stream().filter(m -> m.getName() == museum.getName()).findAny()
+					.orElse(null);
+			museumRepository.deleteMuseum(museumToRemove);
+			return null;
+		});
+
 	}
 
 }

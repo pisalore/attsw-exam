@@ -6,7 +6,11 @@ import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Museum;
 
 public interface MuseumManagerService {
-	Museum saveMuseum(Museum museum) throws RepositoryException;
+	public Museum saveMuseum(Museum museum) throws RepositoryException;
 	
-	List<Museum> getAllMuseums() throws RepositoryException;
+	public List<Museum> getAllMuseums() throws RepositoryException;
+	
+	public void deleteMuseum(Museum museum) throws RepositoryException;
+	
+	
 }

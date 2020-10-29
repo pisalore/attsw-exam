@@ -79,6 +79,14 @@ public class MuseumManagerTest {
 		museumManager.saveMuseum(museum1);
 		verify(museumRepository).updateMuseum(museum1);
 	}
+	
+	@Test
+	public void testDeleteMuseum() throws RepositoryException {
+		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
+		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
+		museumManager.deleteMuseum(museum1);
+		verify(museumRepository).deleteMuseum(museum1);
+	}
 
 	/**
 	 * 
