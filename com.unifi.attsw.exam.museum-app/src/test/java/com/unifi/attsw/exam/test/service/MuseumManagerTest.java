@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 
 import java.util.List;
 
@@ -54,7 +55,15 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testGetAllMuseums() throws RepositoryException {
+	public void testGetAllMuseumsWhenNoArePersisted() throws RepositoryException {
+		when(museumRepository.findAllMuseums()).thenReturn(asList());
+		List<Museum> museums = museumManager.getAllMuseums();
+		verify(museumRepository).findAllMuseums();
+		assertThat(museums).isEmpty();
+	}
+
+	@Test
+	public void testGetAllMuseumsWhenMuseumsArePersisted() throws RepositoryException {
 		Museum museum1 = createTestMuseum("Museum", 10);
 		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1);
 		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1, museum2));
@@ -64,12 +73,11 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testSaveMuseumWhenMuseumDoesNotExistAddNew() throws RepositoryException {
+	public void testSaveMuseumWhenNoMuseumsArePersistedAddNew() throws RepositoryException {
 		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
-		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1);
-		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
-		museumManager.saveMuseum(museum2);
-		verify(museumRepository).addMuseum(museum2);
+		when(museumRepository.findAllMuseums()).thenReturn(asList());
+		museumManager.saveMuseum(museum1);
+		verify(museumRepository).addMuseum(museum1);
 	}
 
 	@Test
@@ -79,13 +87,20 @@ public class MuseumManagerTest {
 		museumManager.saveMuseum(museum1);
 		verify(museumRepository).updateMuseum(museum1);
 	}
-	
+
 	@Test
 	public void testDeleteMuseum() throws RepositoryException {
 		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
 		museumManager.deleteMuseum(museum1);
 		verify(museumRepository).deleteMuseum(museum1);
+	}
+
+	@Test
+	public void testDeleteNullMuseumWhenNoMuseumsArePersistedShouldThrow() throws RepositoryException {
+		when(museumRepository.findAllMuseums()).thenReturn(asList());
+		doThrow(new IllegalArgumentException()).when(museumRepository).deleteMuseum(null);
+		assertThatThrownBy(() -> museumManager.deleteMuseum(null)).isInstanceOf(RuntimeException.class);
 	}
 
 	/**

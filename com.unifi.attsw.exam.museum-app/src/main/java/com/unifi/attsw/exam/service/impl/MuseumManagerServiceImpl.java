@@ -38,14 +38,18 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public void deleteMuseum(Museum museum) throws RepositoryException {
-		transactionManager.doInTransactionMuseum(museumRepository -> {
-			List<Museum> museums = museumRepository.findAllMuseums();
-			Museum museumToRemove = museums.stream().filter(m -> m.getName() == museum.getName()).findAny()
-					.orElse(null);
-			museumRepository.deleteMuseum(museumToRemove);
-			return null;
-		});
+	public void deleteMuseum(Museum museum) throws RuntimeException, RepositoryException {
+		try {
+			transactionManager.doInTransactionMuseum(museumRepository -> {
+				List<Museum> museums = museumRepository.findAllMuseums();
+				Museum museumToRemove = museums.stream().filter(m -> m.getName() == museum.getName()).findAny()
+						.orElse(null);
+				museumRepository.deleteMuseum(museumToRemove);
+				return null;
+			});
+		} catch (NullPointerException | IllegalArgumentException ex) {
+			throw new RuntimeException("Impossibile to delete museum.");
+		}
 
 	}
 
