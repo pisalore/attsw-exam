@@ -3,6 +3,7 @@ package com.unifi.attsw.exam.service;
 import java.util.List;
 
 import com.unifi.attsw.exam.exception.RepositoryException;
+import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 
 public interface MuseumManagerService {
@@ -11,5 +12,7 @@ public interface MuseumManagerService {
 	public List<Museum> getAllMuseums() throws RepositoryException;
 
 	public void deleteMuseum(Museum museum) throws RepositoryException;
+	
+	public Exhibition addNewExhibition(String museumName, Exhibition exhibition);
 
 }

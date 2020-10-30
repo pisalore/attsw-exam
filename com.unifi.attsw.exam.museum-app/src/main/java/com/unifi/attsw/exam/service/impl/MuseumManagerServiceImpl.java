@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.unifi.attsw.exam.exception.RepositoryException;
+import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
@@ -24,7 +25,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public Museum saveMuseum(Museum museum) throws RepositoryException {
+	public Museum saveMuseum(Museum museum) {
 		try {
 			return transactionManager.doInTransactionMuseum(museumRepository -> {
 				Museum existingMuseum = museumRepository.findMuseumByName(museum.getName());
@@ -41,13 +42,16 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public void deleteMuseum(Museum museum) throws RepositoryException {
+	public void deleteMuseum(Museum museum) {
 		try {
-			transactionManager.doInTransactionMuseum(museumRepository -> {
+			transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 				Museum museumToRemove = museumRepository.findMuseumByName(museum.getName());
 				if (museumToRemove == null) {
 					throw new NoSuchElementException("The selected museum does not exist!");
 				}
+				List<Exhibition> museumToRemoveExhibitions = exhibitionRepository
+						.findExhibitionsByMuseumId(museumToRemove.getId());
+				museumToRemoveExhibitions.forEach(e -> exhibitionRepository.deleteExhibition(e));
 				museumRepository.deleteMuseum(museumToRemove);
 				return null;
 			});
@@ -55,6 +59,23 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			throw new RuntimeException("Impossible to delete Museum.");
 		}
 
+	}
+
+	@Override
+	public Exhibition addNewExhibition(String museumName, Exhibition exhibition) {
+		try {
+			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+				Museum museum = museumRepository.findMuseumByName(museumName);
+				if (museum == null) {
+					throw new NoSuchElementException("The selected museum does not exist!");
+				}
+				exhibition.setMuseumId(museum.getId());
+				museum.setOccupiedRooms(museum.getOccupiedRooms() + 1);
+				return exhibitionRepository.addNewExhibition(exhibition);
+			});
+		} catch (NoSuchElementException | RepositoryException ex) {
+			throw new RuntimeException("Impossible to add Exhibition.");
+		}
 	}
 
 }

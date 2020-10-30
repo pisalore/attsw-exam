@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity(name = "Museum")
 @Table(name = "museums")
-public final class Museum{
+public class Museum{
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
