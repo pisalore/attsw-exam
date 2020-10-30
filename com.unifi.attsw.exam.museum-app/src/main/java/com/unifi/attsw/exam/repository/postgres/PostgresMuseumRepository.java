@@ -37,9 +37,7 @@ public class PostgresMuseumRepository implements MuseumRepository {
 	@Override
 	public Museum findMuseumByName(String museumToFind) {
 		List<Museum> museums = entityManager.createQuery("FROM Museum", Museum.class).getResultList();
-		return museums.stream().filter(m -> m.getName().equals(museumToFind)).findAny()
-				.orElseThrow(() -> new NoSuchElementException(
-						"Cannot find Museum with name " + museumToFind + " or invalid entity."));
+		return museums.stream().filter(m -> m.getName().equals(museumToFind)).findAny().orElse(null);
 
 	}
 

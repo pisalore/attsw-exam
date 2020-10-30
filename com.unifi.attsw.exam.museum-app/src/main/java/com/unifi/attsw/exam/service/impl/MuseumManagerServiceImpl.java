@@ -1,6 +1,7 @@
 package com.unifi.attsw.exam.service.impl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Museum;
@@ -16,21 +17,6 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public Museum saveMuseum(Museum museum) throws RepositoryException {
-		return transactionManager.doInTransactionMuseum(museumRepository -> {
-			List<Museum> museums = museumRepository.findAllMuseums();
-			Museum existingMuseum = museums.stream().filter(m -> m.getName() == museum.getName()).findAny()
-					.orElse(null);
-			if (existingMuseum == null) {
-				return museumRepository.addMuseum(museum);
-			}
-			return museumRepository.updateMuseum(museum);
-
-		});
-
-	}
-
-	@Override
 	public List<Museum> getAllMuseums() throws RepositoryException {
 		return transactionManager.doInTransactionMuseum(museumRepository -> {
 			return museumRepository.findAllMuseums();
@@ -38,17 +24,35 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public void deleteMuseum(Museum museum) throws RuntimeException, RepositoryException {
+	public Museum saveMuseum(Museum museum) throws RepositoryException {
+		try {
+			return transactionManager.doInTransactionMuseum(museumRepository -> {
+				Museum existingMuseum = museumRepository.findMuseumByName(museum.getName());
+				if (existingMuseum == null) {
+					return museumRepository.addMuseum(museum);
+				}
+				return museumRepository.updateMuseum(museum);
+
+			});
+		} catch (NullPointerException | RepositoryException ex) {
+			throw new RuntimeException("Impossibile to add Museum.");
+		}
+
+	}
+
+	@Override
+	public void deleteMuseum(Museum museum) throws RepositoryException {
 		try {
 			transactionManager.doInTransactionMuseum(museumRepository -> {
-				List<Museum> museums = museumRepository.findAllMuseums();
-				Museum museumToRemove = museums.stream().filter(m -> m.getName() == museum.getName()).findAny()
-						.orElse(null);
+				Museum museumToRemove = museumRepository.findMuseumByName(museum.getName());
+				if (museumToRemove == null) {
+					throw new NoSuchElementException("The selected museum does not exist!");
+				}
 				museumRepository.deleteMuseum(museumToRemove);
 				return null;
 			});
-		} catch (NullPointerException | IllegalArgumentException ex) {
-			throw new RuntimeException("Impossibile to delete museum.");
+		} catch (NullPointerException | NoSuchElementException | RepositoryException ex) {
+			throw new RuntimeException("Impossible to delete Museum.");
 		}
 
 	}

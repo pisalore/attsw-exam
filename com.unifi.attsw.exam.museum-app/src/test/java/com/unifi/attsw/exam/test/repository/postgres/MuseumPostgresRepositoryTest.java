@@ -55,12 +55,9 @@ public class MuseumPostgresRepositoryTest {
 	}
 
 	@Test
-	public void testFindMuseumByNullNameShouldThrow() {
-		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumByName(null))
-				.isInstanceOf(NoSuchElementException.class)
-				.hasMessage("Cannot find Museum with name " + null + " or invalid entity.");
+	public void testFindMuseumByNullName() {
+		assertThat(postgresMuseumRepository.findMuseumByName(null)).isNull();
 
-		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
 	}
 
 	@Test

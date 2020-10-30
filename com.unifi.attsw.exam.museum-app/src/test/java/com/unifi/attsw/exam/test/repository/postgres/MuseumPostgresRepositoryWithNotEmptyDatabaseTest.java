@@ -3,7 +3,6 @@ package com.unifi.attsw.exam.test.repository.postgres;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -63,10 +62,8 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	}
 	
 	@Test
-	public void testFindMuseumByNameOfNotExistingMuseumShouldThrow() {
-		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumByName(MUSEUM_NOT_PERSISTED_TEST))
-				.isInstanceOf(NoSuchElementException.class)
-				.hasMessage("Cannot find Museum with name " + MUSEUM_NOT_PERSISTED_TEST + " or invalid entity.");
+	public void testFindMuseumByNameOfNotExistingMuseumReturnsNull() {
+		assertThat(postgresMuseumRepository.findMuseumByName(MUSEUM_NOT_PERSISTED_TEST)).isNull();
 
 	}
 

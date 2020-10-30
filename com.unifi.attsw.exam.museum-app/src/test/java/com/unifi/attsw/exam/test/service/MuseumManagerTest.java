@@ -73,34 +73,55 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testSaveMuseumWhenNoMuseumsArePersistedAddNew() throws RepositoryException {
+	public void testSaveNullMuseumShouldThrow() {
+		doThrow(new NullPointerException()).when(museumRepository).findMuseumByName(null);
+		assertThatThrownBy(() -> museumManager.saveMuseum(null)).isInstanceOf(RuntimeException.class)
+				.hasMessage("Impossibile to add Museum.");
+	}
+
+	@Test
+	public void testSaveNewMuseum() throws RepositoryException {
 		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
-		when(museumRepository.findAllMuseums()).thenReturn(asList());
+		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 		museumManager.saveMuseum(museum1);
+		verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
 		verify(museumRepository).addMuseum(museum1);
 	}
 
 	@Test
 	public void testSaveMuseumWhenMuseumExistsUpdate() throws RepositoryException {
-		Museum museum1 = createTestMuseum("Museum", 10);
-		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
+		Museum museum1 = createTestMuseum(MUSEUM1_TEST, 10);
+		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum1);
 		museumManager.saveMuseum(museum1);
+		verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
 		verify(museumRepository).updateMuseum(museum1);
 	}
 
 	@Test
 	public void testDeleteMuseum() throws RepositoryException {
 		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
-		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1));
+		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum1);
 		museumManager.deleteMuseum(museum1);
 		verify(museumRepository).deleteMuseum(museum1);
 	}
 
 	@Test
-	public void testDeleteNullMuseumWhenNoMuseumsArePersistedShouldThrow() throws RepositoryException {
-		when(museumRepository.findAllMuseums()).thenReturn(asList());
-		doThrow(new IllegalArgumentException()).when(museumRepository).deleteMuseum(null);
-		assertThatThrownBy(() -> museumManager.deleteMuseum(null)).isInstanceOf(RuntimeException.class);
+	public void testDeleteNullMuseumShouldThrow() throws RepositoryException {
+		doThrow(new NullPointerException()).when(museumRepository).findMuseumByName(null);
+		assertThatThrownBy(() -> museumManager.deleteMuseum(null)).isInstanceOf(RuntimeException.class)
+				.hasMessage("Impossible to delete Museum.");
+
+	}
+
+	@Test
+	public void testDeleteMuseumWhichDoesNotExistShouldThrow() throws RepositoryException {
+		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
+		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1);
+		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum1);
+
+		assertThatThrownBy(() -> museumManager.deleteMuseum(museum2)).isInstanceOf(RuntimeException.class)
+				.hasMessage("Impossible to delete Museum.");
+
 	}
 
 	/**
