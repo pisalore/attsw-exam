@@ -11,6 +11,8 @@ public interface MuseumRepository {
 
 	public Museum findMuseumById(UUID id);
 	
+	public Museum findMuseumByName(String museumToFind);
+	
 	public Museum addMuseum(Museum museum);
 
 	public Museum updateMuseum(Museum updatedMuseum);

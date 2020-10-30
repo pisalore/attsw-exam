@@ -3,6 +3,7 @@ package com.unifi.attsw.exam.test.repository.postgres;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -24,6 +25,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	private static final UUID MUSEUM_ID_2 = UUID.fromString("94fe3013-9ebb-432e-ab55-e612dc797851");
 	private static final String MUSEUM_TEST_1 = "museum1_test";
 	private static final String MUSEUM_TEST_2 = "museum2_test";
+	private static final String MUSEUM_NOT_PERSISTED_TEST = "museum_not_persisted_test";
 	private static final int NUM_OF_ROOMS = 10;
 
 	private MuseumRepository postgresMuseumRepository;
@@ -52,6 +54,20 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	public void testFindMuseumByIdWhenMuseumIsPresent() {
 		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
 		assertThat(postgresMuseumRepository.findMuseumById(museum1.getId())).isEqualTo(museum1);
+	}
+	
+	@Test
+	public void testFindMuseumByNameWhenMuseumIsPresent() {
+		Museum museum1 = postgresMuseumRepository.findMuseumByName(MUSEUM_TEST_1);
+		assertThat(persistedMuseums).extracting(Museum::getName).contains(museum1.getName());
+	}
+	
+	@Test
+	public void testFindMuseumByNameOfNotExistingMuseumShouldThrow() {
+		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumByName(MUSEUM_NOT_PERSISTED_TEST))
+				.isInstanceOf(NoSuchElementException.class)
+				.hasMessage("Cannot find Museum with name " + MUSEUM_NOT_PERSISTED_TEST + " or invalid entity.");
+
 	}
 
 	@Test

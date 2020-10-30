@@ -1,6 +1,7 @@
 package com.unifi.attsw.exam.repository.postgres;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -23,14 +24,23 @@ public class PostgresMuseumRepository implements MuseumRepository {
 		return museums;
 	}
 
-	
 	@Override
 	public Museum findMuseumById(UUID id) {
-		try {
-			return entityManager.find(Museum.class, id);
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException("Cannot find entity, invalid or null id: " + id);
+		Museum foundMuseum = entityManager.find(Museum.class, id);
+		if (foundMuseum == null) {
+			throw new NoSuchElementException("Cannot find entity with id: " + id);
 		}
+		return entityManager.find(Museum.class, id);
+
+	}
+
+	@Override
+	public Museum findMuseumByName(String museumToFind) {
+		List<Museum> museums = entityManager.createQuery("FROM Museum", Museum.class).getResultList();
+		return museums.stream().filter(m -> m.getName().equals(museumToFind)).findAny()
+				.orElseThrow(() -> new NoSuchElementException(
+						"Cannot find Museum with name " + museumToFind + " or invalid entity."));
+
 	}
 
 	@Override
@@ -62,6 +72,5 @@ public class PostgresMuseumRepository implements MuseumRepository {
 		}
 
 	}
-
 
 }
