@@ -70,10 +70,15 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 					throw new NoSuchElementException("The selected museum does not exist!");
 				}
 				exhibition.setMuseumId(museum.getId());
-				museum.setOccupiedRooms(museum.getOccupiedRooms() + 1);
+				int occupiedRooms = museum.getOccupiedRooms();
+				int rooms = museum.getTotalRooms();
+				if (occupiedRooms >= rooms) {
+					throw new IllegalArgumentException("Impossibile to add new Exhibition: all rooms are occupied!");
+				}
+				museum.setOccupiedRooms(occupiedRooms + 1);
 				return exhibitionRepository.addNewExhibition(exhibition);
 			});
-		} catch (NoSuchElementException | RepositoryException ex) {
+		} catch (NoSuchElementException | RepositoryException | IllegalArgumentException ex) {
 			throw new RuntimeException("Impossible to add Exhibition.");
 		}
 	}
