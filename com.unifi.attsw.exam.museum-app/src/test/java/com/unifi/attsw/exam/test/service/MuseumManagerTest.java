@@ -32,6 +32,7 @@ import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.service.impl.MuseumManagerServiceImpl;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
 import com.unifi.attsw.exam.transaction.manager.code.MuseumTransactionCode;
+import com.unifi.attsw.exam.transaction.manager.code.ExhibitionTransactionCode;
 import com.unifi.attsw.exam.transaction.manager.code.TransactionCode;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -73,6 +74,9 @@ public class MuseumManagerTest {
 	public void setUp() throws RepositoryException {
 		when(transactionManager.doInTransactionMuseum(any()))
 				.thenAnswer(answer((MuseumTransactionCode<?> code) -> code.apply(museumRepository)));
+
+		when(transactionManager.doInTransactionExhibition(any()))
+				.thenAnswer(answer((ExhibitionTransactionCode<?> code) -> code.apply(exhibitionRepository)));
 
 		when(transactionManager.doInTransaction(any()))
 				.thenAnswer(answer((TransactionCode<?> code) -> code.apply(museumRepository, exhibitionRepository)));
@@ -222,6 +226,15 @@ public class MuseumManagerTest {
 			museumManager.addNewExhibition(MUSEUM1_TEST, exhibition);
 			doThrow(new NoSuchElementException("The selected museum does not exist!")).doNothing();
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to add Exhibition.");
+	}
+
+	@Test
+	public void testDeleteNullExhibitionShouldThrow() throws RepositoryException {
+		assertThatThrownBy(() -> {
+			museumManager.deleteExhibition(null);
+			doThrow(new NullPointerException()).doNothing();
+		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to delete Exhibition.");
+
 	}
 
 	/**

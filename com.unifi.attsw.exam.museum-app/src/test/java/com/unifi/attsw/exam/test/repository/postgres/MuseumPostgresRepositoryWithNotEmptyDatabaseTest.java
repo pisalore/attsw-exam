@@ -25,6 +25,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 	private static final String MUSEUM_TEST_1 = "museum1_test";
 	private static final String MUSEUM_TEST_2 = "museum2_test";
 	private static final String MUSEUM_NOT_PERSISTED_TEST = "museum_not_persisted_test";
+	
 	private static final int NUM_OF_ROOMS = 10;
 
 	private MuseumRepository postgresMuseumRepository;

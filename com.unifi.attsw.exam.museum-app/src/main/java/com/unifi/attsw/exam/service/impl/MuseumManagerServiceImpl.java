@@ -24,6 +24,13 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 		});
 	}
 
+//	@Override
+//	public List<Exhibition> getAllExhibitions() throws RepositoryException {
+//		return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+//			return exhibitionRepository.findAllExhibitions();
+//		});
+//	}
+
 	@Override
 	public Museum saveMuseum(Museum museum) {
 		try {
@@ -80,6 +87,22 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			});
 		} catch (NoSuchElementException | RepositoryException | IllegalArgumentException ex) {
 			throw new RuntimeException("Impossible to add Exhibition.");
+		}
+	}
+
+	@Override
+	public void deleteExhibition(Exhibition exhibition) throws RepositoryException {
+		try {
+			transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+				Exhibition exhibitionToRemove = exhibitionRepository.findExhibitionByName(exhibition.getName());
+				if (exhibitionToRemove == null) {
+					throw new NoSuchElementException("The selected exhibition does not exist!");
+				}
+				exhibitionRepository.deleteExhibition(exhibitionToRemove);
+				return null;
+			});
+		} catch (NullPointerException ex) {
+			throw new RuntimeException("Impossible to delete Exhibition.");
 		}
 	}
 

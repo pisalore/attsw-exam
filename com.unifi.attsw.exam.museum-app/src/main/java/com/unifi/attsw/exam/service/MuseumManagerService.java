@@ -14,5 +14,7 @@ public interface MuseumManagerService {
 	public void deleteMuseum(Museum museum) throws RepositoryException;
 	
 	public Exhibition addNewExhibition(String museumName, Exhibition exhibition);
+	
+	public void deleteExhibition(Exhibition exhibition) throws RepositoryException;
 
 }
