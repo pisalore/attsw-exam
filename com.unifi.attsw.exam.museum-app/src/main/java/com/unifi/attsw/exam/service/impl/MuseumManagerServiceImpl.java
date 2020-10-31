@@ -101,7 +101,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				exhibitionRepository.deleteExhibition(exhibitionToRemove);
 				return null;
 			});
-		} catch (NullPointerException ex) {
+		} catch (NoSuchElementException | NullPointerException ex) {
 			throw new RuntimeException("Impossible to delete Exhibition.");
 		}
 	}

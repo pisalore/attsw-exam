@@ -237,6 +237,26 @@ public class MuseumManagerTest {
 
 	}
 
+	@Test
+	public void testDeleteExhibitionhichDoesNotExistShouldThrow() throws RepositoryException {
+		assertThatThrownBy(() -> {
+			museumManager.deleteExhibition(exhibition);
+			when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(null);
+			doThrow(new NoSuchElementException("The selected exhibition does not exist!")).doNothing();
+
+		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to delete Exhibition.");
+
+	}
+
+	@Test
+	public void testDeleteExhibition() throws RepositoryException {
+		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(exhibition);
+		museumManager.deleteExhibition(exhibition);
+		inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
+		inOrder.verify(exhibitionRepository).deleteExhibition(exhibition);
+		verifyNoMoreInteractions(exhibitionRepository);
+	}
+
 	/**
 	 * 
 	 * Utility methods
