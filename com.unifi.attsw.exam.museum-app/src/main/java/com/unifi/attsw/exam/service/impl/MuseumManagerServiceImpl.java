@@ -24,12 +24,12 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 		});
 	}
 
-//	@Override
-//	public List<Exhibition> getAllExhibitions() throws RepositoryException {
-//		return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-//			return exhibitionRepository.findAllExhibitions();
-//		});
-//	}
+	@Override
+	public List<Exhibition> getAllExhibitions() throws RepositoryException {
+		return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+			return exhibitionRepository.findAllExhibitions();
+		});
+	}
 
 	@Override
 	public Museum saveMuseum(Museum museum) {

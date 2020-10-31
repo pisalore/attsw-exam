@@ -10,6 +10,8 @@ public interface MuseumManagerService {
 	public Museum saveMuseum(Museum museum) throws RepositoryException;
 
 	public List<Museum> getAllMuseums() throws RepositoryException;
+	
+	public List<Exhibition> getAllExhibitions() throws RepositoryException;
 
 	public void deleteMuseum(Museum museum) throws RepositoryException;
 	

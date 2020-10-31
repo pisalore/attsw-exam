@@ -17,9 +17,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 import static java.util.Arrays.asList;
 
@@ -40,8 +38,6 @@ public class MuseumManagerTest {
 
 	private static final String MUSEUM1_TEST = "museum1_test";
 	private static final String MUSEUM2_TEST = "museum2_test";
-
-	private static final UUID MUSEUM_ID_1 = UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7");
 
 	private static final String EXHIBITION1_TEST = "exhibition1_test";
 	private static final String EXHIBITION2_TEST = "exhibition2_test";
@@ -83,8 +79,6 @@ public class MuseumManagerTest {
 
 		museumManager = new MuseumManagerServiceImpl(transactionManager);
 
-		museum.setId(MUSEUM_ID_1);
-
 		inOrder = inOrder(exhibitionRepository, museumRepository, museum, exhibition);
 
 	}
@@ -92,9 +86,9 @@ public class MuseumManagerTest {
 	@Test
 	public void testGetAllMuseumsWhenNoArePersisted() throws RepositoryException {
 		when(museumRepository.findAllMuseums()).thenReturn(asList());
-		List<Museum> museums = museumManager.getAllMuseums();
-		verify(museumRepository).findAllMuseums();
-		assertThat(museums).isEmpty();
+		museumManager.getAllMuseums();
+		inOrder.verify(museumRepository).findAllMuseums();
+		verifyNoMoreInteractions(museumRepository);
 	}
 
 	@Test
@@ -102,10 +96,29 @@ public class MuseumManagerTest {
 		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
 		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1);
 		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1, museum2));
-		List<Museum> museums = museumManager.getAllMuseums();
+		
+		museumManager.getAllMuseums();
 		verify(museumRepository).findAllMuseums();
-		assertThat(museums).containsAll(asList(museum1, museum2));
 		verifyNoMoreInteractions(museumRepository);
+	}
+	
+	@Test
+	public void testGetAllExhibitionWhenNoExhibitionIsPersisted() throws RepositoryException {
+		when(exhibitionRepository.findAllExhibitions()).thenReturn(asList());
+		museumManager.getAllExhibitions();
+		inOrder.verify(exhibitionRepository).findAllExhibitions();
+		verifyNoMoreInteractions(exhibitionRepository);
+	}
+	
+	@Test
+	public void testGetAllExhibitionWhenExhibitionsArePersisted() throws RepositoryException {
+		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1);
+		when(exhibitionRepository.findAllExhibitions()).thenReturn(asList(exhibition1, exhibition2));
+		
+		museumManager.getAllExhibitions();
+		inOrder.verify(exhibitionRepository).findAllExhibitions();
+		verifyNoMoreInteractions(exhibitionRepository);
 	}
 
 	@Test
