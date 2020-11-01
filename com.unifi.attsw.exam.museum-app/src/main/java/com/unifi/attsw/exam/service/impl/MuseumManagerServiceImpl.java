@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
+import com.unifi.attsw.exam.repository.ExhibitionRepository;
+import com.unifi.attsw.exam.repository.MuseumRepository;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
 
@@ -19,16 +21,12 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 	@Override
 	public List<Museum> getAllMuseums() throws RepositoryException {
-		return transactionManager.doInTransactionMuseum(museumRepository -> {
-			return museumRepository.findAllMuseums();
-		});
+		return transactionManager.doInTransactionMuseum(MuseumRepository::findAllMuseums);
 	}
 
 	@Override
 	public List<Exhibition> getAllExhibitions() throws RepositoryException {
-		return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-			return exhibitionRepository.findAllExhibitions();
-		});
+		return transactionManager.doInTransactionExhibition(ExhibitionRepository::findAllExhibitions);
 
 	}
 
@@ -64,11 +62,15 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public void deleteMuseum(Museum museum) {
 		try {
+			Museum museumToRemove = transactionManager.doInTransactionMuseum(museumRepository -> {
+				return museumRepository.findMuseumByName(museum.getName());
+			});
+
+			if (museumToRemove == null) {
+				throw new NoSuchElementException("The selected museum does not exist!");
+			}
+
 			transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-				Museum museumToRemove = museumRepository.findMuseumByName(museum.getName());
-				if (museumToRemove == null) {
-					throw new NoSuchElementException("The selected museum does not exist!");
-				}
 				List<Exhibition> museumToRemoveExhibitions = exhibitionRepository
 						.findExhibitionsByMuseumId(museumToRemove.getId());
 				museumToRemoveExhibitions.forEach(e -> exhibitionRepository.deleteExhibition(e));
@@ -84,11 +86,16 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public Exhibition addNewExhibition(String museumName, Exhibition exhibition) {
 		try {
+			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
+				return museumRepository.findMuseumByName(museumName);
+			});
+
+			if (museum == null) {
+				throw new NoSuchElementException("The selected museum does not exist!");
+			}
+
 			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-				Museum museum = museumRepository.findMuseumByName(museumName);
-				if (museum == null) {
-					throw new NoSuchElementException("The selected museum does not exist!");
-				}
+
 				exhibition.setMuseumId(museum.getId());
 				int occupiedRooms = museum.getOccupiedRooms();
 				int rooms = museum.getTotalRooms();
@@ -106,17 +113,45 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public void deleteExhibition(Exhibition exhibition) {
 		try {
+			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+				return exhibitionRepository.findExhibitionByName(exhibition.getName());
+			});
+
+			if (exhibitionToRemove == null) {
+				throw new NoSuchElementException("The selected exhibition does not exist!");
+			}
 			transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-				Exhibition exhibitionToRemove = exhibitionRepository.findExhibitionByName(exhibition.getName());
-				if (exhibitionToRemove == null) {
-					throw new NoSuchElementException("The selected exhibition does not exist!");
-				}
 				exhibitionRepository.deleteExhibition(exhibitionToRemove);
 				return null;
 			});
-		} catch (NoSuchElementException | NullPointerException | RepositoryException ex) {
+
+		} catch (NoSuchElementException | NullPointerException |
+
+				RepositoryException ex) {
 			throw new RuntimeException("Impossible to delete Exhibition.");
 		}
+	}
+
+	@Override
+	public void bookExhibitionSeat(Exhibition exhibition) {
+		try {
+			Exhibition existingExhibition = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+				return exhibitionRepository.findExhibitionById(exhibition.getId());
+			});
+
+			if (existingExhibition.getBookedSeats() == existingExhibition.getTotalSeats()) {
+				throw new UnsupportedOperationException(
+						"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked");
+			}
+			exhibition.setBookedSeats(exhibition.getBookedSeats() + 1);
+			transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+				return exhibitionRepository.updateExhibition(exhibition);
+			});
+
+		} catch (UnsupportedOperationException | RepositoryException ex) {
+			throw new RuntimeException("Impossible to book a seat.");
+		}
+
 	}
 
 }

@@ -44,7 +44,11 @@ public class MuseumManagerTest {
 	private static final UUID MUSEUM_ID_2 = UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e2");
 
 	private static final String EXHIBITION1_TEST = "exhibition1_test";
+	private static final UUID EXHIBITION_ID_1 = UUID.fromString("49d13e51-2277-4911-929f-c9c067e2e8b4");
+
 	private static final String EXHIBITION2_TEST = "exhibition2_test";
+	private static final UUID EXHIBITION_ID_2 = UUID.fromString("b2cb1474-24ff-41eb-a8d7-963f32f6822d");
+
 
 	private static final int NUM_CONSTANT1 = 10;
 
@@ -61,7 +65,7 @@ public class MuseumManagerTest {
 	private Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1, MUSEUM_ID_1);
 
 	@Spy
-	private Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+	private Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
 
 	@Rule
 	public VerificationCollector collector = MockitoJUnit.collector();
@@ -116,8 +120,8 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testGetAllExhibitionWhenExhibitionsArePersisted() throws RepositoryException {
-		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1);
+		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
+		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1, EXHIBITION_ID_2);
 		when(exhibitionRepository.findAllExhibitions()).thenReturn(asList(exhibition1, exhibition2));
 
 		museumManager.getAllExhibitions();
@@ -145,8 +149,8 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testGetMuseumExhibitions() throws RepositoryException {
-		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1);
+		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
+		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1, EXHIBITION_ID_2);
 		when(exhibitionRepository.findExhibitionsByMuseumId(museum.getId()))
 				.thenReturn(asList(exhibition1, exhibition2));
 
@@ -195,8 +199,8 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testDeleteMuseumWithExhibitions() throws RepositoryException {
-		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1);
+		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
+		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1, EXHIBITION_ID_2);
 
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 		when(exhibitionRepository.findExhibitionsByMuseumId(museum.getId()))
@@ -266,8 +270,6 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testAddNewExhibitionToAMuseumWhichDoesNotExistShouldThrow() throws RepositoryException {
-		Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
 			museumManager.addNewExhibition(MUSEUM1_TEST, exhibition);
@@ -304,6 +306,27 @@ public class MuseumManagerTest {
 		verifyNoMoreInteractions(exhibitionRepository);
 	}
 
+	@Test
+	public void testBookExhibitionWhenAllSeatsAreBookedShouldThrow() {
+		assertThatThrownBy(() -> {
+			exhibition.setBookedSeats(exhibition.getTotalSeats());
+			when(exhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).thenReturn(exhibition);
+			museumManager.bookExhibitionSeat(exhibition);
+			doThrow(new UnsupportedOperationException(
+					"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked")).doNothing();
+		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to book a seat.");
+
+	}
+
+	@Test
+	public void testBookExhibitionWhenSeatsAreAvailable() {
+		when(exhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).thenReturn(exhibition);
+		museumManager.bookExhibitionSeat(exhibition);
+		inOrder.verify(exhibition).setBookedSeats(exhibition.getBookedSeats() + 1);
+		inOrder.verify(exhibitionRepository).updateExhibition(exhibition);
+
+	}
+
 	/**
 	 * 
 	 * Utility methods
@@ -316,8 +339,10 @@ public class MuseumManagerTest {
 		return museum;
 	}
 
-	public Exhibition createExhibition(String exhibitionName, int numOfSeats) {
-		return new Exhibition(exhibitionName, numOfSeats);
+	public Exhibition createExhibition(String exhibitionName, int numOfSeats, UUID id) {
+		Exhibition exhibition = new Exhibition(exhibitionName, numOfSeats);
+		exhibition.setId(EXHIBITION_ID_1);
+		return exhibition;
 
 	}
 

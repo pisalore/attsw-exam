@@ -15,10 +15,12 @@ public interface MuseumManagerService {
 
 	public Museum saveMuseum(Museum museum);
 
-	public void deleteMuseum(Museum museum) throws RepositoryException;
+	public void deleteMuseum(Museum museum);
 
 	public Exhibition addNewExhibition(String museumName, Exhibition exhibition);
 
 	public void deleteExhibition(Exhibition exhibition);
+	
+	public void bookExhibitionSeat(Exhibition exhibition);
 
 }
