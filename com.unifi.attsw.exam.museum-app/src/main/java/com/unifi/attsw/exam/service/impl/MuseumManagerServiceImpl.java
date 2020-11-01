@@ -19,24 +19,17 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 	@Override
 	public List<Museum> getAllMuseums() throws RepositoryException {
-		try {
-			return transactionManager.doInTransactionMuseum(museumRepository -> {
-				return museumRepository.findAllMuseums();
-			});
-		} catch (RepositoryException ex) {
-			throw new RuntimeException("Impossible to get Museums");
-		}
+		return transactionManager.doInTransactionMuseum(museumRepository -> {
+			return museumRepository.findAllMuseums();
+		});
 	}
 
 	@Override
 	public List<Exhibition> getAllExhibitions() throws RepositoryException {
-		try {
-			return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-				return exhibitionRepository.findAllExhibitions();
-			});
-		} catch (RepositoryException ex) {
-			throw new RuntimeException("Impossible to get Exhibitions");
-		}
+		return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+			return exhibitionRepository.findAllExhibitions();
+		});
+
 	}
 
 	@Override

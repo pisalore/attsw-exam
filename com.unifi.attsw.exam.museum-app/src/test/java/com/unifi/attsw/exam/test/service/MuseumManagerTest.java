@@ -126,12 +126,21 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testGetMuseumexhibitionsWhenMuseumIsNullShouldThrow() {
+	public void testGetMuseumExhibitionsWhenMuseumIsNullShouldThrow() {
 		assertThatThrownBy(() -> {
 			museumManager.getAllMuseumExhibitions(null);
 			doThrow(new NullPointerException()).doNothing();
 		}).isInstanceOf(RuntimeException.class)
 				.hasMessage("Impossible to get Exhibitions for the selected Museum: " + null);
+	}
+
+	@Test
+	public void testGetMuseumExhibitionsWhenNoExhibitionIsPersisted() {
+		when(exhibitionRepository.findExhibitionsByMuseumId(museum.getId())).thenReturn(asList());
+
+		museumManager.getAllMuseumExhibitions(museum);
+		inOrder.verify(exhibitionRepository).findExhibitionsByMuseumId(museum.getId());
+		verifyNoMoreInteractions(exhibitionRepository);
 	}
 
 	@Test
