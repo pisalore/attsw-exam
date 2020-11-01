@@ -19,16 +19,36 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 	@Override
 	public List<Museum> getAllMuseums() throws RepositoryException {
-		return transactionManager.doInTransactionMuseum(museumRepository -> {
-			return museumRepository.findAllMuseums();
-		});
+		try {
+			return transactionManager.doInTransactionMuseum(museumRepository -> {
+				return museumRepository.findAllMuseums();
+			});
+		} catch (RepositoryException ex) {
+			throw new RuntimeException("Impossible to get Museums");
+		}
 	}
 
 	@Override
 	public List<Exhibition> getAllExhibitions() throws RepositoryException {
-		return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-			return exhibitionRepository.findAllExhibitions();
-		});
+		try {
+			return transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+				return exhibitionRepository.findAllExhibitions();
+			});
+		} catch (RepositoryException ex) {
+			throw new RuntimeException("Impossible to get Exhibitions");
+		}
+	}
+
+	@Override
+	public List<Exhibition> getAllMuseumExhibitions(Museum museum) {
+		try {
+			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+				return exhibitionRepository.findExhibitionsByMuseumId(museum.getId());
+			});
+		} catch (NullPointerException | RepositoryException ex) {
+			throw new RuntimeException("Impossible to get Exhibitions for the selected Museum: " + museum);
+		}
+
 	}
 
 	@Override
@@ -91,7 +111,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public void deleteExhibition(Exhibition exhibition) throws RepositoryException {
+	public void deleteExhibition(Exhibition exhibition) {
 		try {
 			transactionManager.doInTransactionExhibition(exhibitionRepository -> {
 				Exhibition exhibitionToRemove = exhibitionRepository.findExhibitionByName(exhibition.getName());
@@ -101,7 +121,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				exhibitionRepository.deleteExhibition(exhibitionToRemove);
 				return null;
 			});
-		} catch (NoSuchElementException | NullPointerException ex) {
+		} catch (NoSuchElementException | NullPointerException | RepositoryException ex) {
 			throw new RuntimeException("Impossible to delete Exhibition.");
 		}
 	}

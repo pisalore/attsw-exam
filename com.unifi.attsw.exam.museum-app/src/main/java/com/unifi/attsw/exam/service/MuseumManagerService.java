@@ -7,16 +7,18 @@ import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 
 public interface MuseumManagerService {
-	public Museum saveMuseum(Museum museum) throws RepositoryException;
-
 	public List<Museum> getAllMuseums() throws RepositoryException;
-	
+
 	public List<Exhibition> getAllExhibitions() throws RepositoryException;
 
+	public List<Exhibition> getAllMuseumExhibitions(Museum museum);
+
+	public Museum saveMuseum(Museum museum);
+
 	public void deleteMuseum(Museum museum) throws RepositoryException;
-	
+
 	public Exhibition addNewExhibition(String museumName, Exhibition exhibition);
-	
-	public void deleteExhibition(Exhibition exhibition) throws RepositoryException;
+
+	public void deleteExhibition(Exhibition exhibition);
 
 }

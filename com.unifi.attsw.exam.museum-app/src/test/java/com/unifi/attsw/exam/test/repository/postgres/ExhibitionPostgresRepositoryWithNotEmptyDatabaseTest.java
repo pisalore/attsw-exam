@@ -27,7 +27,7 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	private static final String EXHIBITION_TEST_1 = "exhibition1_test";
 	private static final String EXHIBITION_NOT_PERSISTED = "exhibition_not_persisted";
-	
+
 	private static final int UTILITY_CONST_NUM = 10;
 
 	private ExhibitionRepository postgresExhibitionRepository;
@@ -77,21 +77,20 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 	}
 
 	@Test
-	public void testFindExhibitionsByMuseumIdWhenMuseumsArePersisted() {
+	public void testFindExhibitionsByMuseumIdWhenMuseumAndrelativeExhibitionsArePersisted() {
 		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
 		Exhibition exhibition2 = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_2);
 
 		assertThat(postgresExhibitionRepository.findExhibitionsByMuseumId(MUSEUM_ID_1)).containsExactly(exhibition1,
 				exhibition2);
-
 	}
-	
+
 	@Test
 	public void testFindeXHIBITIONByNameWhenMuseumIsPresent() {
 		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionByName(EXHIBITION_TEST_1);
 		assertThat(persistedExhibitions).extracting(Exhibition::getName).contains(exhibition1.getName());
 	}
-	
+
 	@Test
 	public void testFindExhibitionByNameOfNotExistingExhibitionReturnsNull() {
 		assertThat(postgresExhibitionRepository.findExhibitionByName(EXHIBITION_NOT_PERSISTED)).isNull();
@@ -107,7 +106,6 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(3).extracting(Exhibition::getId)
 				.contains(exhibition.getId());
 	}
-	
 
 	@Test
 	public void testUpdateExhibitionWithNullEntityShouldThrow() {
@@ -141,7 +139,8 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 		exhibition1.setBookedSeats(UTILITY_CONST_NUM);
 		postgresExhibitionRepository.updateExhibition(exhibition1);
 
-		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getBookedSeats()).isEqualTo(UTILITY_CONST_NUM);
+		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getBookedSeats())
+				.isEqualTo(UTILITY_CONST_NUM);
 
 	}
 

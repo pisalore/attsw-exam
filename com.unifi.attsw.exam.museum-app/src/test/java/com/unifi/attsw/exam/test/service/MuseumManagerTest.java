@@ -18,6 +18,7 @@ import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 
@@ -37,7 +38,10 @@ import com.unifi.attsw.exam.transaction.manager.code.TransactionCode;
 public class MuseumManagerTest {
 
 	private static final String MUSEUM1_TEST = "museum1_test";
+	private static final UUID MUSEUM_ID_1 = UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e7");
+
 	private static final String MUSEUM2_TEST = "museum2_test";
+	private static final UUID MUSEUM_ID_2 = UUID.fromString("b433da18-ba5a-4b86-92af-ba11be6314e2");
 
 	private static final String EXHIBITION1_TEST = "exhibition1_test";
 	private static final String EXHIBITION2_TEST = "exhibition2_test";
@@ -54,7 +58,7 @@ public class MuseumManagerTest {
 	private ExhibitionRepository exhibitionRepository;
 
 	@Spy
-	private Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
+	private Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1, MUSEUM_ID_1);
 
 	@Spy
 	private Exhibition exhibition = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
@@ -93,15 +97,15 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testGetAllMuseumsWhenMuseumsArePersisted() throws RepositoryException {
-		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1);
-		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1);
+		Museum museum1 = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1, MUSEUM_ID_1);
+		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1, MUSEUM_ID_2);
 		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1, museum2));
-		
+
 		museumManager.getAllMuseums();
 		verify(museumRepository).findAllMuseums();
 		verifyNoMoreInteractions(museumRepository);
 	}
-	
+
 	@Test
 	public void testGetAllExhibitionWhenNoExhibitionIsPersisted() throws RepositoryException {
 		when(exhibitionRepository.findAllExhibitions()).thenReturn(asList());
@@ -109,15 +113,36 @@ public class MuseumManagerTest {
 		inOrder.verify(exhibitionRepository).findAllExhibitions();
 		verifyNoMoreInteractions(exhibitionRepository);
 	}
-	
+
 	@Test
 	public void testGetAllExhibitionWhenExhibitionsArePersisted() throws RepositoryException {
 		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1);
 		when(exhibitionRepository.findAllExhibitions()).thenReturn(asList(exhibition1, exhibition2));
-		
+
 		museumManager.getAllExhibitions();
 		inOrder.verify(exhibitionRepository).findAllExhibitions();
+		verifyNoMoreInteractions(exhibitionRepository);
+	}
+
+	@Test
+	public void testGetMuseumexhibitionsWhenMuseumIsNullShouldThrow() {
+		assertThatThrownBy(() -> {
+			museumManager.getAllMuseumExhibitions(null);
+			doThrow(new NullPointerException()).doNothing();
+		}).isInstanceOf(RuntimeException.class)
+				.hasMessage("Impossible to get Exhibitions for the selected Museum: " + null);
+	}
+
+	@Test
+	public void testGetMuseumExhibitions() throws RepositoryException {
+		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1);
+		when(exhibitionRepository.findExhibitionsByMuseumId(museum.getId()))
+				.thenReturn(asList(exhibition1, exhibition2));
+
+		museumManager.getAllMuseumExhibitions(museum);
+		inOrder.verify(exhibitionRepository).findExhibitionsByMuseumId(museum.getId());
 		verifyNoMoreInteractions(exhibitionRepository);
 	}
 
@@ -276,8 +301,10 @@ public class MuseumManagerTest {
 	 * 
 	 */
 
-	public Museum createTestMuseum(String museumName, int numOfRooms) {
-		return new Museum(museumName, numOfRooms);
+	public Museum createTestMuseum(String museumName, int numOfRooms, UUID id) {
+		Museum museum = new Museum(museumName, numOfRooms);
+		museum.setId(id);
+		return museum;
 	}
 
 	public Exhibition createExhibition(String exhibitionName, int numOfSeats) {
