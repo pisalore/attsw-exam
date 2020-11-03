@@ -128,7 +128,7 @@
 						<mutators>
 							<mutator>DEFAULTS</mutator>
 						</mutators>
-						<mutationThreshold>50</mutationThreshold>
+						<mutationThreshold>80</mutationThreshold>
 					</configuration>
 				</plugin>
 
