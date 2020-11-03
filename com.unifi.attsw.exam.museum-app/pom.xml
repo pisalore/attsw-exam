@@ -19,6 +19,7 @@
 		<postgresql.testcontainers.version>1.14.3</postgresql.testcontainers.version>
 		<log4j.version>2.13.2</log4j.version>
 		<mockito.version>3.2.4</mockito.version>
+		<pitest.version>1.4.10</pitest.version>
 
 	</properties>
 
@@ -109,6 +110,23 @@
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.7.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>${pitest.version}</version>
+					<configuration>
+						<targetTests>
+							<param>com.unifi.attsw.exam.*</param>
+						</targetTests>
+						<timeoutFactor>4000</timeoutFactor>
+						<timeoutConstant>10000</timeoutConstant>
+						<mutators>
+							<mutator>DEFAULTS</mutator>
+						</mutators>
+						<mutationThreshold>50</mutationThreshold>
+					</configuration>
 				</plugin>
 
 				<plugin>
