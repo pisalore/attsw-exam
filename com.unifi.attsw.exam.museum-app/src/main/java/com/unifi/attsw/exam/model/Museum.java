@@ -10,33 +10,32 @@ import javax.persistence.Table;
 
 @Entity(name = "Museum")
 @Table(name = "museums")
-public final class Museum{
-	
+public class Museum {
+
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
 
-	@Column(name = "Museum_Name", unique=true)
+	@Column(name = "Museum_Name", unique = true)
 	private String name;
 
 	@Column(name = "Number_Of_Rooms")
-	private int rooms;
+	private int totalRooms;
 
 	@Column(name = "Number_Of_Occupied_Rooms")
 	private int occupiedRooms;
-	
 
 	public Museum(String name, int rooms) {
 		this.name = name;
-		this.rooms = rooms;
+		this.totalRooms = rooms;
 		this.occupiedRooms = 0;
 
 	}
 
 	public Museum() {
-		
+
 	}
-	
+
 	public UUID getId() {
 		return id;
 	}
@@ -53,12 +52,12 @@ public final class Museum{
 		this.name = name;
 	}
 
-	public int getRooms() {
-		return rooms;
+	public int getTotalRooms() {
+		return totalRooms;
 	}
 
-	public void setRooms(int rooms) {
-		this.rooms = rooms;
+	public void setRooms(int totalRooms) {
+		this.totalRooms = totalRooms;
 	}
 
 	public int getOccupiedRooms() {
@@ -76,7 +75,7 @@ public final class Museum{
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + occupiedRooms;
-		result = prime * result + rooms;
+		result = prime * result + totalRooms;
 		return result;
 	}
 
@@ -101,12 +100,10 @@ public final class Museum{
 			return false;
 		if (occupiedRooms != other.occupiedRooms)
 			return false;
-		if (rooms != other.rooms)
+		if (totalRooms != other.totalRooms)
 			return false;
 		return true;
 	}
-	
-	
 
 //	public List<Exhibition> getExhibitions() {
 //		return exhibitions;
@@ -115,8 +112,5 @@ public final class Museum{
 //	public void setExhibitions(List<Exhibition> exhibitions) {
 //		this.exhibitions = exhibitions;
 //	}
-	
-	
-
 
 }

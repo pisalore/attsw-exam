@@ -9,6 +9,8 @@ public interface ExhibitionRepository {
 	public List<Exhibition> findAllExhibitions();
 
 	public Exhibition findExhibitionById(UUID exhibitionId);
+	
+	public Exhibition findExhibitionByName(String exhibitionName);
 
 	public List<Exhibition> findExhibitionsByMuseumId(UUID museumId);
 

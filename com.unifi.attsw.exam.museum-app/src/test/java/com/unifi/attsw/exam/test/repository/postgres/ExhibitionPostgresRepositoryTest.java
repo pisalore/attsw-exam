@@ -47,6 +47,12 @@ public class ExhibitionPostgresRepositoryTest {
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Cannot find entity, invalid or null id: " + null);
 	}
+	
+	@Test
+	public void testFindMuseumByNullName() {
+		assertThat(postgresExhibitionRepository.findExhibitionByName(null)).isNull();
+
+	}
 
 	@Test
 	public void testAddNewNullExhibitionEntityShouldThrow() {
