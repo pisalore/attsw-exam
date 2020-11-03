@@ -30,7 +30,7 @@ public class PostgresMuseumRepository implements MuseumRepository {
 		if (foundMuseum == null) {
 			throw new NoSuchElementException("Cannot find entity with id: " + id);
 		}
-		return entityManager.find(Museum.class, id);
+		return foundMuseum;
 
 	}
 

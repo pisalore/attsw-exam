@@ -49,7 +49,6 @@ public class MuseumManagerTest {
 	private static final String EXHIBITION2_TEST = "exhibition2_test";
 	private static final UUID EXHIBITION_ID_2 = UUID.fromString("b2cb1474-24ff-41eb-a8d7-963f32f6822d");
 
-
 	private static final int NUM_CONSTANT1 = 10;
 
 	@Mock
@@ -312,6 +311,8 @@ public class MuseumManagerTest {
 			exhibition.setBookedSeats(exhibition.getTotalSeats());
 			when(exhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).thenReturn(exhibition);
 			museumManager.bookExhibitionSeat(exhibition);
+			inOrder.verify(exhibition).getBookedSeats();
+			inOrder.verify(exhibition).getTotalSeats();
 			doThrow(new UnsupportedOperationException(
 					"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked")).doNothing();
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to book a seat.");
