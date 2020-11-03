@@ -121,7 +121,7 @@
 							<param>com.unifi.attsw.exam.model.*</param>
 						</excludedClasses>
 						<targetTests>
-
+							<param>com.unifi.attsw.exam.*</param>
 						</targetTests>
 						<timeoutFactor>4000</timeoutFactor>
 						<timeoutConstant>10000</timeoutConstant>
