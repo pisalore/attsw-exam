@@ -210,7 +210,7 @@ public class PostgresTransactionManagerWithNoEmptyDatabaseTest {
 		});
 
 		assertThat(postgresMuseumRepository.findMuseumById(MUSEUM_ID_1).getOccupiedRooms()).isEqualTo(5);
-		assertThat(postgresMuseumRepository.findMuseumById(MUSEUM_ID_1).getRooms()).isEqualTo(50);
+		assertThat(postgresMuseumRepository.findMuseumById(MUSEUM_ID_1).getTotalRooms()).isEqualTo(50);
 	}
 
 	@Test

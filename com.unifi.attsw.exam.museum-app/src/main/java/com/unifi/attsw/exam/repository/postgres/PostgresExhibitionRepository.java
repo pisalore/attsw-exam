@@ -32,6 +32,13 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 		}
 
 	}
+	
+	@Override
+	public Exhibition findExhibitionByName(String exhibitionToFind) {
+		List<Exhibition> exhibitions = entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
+		return exhibitions.stream().filter(e -> e.getName().equals(exhibitionToFind)).findAny().orElse(null);
+
+	}
 
 	@Override
 	public List<Exhibition> findExhibitionsByMuseumId(UUID museumId) {
@@ -72,15 +79,6 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 			throw new IllegalArgumentException();
 		}
 
-	}
-
-
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
 	}
 
 }

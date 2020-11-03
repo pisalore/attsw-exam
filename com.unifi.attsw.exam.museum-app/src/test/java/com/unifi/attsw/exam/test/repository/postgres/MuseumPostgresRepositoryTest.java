@@ -2,6 +2,7 @@ package com.unifi.attsw.exam.test.repository.postgres;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -43,15 +44,20 @@ public class MuseumPostgresRepositoryTest {
 	@Test
 	public void testFindMuseumByNullIdShouldThrow() {
 		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumById(null))
-				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("Cannot find entity, invalid or null id: " + null);
-
-		assertThat(postgresMuseumRepository.findAllMuseums()).isEmpty();
+				.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
 	public void testFindMuseumByIdWhenNoMuseumsArePresent() {
-		assertThat(postgresMuseumRepository.findMuseumById(invalidUUID)).isNull();
+		assertThatThrownBy(() -> postgresMuseumRepository.findMuseumById(invalidUUID))
+				.isInstanceOf(NoSuchElementException.class).hasMessage("Cannot find entity with id: " + invalidUUID);
+		;
+	}
+
+	@Test
+	public void testFindMuseumByNullName() {
+		assertThat(postgresMuseumRepository.findMuseumByName(null)).isNull();
+
 	}
 
 	@Test

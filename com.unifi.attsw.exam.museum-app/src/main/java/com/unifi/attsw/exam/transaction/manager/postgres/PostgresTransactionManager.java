@@ -79,7 +79,6 @@ public class PostgresTransactionManager implements TransactionManager {
 	}
 
 	public void commit() {
-		this.entityManager.flush();
 		this.entityManager.getTransaction().commit();
 	}
 

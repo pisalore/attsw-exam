@@ -6,7 +6,7 @@ matrix:
       - os: linux
         dist: xenial
         jdk: openjdk8
-        env: ADDITIONAL_MAVEN_ARGS="-Pjacoco coveralls:report"
+        env: ADDITIONAL_MAVEN_ARGS="org.pitest:pitest-maven:mutationCoverage -Pjacoco coveralls:report"
       # only on PR
       - os: linux
         dist: xenial
@@ -27,4 +27,4 @@ cache:
       - $HOME/.m2
 
 script:
-   - mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS
+   - mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify  $ADDITIONAL_MAVEN_ARGS
