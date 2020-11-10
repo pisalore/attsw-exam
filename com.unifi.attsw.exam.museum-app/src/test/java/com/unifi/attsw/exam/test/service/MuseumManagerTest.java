@@ -160,9 +160,13 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testSaveNullMuseumShouldThrow() {
+		museum = null;
 		assertThatThrownBy(() -> {
 			museumManager.saveMuseum(null);
-			doThrow(new NullPointerException()).doNothing();
+			doThrow(new NullPointerException()).when(museum).getName();
+			inOrder.verify(museumRepository).addMuseum(museum);
+			inOrder.verify(museum).getName();
+			verifyNoMoreInteractions(museumRepository, museum);
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossibile to add Museum.");
 	}
 

@@ -13,17 +13,24 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.mockito.Mockito.*;
 
 import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
+import com.unifi.attsw.exam.view.MuseumView;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MuseumControllerTest {
 
 	private static final String MUSEUM1_TEST = "museum1_test";
+	private static final String EXHIBITION1_TEST = "exhibition1_test";
+	
 	private static final int NUM_CONSTANT1 = 10;
 
 	@Mock
 	private MuseumManagerService museumService;
+	
+	@Mock
+	private MuseumView museumView;
 
 	@InjectMocks
 	private MuseumController museumController;
@@ -32,15 +39,16 @@ public class MuseumControllerTest {
 	
 	@Before
 	public void setUp() {
-		inOrder = inOrder(museumService);
+		inOrder = inOrder(museumService, museumView);
 	}
 	
 	@Test
 	public void testSaveNullMuseumShouldThrow() {
-		doThrow(new NullPointerException()).when(museumService).saveMuseum(null);
+		doThrow(new RuntimeException()).when(museumService).saveMuseum(null);
 		museumController.saveMuseum(null);
 		
 		inOrder.verify(museumService).saveMuseum(null);
+		inOrder.verify(museumView).showError("Impossibile to add Museum.", null);
 		verifyNoMoreInteractions(museumService);
 	}
 
@@ -53,6 +61,45 @@ public class MuseumControllerTest {
 		verifyNoMoreInteractions(museumService);
 	}
 	
+	@Test
+	public void testAddNewNullExhibitionShouldThrow() {
+		doThrow(new RuntimeException()).when(museumService).addNewExhibition(MUSEUM1_TEST, null);
+		museumController.saveExhibition(MUSEUM1_TEST, null);
+		
+		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, null);
+		verifyNoMoreInteractions(museumService);
+	}
+	
+	@Test
+	public void testAddNewExhibitionWhenMuseumDoesNotExistShouldThrow() {
+		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		doThrow(new RuntimeException()).when(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
+		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
+		
+		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
+		verifyNoMoreInteractions(museumService);
+		
+	}
+	
+	@Test
+	public void testAddNewExhibitionWhenMuseumNameIsNullShouldThrow() {
+		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		doThrow(new RuntimeException()).when(museumService).addNewExhibition(null, exhibition);
+		museumController.saveExhibition(null, exhibition);
+		
+		inOrder.verify(museumService).addNewExhibition(null, exhibition);
+		verifyNoMoreInteractions(museumService);
+		
+	}
+	
+	@Test
+	public void testAddNewExhibition() {
+		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
+		
+		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
+		verifyNoMoreInteractions(museumService);
+	}
 	
 
 }
