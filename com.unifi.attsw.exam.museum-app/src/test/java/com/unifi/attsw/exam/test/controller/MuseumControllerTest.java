@@ -16,6 +16,7 @@ import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
+import com.unifi.attsw.exam.view.ExhibitionView;
 import com.unifi.attsw.exam.view.MuseumView;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,6 +32,9 @@ public class MuseumControllerTest {
 	
 	@Mock
 	private MuseumView museumView;
+	
+	@Mock
+	private ExhibitionView exhibitionView;
 
 	@InjectMocks
 	private MuseumController museumController;
@@ -39,7 +43,7 @@ public class MuseumControllerTest {
 	
 	@Before
 	public void setUp() {
-		inOrder = inOrder(museumService, museumView);
+		inOrder = inOrder(museumService, museumView, exhibitionView);
 	}
 	
 	@Test
@@ -67,7 +71,8 @@ public class MuseumControllerTest {
 		museumController.saveExhibition(MUSEUM1_TEST, null);
 		
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, null);
-		verifyNoMoreInteractions(museumService);
+		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", null);
+		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 	
 	@Test
@@ -77,7 +82,8 @@ public class MuseumControllerTest {
 		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
 		
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
-		verifyNoMoreInteractions(museumService);
+		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", exhibition);
+		verifyNoMoreInteractions(museumService, exhibitionView);
 		
 	}
 	
@@ -88,7 +94,8 @@ public class MuseumControllerTest {
 		museumController.saveExhibition(null, exhibition);
 		
 		inOrder.verify(museumService).addNewExhibition(null, exhibition);
-		verifyNoMoreInteractions(museumService);
+		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", exhibition);
+		verifyNoMoreInteractions(museumService, exhibitionView);
 		
 	}
 	
