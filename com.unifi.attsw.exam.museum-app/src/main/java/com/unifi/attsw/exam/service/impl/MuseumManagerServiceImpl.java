@@ -125,9 +125,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				return null;
 			});
 
-		} catch (NoSuchElementException | NullPointerException |
-
-				RepositoryException ex) {
+		} catch (NoSuchElementException | NullPointerException | RepositoryException ex) {
 			throw new RuntimeException("Impossible to delete Exhibition.");
 		}
 	}
