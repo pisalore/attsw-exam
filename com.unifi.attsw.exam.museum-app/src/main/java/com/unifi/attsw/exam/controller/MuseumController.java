@@ -52,4 +52,12 @@ public class MuseumController {
 		}
 	}
 
+	public void bookExhibitionSeat(Exhibition exhibition) {
+		try {
+			museumService.bookExhibitionSeat(exhibition);
+		} catch (RuntimeException ex) {
+			exhibitionView.showError("Impossible to book a seat for Exhibition.", exhibition);
+		}
+	}
+
 }

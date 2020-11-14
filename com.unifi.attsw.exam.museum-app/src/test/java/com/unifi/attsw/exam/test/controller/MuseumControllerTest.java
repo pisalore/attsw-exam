@@ -160,12 +160,44 @@ public class MuseumControllerTest {
 	}
 	
 	@Test
-	public void testDeeteExhibition() {
+	public void testDeleteExhibition() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		museumController.deleteExhibition(exhibition);
 
 		inOrder.verify(museumService).deleteExhibition(exhibition);
 		verifyNoMoreInteractions(museumService);
+	}
+	
+	@Test
+	public void testBookNullExhibitionSeatShouldThrow() {
+		doThrow(new RuntimeException()).when(museumService).bookExhibitionSeat(null);
+		museumController.bookExhibitionSeat(null);
+
+		inOrder.verify(museumService).bookExhibitionSeat(null);
+		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition." , null);
+		verifyNoMoreInteractions(museumService, exhibitionView);
+	}
+	
+	@Test
+	public void testBookExhibitionWhenAllSeatsAreBookedShouldThrow() {
+		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		exhibition.setBookedSeats(NUM_CONSTANT1);
+		
+		doThrow(new RuntimeException()).when(museumService).bookExhibitionSeat(exhibition);
+		museumController.bookExhibitionSeat(exhibition);
+
+		inOrder.verify(museumService).bookExhibitionSeat(exhibition);
+		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition.", exhibition);
+		verifyNoMoreInteractions(museumService, exhibitionView);
+	}
+	
+	@Test
+	public void testBookExhibition() {
+		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		museumController.bookExhibitionSeat(exhibition);
+
+		inOrder.verify(museumService).bookExhibitionSeat(exhibition);
+		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 
 }
