@@ -20,14 +20,13 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public List<Museum> getAllMuseums() throws RepositoryException {
+	public List<Museum> getAllMuseums() throws RepositoryException  {
 		return transactionManager.doInTransactionMuseum(MuseumRepository::findAllMuseums);
 	}
 
 	@Override
 	public List<Exhibition> getAllExhibitions() throws RepositoryException {
 		return transactionManager.doInTransactionExhibition(ExhibitionRepository::findAllExhibitions);
-
 	}
 
 	@Override
@@ -40,6 +39,21 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			throw new RuntimeException("Impossible to get Exhibitions for the selected Museum: " + museum);
 		}
 
+	}
+
+	@Override
+	public Museum getMuseumByName(String museumName) {
+		try {
+			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
+				return museumRepository.findMuseumByName(museumName);
+			});
+			if (museum == null) {
+				throw new NoSuchElementException("Impossible to find the specified Museum: " + museumName);
+			}
+			return museum;
+		} catch (RepositoryException | NoSuchElementException ex) {
+			throw new RuntimeException("Impossible to find Museum");
+		}
 	}
 
 	@Override
