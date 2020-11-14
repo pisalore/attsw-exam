@@ -43,7 +43,7 @@ public class MuseumPostgresRepositoryWithNotEmptyDatabaseTest {
 
 	// Check if the sql script has been executed.
 	@Test
-	public void testfindAllMuseumsWhenMuseumsArePersisted() {
+	public void testFindAllMuseumsWhenMuseumsArePersisted() {
 		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
 		Museum museum2 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_2);
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsExactly(museum1, museum2);

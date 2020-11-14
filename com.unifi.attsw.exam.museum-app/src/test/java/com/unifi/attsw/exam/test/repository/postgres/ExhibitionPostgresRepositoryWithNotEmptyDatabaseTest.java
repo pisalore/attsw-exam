@@ -86,7 +86,7 @@ public class ExhibitionPostgresRepositoryWithNotEmptyDatabaseTest {
 	}
 
 	@Test
-	public void testFindeXHIBITIONByNameWhenMuseumIsPresent() {
+	public void testFindExhibitionByNameWhenMuseumIsPresent() {
 		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionByName(EXHIBITION_TEST_1);
 		assertThat(persistedExhibitions).extracting(Exhibition::getName).contains(exhibition1.getName());
 	}
