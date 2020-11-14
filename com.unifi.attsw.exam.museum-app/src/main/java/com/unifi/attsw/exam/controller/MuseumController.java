@@ -36,4 +36,20 @@ public class MuseumController {
 		}
 	}
 
+	public void deleteMuseum(Museum museum) {
+		try {
+			museumService.deleteMuseum(museum);
+		} catch (RuntimeException ex) {
+			museumView.showError("Impossible to delete Museum.", museum);
+		}
+	}
+
+	public void deleteExhibition(Exhibition exhibition) {
+		try {
+			museumService.deleteExhibition(exhibition);
+		} catch (RuntimeException ex) {
+			exhibitionView.showError("Impossible to delete Exhbition.", exhibition);
+		}
+	}
+
 }

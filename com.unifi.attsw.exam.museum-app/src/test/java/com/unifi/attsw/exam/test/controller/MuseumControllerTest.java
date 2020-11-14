@@ -24,15 +24,15 @@ public class MuseumControllerTest {
 
 	private static final String MUSEUM1_TEST = "museum1_test";
 	private static final String EXHIBITION1_TEST = "exhibition1_test";
-	
+
 	private static final int NUM_CONSTANT1 = 10;
 
 	@Mock
 	private MuseumManagerService museumService;
-	
+
 	@Mock
 	private MuseumView museumView;
-	
+
 	@Mock
 	private ExhibitionView exhibitionView;
 
@@ -40,17 +40,17 @@ public class MuseumControllerTest {
 	private MuseumController museumController;
 
 	private InOrder inOrder;
-	
+
 	@Before
 	public void setUp() {
 		inOrder = inOrder(museumService, museumView, exhibitionView);
 	}
-	
+
 	@Test
 	public void testSaveNullMuseumShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).saveMuseum(null);
 		museumController.saveMuseum(null);
-		
+
 		inOrder.verify(museumService).saveMuseum(null);
 		inOrder.verify(museumView).showError("Impossibile to add Museum.", null);
 		verifyNoMoreInteractions(museumService);
@@ -60,53 +60,94 @@ public class MuseumControllerTest {
 	public void testSaveMuseumWhichDoesNotExist() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
 		museumController.saveMuseum(museum);
-		
+
 		inOrder.verify(museumService).saveMuseum(museum);
 		verifyNoMoreInteractions(museumService);
 	}
-	
+
 	@Test
 	public void testAddNewNullExhibitionShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).addNewExhibition(MUSEUM1_TEST, null);
 		museumController.saveExhibition(MUSEUM1_TEST, null);
-		
+
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, null);
 		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", null);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
-	
+
 	@Test
 	public void testAddNewExhibitionWhenMuseumDoesNotExistShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		doThrow(new RuntimeException()).when(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
 		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
-		
+
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
 		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
-		
+
 	}
-	
+
 	@Test
 	public void testAddNewExhibitionWhenMuseumNameIsNullShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		doThrow(new RuntimeException()).when(museumService).addNewExhibition(null, exhibition);
 		museumController.saveExhibition(null, exhibition);
-		
+
 		inOrder.verify(museumService).addNewExhibition(null, exhibition);
 		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
-		
+
 	}
-	
+
 	@Test
 	public void testAddNewExhibition() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
-		
+
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
 		verifyNoMoreInteractions(museumService);
 	}
+
+	@Test
+	public void testDeleteNullMuseumShouldThrow() {
+		doThrow(new RuntimeException()).when(museumService).deleteMuseum(null);
+		museumController.deleteMuseum(null);
+
+		inOrder.verify(museumService).deleteMuseum(null);
+		inOrder.verify(museumView).showError("Impossible to delete Museum.", null);
+		verifyNoMoreInteractions(museumService, museumView);
+	}
 	
+	@Test
+	public void testDeleteMuseumWhichDoesNotExistShouldThrow() {
+		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
+		doThrow(new RuntimeException()).when(museumService).deleteMuseum(museum);
+		museumController.deleteMuseum(museum);
+
+		inOrder.verify(museumService).deleteMuseum(museum);
+		inOrder.verify(museumView).showError("Impossible to delete Museum.", museum);
+		verifyNoMoreInteractions(museumService, museumView);
+	}
+	
+	@Test
+	public void testDeleteNullExhibitionShouldThrow() {
+		doThrow(new RuntimeException()).when(museumService).deleteExhibition(null);
+		museumController.deleteExhibition(null);
+
+		inOrder.verify(museumService).deleteExhibition(null);
+		inOrder.verify(exhibitionView).showError("Impossible to delete Exhbition.", null);
+		verifyNoMoreInteractions(museumService, exhibitionView);
+	}
+	
+	@Test
+	public void testDeleteExhibitionWhichDoesNotExistShouldThrow() {
+		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		doThrow(new RuntimeException()).when(museumService).deleteExhibition(exhibition);
+		museumController.deleteExhibition(exhibition);
+
+		inOrder.verify(museumService).deleteExhibition(exhibition);
+		inOrder.verify(exhibitionView).showError("Impossible to delete Exhbition.", exhibition);
+		verifyNoMoreInteractions(museumService, exhibitionView);
+	}
 
 }
