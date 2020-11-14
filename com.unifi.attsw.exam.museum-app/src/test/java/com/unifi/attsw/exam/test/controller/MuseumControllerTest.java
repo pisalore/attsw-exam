@@ -130,6 +130,15 @@ public class MuseumControllerTest {
 	}
 	
 	@Test
+	public void testDeleteMuseum() {
+		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
+		museumController.deleteMuseum(museum);
+
+		inOrder.verify(museumService).deleteMuseum(museum);
+		verifyNoMoreInteractions(museumService);
+	}
+	
+	@Test
 	public void testDeleteNullExhibitionShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).deleteExhibition(null);
 		museumController.deleteExhibition(null);
@@ -148,6 +157,15 @@ public class MuseumControllerTest {
 		inOrder.verify(museumService).deleteExhibition(exhibition);
 		inOrder.verify(exhibitionView).showError("Impossible to delete Exhbition.", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
+	}
+	
+	@Test
+	public void testDeeteExhibition() {
+		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
+		museumController.deleteExhibition(exhibition);
+
+		inOrder.verify(museumService).deleteExhibition(exhibition);
+		verifyNoMoreInteractions(museumService);
 	}
 
 }
