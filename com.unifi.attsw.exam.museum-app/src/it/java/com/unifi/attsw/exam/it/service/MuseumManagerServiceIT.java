@@ -25,6 +25,7 @@ public class MuseumManagerServiceIT {
 	private static final String MUSEUM1_TEST = "museum1_test";
 	private static final String MUSEUM2_TEST = "museum2_test";
 	private static final String MUSEUM3_TEST = "museum3_test";
+	private static final int NUM_CONST = 10;
 
 	private static final String EXHIBITION1_TEST = "exhibition1_test";
 	private static final String EXHIBITION2_TEST = "exhibition2_test";
@@ -63,25 +64,45 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testAddNewMuseumWithAlreadyExistingNameShouldThrow() {
-		Museum museum = new Museum(MUSEUM1_TEST, 10);
+		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONST);
 		assertThatThrownBy(() -> {
 			museumManager.saveMuseum(museum);
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossibile to add Museum.");
 	}
-	
+
 	@Test
 	public void testAddNewMuseum() throws RepositoryException {
-		Museum museum = new Museum (MUSEUM3_TEST, 10);
+		Museum museum = new Museum(MUSEUM3_TEST, NUM_CONST);
 		museumManager.saveMuseum(museum);
 		List<Museum> museums = museumManager.getAllMuseums();
 		assertThat(museums).extracting(Museum::getName).contains(MUSEUM1_TEST, MUSEUM2_TEST, MUSEUM3_TEST);
-		
+
 	}
-	
+
+	@Test
+	public void testDeleteMuseum() throws RepositoryException {
+		Museum museum = new Museum("MuseumToBeDeleted", NUM_CONST);
+		museumManager.saveMuseum(museum);
+		museumManager.deleteMuseum(museum);
+		List<Museum> museums = museumManager.getAllMuseums();
+		assertThat(museums).extracting(Museum::getName).doesNotContain("MuseumToBeDeleted");
+	}
+
 	@AfterClass
 	public static void tearDown() {
 		entityManager.clear();
 		entityManager.close();
 		sessionFactory.close();
+	}
+	
+	/**
+	 * 
+	 * Utility methods
+	 * 
+	 */
+
+	public Museum createTestMuseum(String museumName, int numOfRooms) {
+		Museum museum = new Museum(museumName, numOfRooms);
+		return museum;
 	}
 }
