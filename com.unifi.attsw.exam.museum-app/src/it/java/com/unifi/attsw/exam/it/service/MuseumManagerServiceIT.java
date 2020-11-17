@@ -36,6 +36,8 @@ public class MuseumManagerServiceIT {
 	private static final String EXHIBITION2_TEST = "exhibition2_test";
 	private static final String EXHIBITION3_TEST = "exhibition3_test";
 
+	private static final UUID EXHIBITION_ID_1 = UUID.fromString("49d13e51-2277-4911-929f-c9c067e2e8b4");
+
 	private static EntityManagerFactory sessionFactory;
 	private static EntityManager entityManager;
 	private static PostgresTransactionManager transactionManager;
@@ -65,6 +67,13 @@ public class MuseumManagerServiceIT {
 	public void testGetMuseumByName() {
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		assertThat(museum).extracting(Museum::getName, Museum::getId).containsExactly(MUSEUM1_TEST, MUSEUM_ID_1);
+	}
+
+	@Test
+	public void testGetExhibitionByName() {
+		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
+		assertThat(exhibition).extracting(Exhibition::getName, Exhibition::getId).containsExactly(EXHIBITION1_TEST,
+				EXHIBITION_ID_1);
 	}
 
 	@Test
@@ -119,7 +128,7 @@ public class MuseumManagerServiceIT {
 		assertThat(exhibitions).extracting(Exhibition::getName).containsExactly(EXHIBITION1_TEST, EXHIBITION2_TEST,
 				EXHIBITION3_TEST);
 	}
-	
+
 	@Test
 	public void testDeleteExhibition() throws RepositoryException {
 		Museum museum1 = museumManager.getMuseumByName(MUSEUM1_TEST);
@@ -127,10 +136,10 @@ public class MuseumManagerServiceIT {
 		museumManager.deleteExhibition(exhibition);
 		List<Exhibition> allExhibitions = museumManager.getAllExhibitions();
 		List<Exhibition> museum1TestExhibitions = museumManager.getAllMuseumExhibitions(museum1);
-		
+
 		assertThat(allExhibitions).extracting(Exhibition::getName).containsExactly(EXHIBITION2_TEST);
 		assertThat(museum1TestExhibitions).extracting(Exhibition::getName).containsExactly(EXHIBITION2_TEST);
-		
+
 	}
 
 	@After
