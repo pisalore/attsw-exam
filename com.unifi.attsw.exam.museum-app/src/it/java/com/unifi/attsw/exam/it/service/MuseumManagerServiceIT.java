@@ -142,6 +142,17 @@ public class MuseumManagerServiceIT {
 
 	}
 
+	@Test
+	public void testBookExhibition() {
+		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
+		int bookedExhibitionsBefore = exhibition.getBookedSeats();
+		museumManager.bookExhibitionSeat(exhibition);
+		int bookedExhibitionsAfter = exhibition.getBookedSeats();
+		assertThat(bookedExhibitionsBefore).isEqualTo(0);
+		assertThat(bookedExhibitionsAfter).isEqualTo(1);
+		assertThat(bookedExhibitionsAfter).isGreaterThan(bookedExhibitionsBefore);
+	}
+
 	@After
 	public void tearDown() {
 		entityManager.clear();
