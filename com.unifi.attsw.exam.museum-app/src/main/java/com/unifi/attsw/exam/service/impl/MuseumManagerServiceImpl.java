@@ -20,7 +20,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public List<Museum> getAllMuseums() throws RepositoryException  {
+	public List<Museum> getAllMuseums() throws RepositoryException {
 		return transactionManager.doInTransactionMuseum(MuseumRepository::findAllMuseums);
 	}
 
@@ -95,6 +95,21 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			throw new RuntimeException("Impossible to delete Museum.");
 		}
 
+	}
+
+	@Override
+	public Exhibition getExhibitionByName(String exhibitionName) {
+		try {
+			Exhibition exhibition = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+				return exhibitionRepository.findExhibitionByName(exhibitionName);
+			});
+			if (exhibition == null) {
+				throw new NoSuchElementException("Impossible to find the specified Exhibition: " + exhibitionName);
+			}
+			return exhibition;
+		} catch (RepositoryException | NoSuchElementException ex) {
+			throw new RuntimeException("Impossible to find Exhibition");
+		}
 	}
 
 	@Override

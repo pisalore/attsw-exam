@@ -18,6 +18,8 @@ public interface MuseumManagerService {
 	public Museum saveMuseum(Museum museum);
 
 	public void deleteMuseum(Museum museum);
+	
+	public Exhibition getExhibitionByName(String exhibitionName);
 
 	public Exhibition addNewExhibition(String museumName, Exhibition exhibition);
 
