@@ -111,7 +111,7 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testaddNewExhibition() {
+	public void testAddNewExhibition() {
 		Exhibition exhibition = createTestExhibition(EXHIBITION3_TEST, NUM_CONST);
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		museumManager.addNewExhibition(museum.getName(), exhibition);
@@ -120,10 +120,18 @@ public class MuseumManagerServiceIT {
 				EXHIBITION3_TEST);
 	}
 	
-//	@Test
-//	public void deleteExhibition() {
-//		
-//	}
+	@Test
+	public void testDeleteExhibition() throws RepositoryException {
+		Museum museum1 = museumManager.getMuseumByName(MUSEUM1_TEST);
+		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
+		museumManager.deleteExhibition(exhibition);
+		List<Exhibition> allExhibitions = museumManager.getAllExhibitions();
+		List<Exhibition> museum1TestExhibitions = museumManager.getAllMuseumExhibitions(museum1);
+		
+		assertThat(allExhibitions).extracting(Exhibition::getName).containsExactly(EXHIBITION2_TEST);
+		assertThat(museum1TestExhibitions).extracting(Exhibition::getName).containsExactly(EXHIBITION2_TEST);
+		
+	}
 
 	@After
 	public void tearDown() {
