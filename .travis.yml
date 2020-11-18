@@ -19,6 +19,7 @@ matrix:
         
 services:
       - docker
+      - xvfb
 
 install: true
 
