@@ -84,14 +84,6 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testAddNewMuseumWithAlreadyExistingNameShouldThrow() {
-		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONST);
-		assertThatThrownBy(() -> {
-			museumManager.saveMuseum(museum);
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossibile to add Museum.");
-	}
-
-	@Test
 	public void testAddNewMuseum() throws RepositoryException {
 		Museum museum = new Museum(MUSEUM3_TEST, NUM_CONST);
 		museumManager.saveMuseum(museum);
