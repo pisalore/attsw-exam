@@ -30,14 +30,13 @@ public class PostgresTransactionManager implements TransactionManager {
 		startTransaction();
 
 		try {
-			query.apply(museumRepository, exhibitionRepository);
+			T response = query.apply(museumRepository, exhibitionRepository);
 			commit();
+			return response;
 		} catch (PersistenceException | IllegalArgumentException ex) {
 			rollback();
 			throw new RepositoryException("Something went wrong committing to database, rollback");
 		}
-
-		return null;
 	}
 
 	public EntityManager getEntityManager() {
@@ -49,29 +48,27 @@ public class PostgresTransactionManager implements TransactionManager {
 		startTransaction();
 
 		try {
-			query.apply(museumRepository);
+			T response = query.apply(museumRepository);
 			commit();
+			return response;
 		} catch (PersistenceException | IllegalArgumentException ex) {
 			rollback();
 			throw new RepositoryException("Something went wrong committing to database, rollback");
 		}
-
-		return null;
 	}
-	
+
 	@Override
 	public <T> T doInTransactionExhibition(ExhibitionTransactionCode<T> query) throws RepositoryException {
 		startTransaction();
 
 		try {
-			query.apply(exhibitionRepository);
+			T response = query.apply(exhibitionRepository);
 			commit();
+			return response;
 		} catch (PersistenceException | IllegalArgumentException ex) {
 			rollback();
 			throw new RepositoryException("Something went wrong committing to database, rollback");
 		}
-
-		return null;
 	}
 
 	public void startTransaction() {
