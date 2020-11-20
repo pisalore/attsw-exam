@@ -17,29 +17,10 @@ import java.awt.Insets;
 
 public class MuseumSwingView extends JFrame implements MuseumView{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtMuseumname;
-	private JTextField textField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MuseumSwingView frame = new MuseumSwingView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JTextField txtRooms;
 
 	/**
 	 * Create the frame.
@@ -84,13 +65,14 @@ public class MuseumSwingView extends JFrame implements MuseumView{
 		gbc_lblRooms.gridy = 1;
 		contentPane.add(lblRooms, gbc_lblRooms);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		contentPane.add(textField, gbc_textField);
-		textField.setColumns(10);
+		txtRooms = new JTextField();
+		txtRooms.setText("rooms");
+		GridBagConstraints gbc_txtRooms = new GridBagConstraints();
+		gbc_txtRooms.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtRooms.gridx = 1;
+		gbc_txtRooms.gridy = 1;
+		contentPane.add(txtRooms, gbc_txtRooms);
+		txtRooms.setColumns(10);
 	}
 
 	@Override
