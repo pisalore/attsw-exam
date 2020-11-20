@@ -120,6 +120,7 @@
 					<configuration>
 						<excludedClasses>
 							<param>com.unifi.attsw.exam.model.*</param>
+							<param>com.unifi.attws.exam.view.swing.*></param>
 						</excludedClasses>
 						<targetTests>
 							<param>com.unifi.attsw.exam.*</param>
