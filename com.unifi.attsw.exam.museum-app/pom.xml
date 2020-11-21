@@ -121,9 +121,10 @@
 						<excludedClasses>
 							<param>com.unifi.attsw.exam.model.*</param>
 							<param>com.unifi.attsw.exam.view.*></param>
+							<param>com.unifi.attsw.exam.view.swing.*></param>
 						</excludedClasses>
 						<excludedTestClasses>
-							<param>com.unifi.attsw.exam.test.view.*</param>
+							<param>com.unifi.attsw.exam.test.view.swing.*</param>
 						</excludedTestClasses>
 						<targetTests>
 							<param>com.unifi.attsw.exam.*</param>
