@@ -84,26 +84,21 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		gbc_txtRooms.gridy = 1;
 		contentPane.add(txtRooms, gbc_txtRooms);
 		txtRooms.setColumns(10);
-
+		
 		JButton btnAdd = new JButton("Add");
+		btnAdd.setEnabled(false);
+		
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				btnAdd.setEnabled(!txtMuseum.getText().isEmpty() && !txtMuseum.getText().isEmpty());
+				btnAdd.setEnabled(!txtMuseum.getText().trim().isEmpty() && !txtRooms.getText().trim().isEmpty());
 			}
-		}
-		;
-		btnAdd.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				btnAdd.setEnabled(!txtMuseum.getText().isEmpty() && !txtMuseum.getText().isEmpty());
-			}
-		});
-		btnAdd.setEnabled(false);
+		};
 		
+
 		txtRooms.addKeyListener(btnAddEnabler);
 		btnAdd.setEnabled(false);
-		
+
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 5);
 		gbc_btnAdd.gridx = 1;

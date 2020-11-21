@@ -4,6 +4,7 @@ import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
@@ -49,6 +50,24 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("museum").enterText(MUSEUM1_TEST);
 		window.textBox("rooms").enterText(NUM_CONST);
 		window.button(JButtonMatcher.withText("Add")).requireEnabled();
+	}
+	
+	@Test
+	public void testWhenEitherMuseumOrRoomsAreBlankAdButtonShouldBeDisabled() {
+		JTextComponentFixture museumTextBox = window.textBox("museum");
+		JTextComponentFixture roomsTextBox = window.textBox("rooms");
+
+		museumTextBox.enterText(MUSEUM1_TEST);
+		roomsTextBox.enterText(" ");
+		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+
+		museumTextBox.setText("");
+		roomsTextBox.setText("");
+
+		museumTextBox.enterText(" ");
+		roomsTextBox.enterText(NUM_CONST);
+		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+
 	}
 
 }
