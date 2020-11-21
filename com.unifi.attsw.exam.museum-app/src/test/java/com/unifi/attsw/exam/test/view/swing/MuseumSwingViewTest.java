@@ -1,10 +1,6 @@
 package com.unifi.attsw.exam.test.view.swing;
 
-import static org.junit.Assert.*;
-
-import javax.swing.JTextField;
-
-import org.assertj.swing.annotation.GUITest;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.core.matcher.JTextComponentMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -38,6 +34,12 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase{
 	public void testMuseumDashboardControlsInitialState() {
 		window.label(JLabelMatcher.withText("Museum"));
 		window.textBox(JTextComponentMatcher.withText("museum")).requireEnabled();
+		window.label(JLabelMatcher.withText("Rooms"));
+		window.textBox(JTextComponentMatcher.withText("rooms")).requireEnabled();
+		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+		window.button(JButtonMatcher.withText("Find all")).requireEnabled();
+		window.list("museumList");
+		window.button(JButtonMatcher.withText("Delete Selected")).requireDisabled();
 	}
 
 }
