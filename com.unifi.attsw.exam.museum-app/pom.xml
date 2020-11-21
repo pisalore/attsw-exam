@@ -126,9 +126,6 @@
 						<excludedTestClasses>
 							<param>com.unifi.attsw.exam.test.view.swing.*</param>
 						</excludedTestClasses>
-						<targetTests>
-							<param>com.unifi.attsw.exam.*</param>
-						</targetTests>
 						<timeoutFactor>4000</timeoutFactor>
 						<timeoutConstant>10000</timeoutConstant>
 						<mutators>
