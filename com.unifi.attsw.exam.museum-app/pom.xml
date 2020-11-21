@@ -118,11 +118,15 @@
 					<artifactId>pitest-maven</artifactId>
 					<version>${pitest.version}</version>
 					<configuration>
-						<excludedClasses>
-							<param>com.unifi.attsw.exam.model.*</param>
-							<param>com.unifi.attsw.exam.view.*></param>
-							<param>com.unifi.attsw.exam.view.swing.*></param>
-						</excludedClasses>
+						<targetClasses>
+							<param>com.unifi.attsw.exam.controller.*</param>
+							<param>com.unifi.attsw.exam.repository.postgres.*</param>
+							<param>com.unifi.attsw.exam.service.impl.*</param>
+							<param>com.unifi.attsw.exam.transaction.manager.postgres.*</param>
+						</targetClasses>
+						<targetTests>
+							<param>com.unifi.attsw.exam.test.*</param>
+						</targetTests>
 						<excludedTestClasses>
 							<param>com.unifi.attsw.exam.test.view.swing.*</param>
 						</excludedTestClasses>
