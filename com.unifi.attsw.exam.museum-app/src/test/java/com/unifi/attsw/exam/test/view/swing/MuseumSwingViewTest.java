@@ -1,21 +1,29 @@
 package com.unifi.attsw.exam.test.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
+
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
 @RunWith(GUITestRunner.class)
 public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 
 	private static final String MUSEUM1_TEST = "museum1_test";
+	private static final String MUSEUM2_TEST = "museum2_test";
 	private static final String NUM_CONST = "10";
 
 	private FrameFixture window;
@@ -51,7 +59,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("rooms").enterText(NUM_CONST);
 		window.button(JButtonMatcher.withText("Add")).requireEnabled();
 	}
-	
+
 	@Test
 	public void testWhenEitherMuseumOrRoomsAreBlankAdButtonShouldBeDisabled() {
 		JTextComponentFixture museumTextBox = window.textBox("museum");
@@ -67,6 +75,36 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		museumTextBox.enterText(" ");
 		roomsTextBox.enterText(NUM_CONST);
 		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+
+	}
+
+	@Test
+	@GUITest
+	public void testDeleteButtonShouldBeEnabledOnlyWhenAMuseumIsSelected() {
+		GuiActionRunner.execute(() -> museumSwingView.getMuseumListModel().addElement(new Museum(MUSEUM1_TEST, 10)));
+		window.list("museumList").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Selected")).requireEnabled();
+		window.list("museumList").clearSelection();
+		window.button(JButtonMatcher.withText("Delete Selected")).requireDisabled();
+	}
+
+	@Test
+	@GUITest
+	public void testShowAllMuseums() {
+		Museum museum1 = new Museum(MUSEUM1_TEST, 10);
+		Museum museum2 = new Museum(MUSEUM2_TEST, 10);
+		GuiActionRunner.execute(() -> museumSwingView.showAllMuseums(Arrays.asList(museum1, museum2)));
+		String[] listContents = window.list().contents();
+		assertThat(listContents).containsExactly("museum1_test - Total Rooms: 10 - Occupied Rooms: 0",
+				"museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
+	}
+
+	@Test
+	@GUITest
+	public void testShowErrorShouldShowTheMessageInLabel() {
+		Museum museum1 = new Museum(MUSEUM1_TEST, 10);
+		GuiActionRunner.execute(() -> museumSwingView.showError("error message: ", museum1));
+		window.label("errorMessageLabel").requireText("error message: " + museum1);
 
 	}
 

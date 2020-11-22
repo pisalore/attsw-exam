@@ -11,12 +11,19 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
+
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
+
+import javax.swing.ListSelectionModel;
 
 public class MuseumSwingView extends JFrame implements MuseumView {
 
@@ -24,6 +31,14 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	private JPanel contentPane;
 	private JTextField txtMuseum;
 	private JTextField txtRooms;
+	private JList<Museum> museumList;
+	private DefaultListModel<Museum> museumListModel;
+	private JLabel errorMessageLabel;
+	private JLabel lblMuseum;
+	private JLabel lblRooms;
+	private JButton btnFindAll;
+	private JButton btnAdd;
+	private JButton btnDeleteSelected;
 
 	/**
 	 * Create the frame.
@@ -42,7 +57,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
-		JLabel lblMuseum = new JLabel("Museum");
+		lblMuseum = new JLabel("Museum");
 		GridBagConstraints gbc_lblMuseum = new GridBagConstraints();
 		gbc_lblMuseum.anchor = GridBagConstraints.EAST;
 		gbc_lblMuseum.insets = new Insets(0, 0, 5, 5);
@@ -60,14 +75,14 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		contentPane.add(txtMuseum, gbc_txtMuseum);
 		txtMuseum.setColumns(10);
 
-		JButton btnFindAll = new JButton("Find all");
+		btnFindAll = new JButton("Find all");
 		GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
 		gbc_btnFindAll.insets = new Insets(0, 0, 5, 0);
 		gbc_btnFindAll.gridx = 3;
 		gbc_btnFindAll.gridy = 0;
 		contentPane.add(btnFindAll, gbc_btnFindAll);
 
-		JLabel lblRooms = new JLabel("Rooms");
+		lblRooms = new JLabel("Rooms");
 		GridBagConstraints gbc_lblRooms = new GridBagConstraints();
 		gbc_lblRooms.anchor = GridBagConstraints.EAST;
 		gbc_lblRooms.insets = new Insets(0, 0, 5, 5);
@@ -84,17 +99,16 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		gbc_txtRooms.gridy = 1;
 		contentPane.add(txtRooms, gbc_txtRooms);
 		txtRooms.setColumns(10);
-		
-		JButton btnAdd = new JButton("Add");
+
+		btnAdd = new JButton("Add");
 		btnAdd.setEnabled(false);
-		
+
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				btnAdd.setEnabled(!txtMuseum.getText().trim().isEmpty() && !txtRooms.getText().trim().isEmpty());
 			}
 		};
-		
 
 		txtRooms.addKeyListener(btnAddEnabler);
 		btnAdd.setEnabled(false);
@@ -114,11 +128,25 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		gbc_scrollPane.gridy = 3;
 		contentPane.add(scrollPane, gbc_scrollPane);
 
-		JList museumList = new JList();
+		museumListModel = new DefaultListModel<>();
+		museumList = new JList<>(museumListModel);
+		museumList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		museumList.setName("museumList");
+		museumList.setCellRenderer(new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Museum museum = (Museum) value;
+				return super.getListCellRendererComponent(list, getDisplayString(museum), index, isSelected,
+						cellHasFocus);
+			}
+		});
+
 		scrollPane.setViewportView(museumList);
 
-		JLabel errorMessageLabel = new JLabel(" ");
+		errorMessageLabel = new JLabel(" ");
 		errorMessageLabel.setForeground(Color.RED);
 		errorMessageLabel.setName("errorMessageLabel");
 		GridBagConstraints gbc_errorMessageLabel = new GridBagConstraints();
@@ -128,8 +156,11 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		gbc_errorMessageLabel.gridy = 5;
 		contentPane.add(errorMessageLabel, gbc_errorMessageLabel);
 
-		JButton btnDeleteSelected = new JButton("Delete Selected");
+		btnDeleteSelected = new JButton("Delete Selected");
 		btnDeleteSelected.setEnabled(false);
+
+		museumList.addListSelectionListener(e -> btnDeleteSelected.setEnabled(museumList.getSelectedIndex() != -1));
+
 		GridBagConstraints gbc_btnDeleteSelected = new GridBagConstraints();
 		gbc_btnDeleteSelected.anchor = GridBagConstraints.EAST;
 		gbc_btnDeleteSelected.insets = new Insets(0, 0, 5, 0);
@@ -139,9 +170,23 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	}
 
 	@Override
-	public void showError(String message, Museum museum) {
-		// TODO Auto-generated method stub
+	public void showAllMuseums(List<Museum> museums) {
+		museums.stream().forEach(museumListModel::addElement);
+	}
 
+	@Override
+	public void showError(String message, Museum museum) {
+		errorMessageLabel.setText(message + museum);
+
+	}
+
+	public DefaultListModel<Museum> getMuseumListModel() {
+		return museumListModel;
+	}
+
+	private String getDisplayString(Museum museum) {
+		return museum.getName() + " - Total Rooms: " + museum.getTotalRooms() + " - Occupied Rooms: "
+				+ museum.getOccupiedRooms();
 	}
 
 }

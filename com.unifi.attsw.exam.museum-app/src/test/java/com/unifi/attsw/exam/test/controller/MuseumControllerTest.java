@@ -10,9 +10,14 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
@@ -44,6 +49,14 @@ public class MuseumControllerTest {
 	@Before
 	public void setUp() {
 		inOrder = inOrder(museumService, museumView, exhibitionView);
+	}
+
+	@Test
+	public void testShowAllMuseums() throws RepositoryException {
+		List<Museum> museums = asList(new Museum());
+		when(museumService.getAllMuseums()).thenReturn(museums);
+		museumController.getAllMuseums();
+		inOrder.verify(museumView).showAllMuseums(museums);
 	}
 
 	@Test
@@ -117,7 +130,7 @@ public class MuseumControllerTest {
 		inOrder.verify(museumView).showError("Impossible to delete Museum.", null);
 		verifyNoMoreInteractions(museumService, museumView);
 	}
-	
+
 	@Test
 	public void testDeleteMuseumWhichDoesNotExistShouldThrow() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
@@ -128,7 +141,7 @@ public class MuseumControllerTest {
 		inOrder.verify(museumView).showError("Impossible to delete Museum.", museum);
 		verifyNoMoreInteractions(museumService, museumView);
 	}
-	
+
 	@Test
 	public void testDeleteMuseum() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
@@ -137,7 +150,7 @@ public class MuseumControllerTest {
 		inOrder.verify(museumService).deleteMuseum(museum);
 		verifyNoMoreInteractions(museumService);
 	}
-	
+
 	@Test
 	public void testDeleteNullExhibitionShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).deleteExhibition(null);
@@ -147,7 +160,7 @@ public class MuseumControllerTest {
 		inOrder.verify(exhibitionView).showError("Impossible to delete Exhbition.", null);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
-	
+
 	@Test
 	public void testDeleteExhibitionWhichDoesNotExistShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
@@ -158,7 +171,7 @@ public class MuseumControllerTest {
 		inOrder.verify(exhibitionView).showError("Impossible to delete Exhbition.", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
-	
+
 	@Test
 	public void testDeleteExhibition() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
@@ -167,22 +180,22 @@ public class MuseumControllerTest {
 		inOrder.verify(museumService).deleteExhibition(exhibition);
 		verifyNoMoreInteractions(museumService);
 	}
-	
+
 	@Test
 	public void testBookNullExhibitionSeatShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).bookExhibitionSeat(null);
 		museumController.bookExhibitionSeat(null);
 
 		inOrder.verify(museumService).bookExhibitionSeat(null);
-		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition." , null);
+		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition.", null);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
-	
+
 	@Test
 	public void testBookExhibitionWhenAllSeatsAreBookedShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		exhibition.setBookedSeats(NUM_CONSTANT1);
-		
+
 		doThrow(new RuntimeException()).when(museumService).bookExhibitionSeat(exhibition);
 		museumController.bookExhibitionSeat(exhibition);
 
@@ -190,7 +203,7 @@ public class MuseumControllerTest {
 		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition.", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
-	
+
 	@Test
 	public void testBookExhibition() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);

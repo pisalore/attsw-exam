@@ -1,5 +1,6 @@
 package com.unifi.attsw.exam.controller;
 
+import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
@@ -16,6 +17,10 @@ public class MuseumController {
 		this.museumService = museumService;
 		this.museumView = museumView;
 		this.exhibitionView = exhibitionView;
+	}
+	
+	public void getAllMuseums() throws RepositoryException {
+		museumView.showAllMuseums(museumService.getAllMuseums());
 	}
 
 	public void saveMuseum(Museum museum) {
