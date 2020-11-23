@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 
+import javax.swing.DefaultListModel;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -106,6 +107,32 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> museumSwingView.showError("error message: ", museum1));
 		window.label("errorMessageLabel").requireText("error message: " + museum1);
 
+	}
+
+	@Test
+	public void testMuseumAddedShouldAddTheMuseumToTheListAndResetTheErrorLabel() {
+		GuiActionRunner.execute(() -> museumSwingView.museumAdded(new Museum(MUSEUM1_TEST, 10)));
+		String[] listContents = window.list().contents();
+		assertThat(listContents).containsExactly("museum1_test - Total Rooms: 10 - Occupied Rooms: 0");
+		window.label("errorMessageLabel").requireText(" ");
+	}
+
+	@Test
+	public void testMuseumRemovedShouldRemoveTheMuseumFromTheListAndResetTheErrorLabel() {
+		// setup
+		Museum museum1 = new Museum(MUSEUM1_TEST, 10);
+		Museum museum2 = new Museum(MUSEUM2_TEST, 10);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Museum> museumsListModel = museumSwingView.getMuseumListModel();
+			museumsListModel.addElement(museum1);
+			museumsListModel.addElement(museum2);
+		});
+		// execute
+		GuiActionRunner.execute(() -> museumSwingView.museumRemoved(new Museum(MUSEUM1_TEST, 10)));
+		// verify
+		String[] listContents = window.list().contents();
+		assertThat(listContents).containsExactly("museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
+		window.label("errorMessageLabel").requireText(" ");
 	}
 
 }

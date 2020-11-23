@@ -168,9 +168,10 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		gbc_btnDeleteSelected.gridy = 5;
 		contentPane.add(btnDeleteSelected, gbc_btnDeleteSelected);
 	}
-
+	
 	@Override
 	public void showAllMuseums(List<Museum> museums) {
+		museumListModel.clear();
 		museums.stream().forEach(museumListModel::addElement);
 	}
 
@@ -178,6 +179,18 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	public void showError(String message, Museum museum) {
 		errorMessageLabel.setText(message + museum);
 
+	}
+	
+	@Override
+	public void museumAdded(Museum museum) {
+		museumListModel.addElement(museum);
+		
+	}
+
+	@Override
+	public void museumRemoved(Museum museum) {
+		museumListModel.removeElement(museum);
+		
 	}
 
 	public DefaultListModel<Museum> getMuseumListModel() {

@@ -6,8 +6,12 @@ import com.unifi.attsw.exam.model.Museum;
 
 public interface MuseumView {
 	
+	void showAllMuseums(List<Museum> museums);
+	
 	void showError(String message, Museum museum);
 	
-	void showAllMuseums(List<Museum> museums);
+	public void museumAdded(Museum museum);
+	
+	public void museumRemoved(Museum museum);
 
 }

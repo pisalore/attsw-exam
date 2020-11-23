@@ -105,12 +105,4 @@ public class Museum {
 		return true;
 	}
 
-//	public List<Exhibition> getExhibitions() {
-//		return exhibitions;
-//	}
-//
-//	public void setExhibitions(List<Exhibition> exhibitions) {
-//		this.exhibitions = exhibitions;
-//	}
-
 }
