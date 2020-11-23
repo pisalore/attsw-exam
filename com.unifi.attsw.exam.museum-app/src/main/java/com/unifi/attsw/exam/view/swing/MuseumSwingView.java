@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.view.MuseumView;
 import java.awt.GridBagLayout;
@@ -26,6 +27,8 @@ import java.util.List;
 import javax.swing.ListSelectionModel;
 
 public class MuseumSwingView extends JFrame implements MuseumView {
+	
+	private MuseumController museumController;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -102,6 +105,8 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 		btnAdd = new JButton("Add");
 		btnAdd.setEnabled(false);
+		btnAdd.addActionListener(e -> museumController
+				.saveMuseum(new Museum(txtMuseum.getText(), Integer.parseInt(txtRooms.getText()))));
 
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
@@ -111,7 +116,6 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		};
 
 		txtRooms.addKeyListener(btnAddEnabler);
-		btnAdd.setEnabled(false);
 
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 5);
@@ -161,6 +165,8 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 		museumList.addListSelectionListener(e -> btnDeleteSelected.setEnabled(museumList.getSelectedIndex() != -1));
 
+		btnDeleteSelected.addActionListener(e -> museumController.deleteMuseum(museumList.getSelectedValue()));
+
 		GridBagConstraints gbc_btnDeleteSelected = new GridBagConstraints();
 		gbc_btnDeleteSelected.anchor = GridBagConstraints.EAST;
 		gbc_btnDeleteSelected.insets = new Insets(0, 0, 5, 0);
@@ -200,6 +206,10 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	private String getDisplayString(Museum museum) {
 		return museum.getName() + " - Total Rooms: " + museum.getTotalRooms() + " - Occupied Rooms: "
 				+ museum.getOccupiedRooms();
+	}
+	
+	public void setMuseumController(MuseumController museumController) {
+		this.museumController = museumController;
 	}
 
 }

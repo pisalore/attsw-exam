@@ -1,6 +1,7 @@
 package com.unifi.attsw.exam.test.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 
@@ -16,7 +17,10 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
@@ -30,11 +34,16 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	private FrameFixture window;
 
 	private MuseumSwingView museumSwingView;
+	
+	@Mock
+	private MuseumController museumController;
 
 	@Override
 	protected void onSetUp() {
+		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
 			museumSwingView = new MuseumSwingView();
+			museumSwingView.setMuseumController(museumController);
 			return museumSwingView;
 		});
 		window = new FrameFixture(robot(), museumSwingView);
@@ -133,6 +142,29 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		String[] listContents = window.list().contents();
 		assertThat(listContents).containsExactly("museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
 		window.label("errorMessageLabel").requireText(" ");
+	}
+	
+	@Test
+	public void testAddButtonShouldDelegateToControllerSaveMuseum() {
+		window.textBox("museum").enterText(MUSEUM1_TEST);
+		window.textBox("rooms").enterText(NUM_CONST);
+		window.button(JButtonMatcher.withText("Add")).click();
+		verify(museumController).saveMuseum(new Museum(MUSEUM1_TEST, 10));
+	}
+	
+	@Test
+	public void testRemovedSelectedButtonShouldDelegateToControllerDeleteMuseum() {
+		// setup
+		Museum museum1 = new Museum(MUSEUM1_TEST, 10);
+		Museum museum2 = new Museum(MUSEUM2_TEST, 10);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Museum> museumsListModel = museumSwingView.getMuseumListModel();
+			museumsListModel.addElement(museum1);
+			museumsListModel.addElement(museum2);
+		});
+		window.list("museumList").selectItem(1);
+		window.button(JButtonMatcher.withText("Delete Selected")).click();
+		verify(museumController).deleteMuseum(museum2);
 	}
 
 }
