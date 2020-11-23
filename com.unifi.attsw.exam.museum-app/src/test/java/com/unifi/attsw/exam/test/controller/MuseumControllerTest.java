@@ -75,6 +75,7 @@ public class MuseumControllerTest {
 		museumController.saveMuseum(museum);
 
 		inOrder.verify(museumService).saveMuseum(museum);
+		inOrder.verify(museumView).museumAdded(museum);
 		verifyNoMoreInteractions(museumService);
 	}
 

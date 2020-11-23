@@ -26,6 +26,7 @@ public class MuseumController {
 	public void saveMuseum(Museum museum) {
 		try {
 			museumService.saveMuseum(museum);
+			museumView.museumAdded(museum);
 		} catch (RuntimeException ex) {
 			museumView.showError("Impossibile to add Museum.", museum);
 			return;
