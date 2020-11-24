@@ -184,7 +184,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 	@Override
 	public void showError(String message, Museum museum) {
-		String museumName = museum != null ? museum.getName() : null;
+		String museumName = museum != null ? museum.getName() : "";
 		errorMessageLabel.setText(message + museumName);
 
 	}

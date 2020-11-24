@@ -22,8 +22,9 @@ public class MuseumController {
 	public void getAllMuseums() {
 		try {
 			museumView.showAllMuseums(museumService.getAllMuseums());
-		} catch (RepositoryException ex) {
+		} catch (RepositoryException | IllegalStateException ex) {
 			museumView.showError("Impossibile to get museums.", null);
+			return;
 		}
 	}
 
