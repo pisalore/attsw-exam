@@ -65,7 +65,7 @@ public class MuseumControllerTest {
 		museumController.saveMuseum(null);
 
 		inOrder.verify(museumService).saveMuseum(null);
-		inOrder.verify(museumView).showError("Impossibile to add Museum.", null);
+		inOrder.verify(museumView).showError("Impossibile to add Museum: ", null);
 		verifyNoMoreInteractions(museumService);
 	}
 
@@ -128,7 +128,7 @@ public class MuseumControllerTest {
 		museumController.deleteMuseum(null);
 
 		inOrder.verify(museumService).deleteMuseum(null);
-		inOrder.verify(museumView).showError("Impossible to delete Museum.", null);
+		inOrder.verify(museumView).showError("Impossible to delete Museum: ", null);
 		verifyNoMoreInteractions(museumService, museumView);
 	}
 
@@ -139,7 +139,7 @@ public class MuseumControllerTest {
 		museumController.deleteMuseum(museum);
 
 		inOrder.verify(museumService).deleteMuseum(museum);
-		inOrder.verify(museumView).showError("Impossible to delete Museum.", museum);
+		inOrder.verify(museumView).showError("Impossible to delete Museum: ", museum);
 		verifyNoMoreInteractions(museumService, museumView);
 	}
 

@@ -32,7 +32,7 @@ public class MuseumController {
 			museumService.saveMuseum(museum);
 			museumView.museumAdded(museum);
 		} catch (RuntimeException ex) {
-			museumView.showError("Impossibile to add Museum.", museum);
+			museumView.showError("Impossibile to add Museum: ", museum);
 			return;
 		}
 	}
@@ -49,8 +49,9 @@ public class MuseumController {
 	public void deleteMuseum(Museum museum) {
 		try {
 			museumService.deleteMuseum(museum);
+			museumView.museumRemoved(museum);
 		} catch (RuntimeException ex) {
-			museumView.showError("Impossible to delete Museum.", museum);
+			museumView.showError("Impossible to delete Museum: ", museum);
 		}
 	}
 
