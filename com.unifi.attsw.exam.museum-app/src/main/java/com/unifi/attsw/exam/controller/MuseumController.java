@@ -19,8 +19,12 @@ public class MuseumController {
 		this.exhibitionView = exhibitionView;
 	}
 	
-	public void getAllMuseums() throws RepositoryException {
-		museumView.showAllMuseums(museumService.getAllMuseums());
+	public void getAllMuseums() {
+		try {
+			museumView.showAllMuseums(museumService.getAllMuseums());
+		} catch (RepositoryException ex) {
+			museumView.showError("Impossibile to get museums.", null);
+		}
 	}
 
 	public void saveMuseum(Museum museum) {

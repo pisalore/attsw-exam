@@ -145,6 +145,12 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	public void testFindAllButtonShouldDelegateToControllerGetMuseums() {
+		window.button(JButtonMatcher.withText("Find all")).click();
+		verify(museumController).getAllMuseums();
+	}
+	
+	@Test
 	public void testAddButtonShouldDelegateToControllerSaveMuseum() {
 		window.textBox("museum").enterText(MUSEUM1_TEST);
 		window.textBox("rooms").enterText(NUM_CONST);

@@ -79,6 +79,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		txtMuseum.setColumns(10);
 
 		btnFindAll = new JButton("Find all");
+		btnFindAll.addActionListener(e -> museumController.getAllMuseums());
 		GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
 		gbc_btnFindAll.insets = new Insets(0, 0, 5, 0);
 		gbc_btnFindAll.gridx = 3;
