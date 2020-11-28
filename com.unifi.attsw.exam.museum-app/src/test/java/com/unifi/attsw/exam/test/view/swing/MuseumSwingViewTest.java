@@ -71,7 +71,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	public void testWhenEitherMuseumOrRoomsAreBlankAdButtonShouldBeDisabled() {
+	public void testWhenEitherMuseumOrRoomsAreBlankAddButtonShouldBeDisabled() {
 		JTextComponentFixture museumTextBox = window.textBox("museum");
 		JTextComponentFixture roomsTextBox = window.textBox("rooms");
 

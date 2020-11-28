@@ -115,7 +115,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 				btnAdd.setEnabled(!txtMuseum.getText().trim().isEmpty() && !txtRooms.getText().trim().isEmpty());
 			}
 		};
-
+		txtMuseum.addKeyListener(btnAddEnabler);
 		txtRooms.addKeyListener(btnAddEnabler);
 
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
