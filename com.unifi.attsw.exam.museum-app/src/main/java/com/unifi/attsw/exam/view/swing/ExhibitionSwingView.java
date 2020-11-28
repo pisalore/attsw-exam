@@ -241,16 +241,16 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_lblError_1.insets = new Insets(0, 0, 5, 0);
 		gbc_lblError_1.gridx = 4;
 		gbc_lblError_1.gridy = 5;
-		
-				lblError = new JLabel(" ");
-				lblError.setName("errorLabel");
-				lblError.setForeground(Color.RED);
-				GridBagConstraints gbc_lblError = new GridBagConstraints();
-				gbc_lblError.anchor = GridBagConstraints.WEST;
-				gbc_lblError.insets = new Insets(0, 0, 5, 5);
-				gbc_lblError.gridx = 2;
-				gbc_lblError.gridy = 5;
-				contentPane.add(lblError, gbc_lblError);
+
+		lblError = new JLabel(" ");
+		lblError.setName("errorLabel");
+		lblError.setForeground(Color.RED);
+		GridBagConstraints gbc_lblError = new GridBagConstraints();
+		gbc_lblError.anchor = GridBagConstraints.WEST;
+		gbc_lblError.insets = new Insets(0, 0, 5, 5);
+		gbc_lblError.gridx = 2;
+		gbc_lblError.gridy = 5;
+		contentPane.add(lblError, gbc_lblError);
 
 		btnFindAll = new JButton("Find all");
 		GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
@@ -316,6 +316,14 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		allExhibitionsListModel.clear();
 		exhibitions.stream().forEach(museumsExhibitionListModel::addElement);
 
+	}
+
+	@Override
+	public void exhibitionAdded(Exhibition exhibition) {
+		allExhibitionsListModel.addElement(exhibition);
+		findMuseumTextField.setText(" ");
+		museumsExhibitionListModel.clear();
+		lblError.setText(" ");
 	}
 
 	@Override

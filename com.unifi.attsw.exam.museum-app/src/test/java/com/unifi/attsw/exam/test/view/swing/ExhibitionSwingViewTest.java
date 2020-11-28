@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -33,7 +34,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 
 	private FrameFixture window;
 
-	private ExhibitionSwingView exhibitionView;
+	private ExhibitionSwingView exhibitionSwingView;
 
 	@Mock
 	private MuseumController museumController;
@@ -42,11 +43,11 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
-			exhibitionView = new ExhibitionSwingView();
-			exhibitionView.setMuseumController(museumController);
-			return exhibitionView;
+			exhibitionSwingView = new ExhibitionSwingView();
+			exhibitionSwingView.setMuseumController(museumController);
+			return exhibitionSwingView;
 		});
-		window = new FrameFixture(robot(), exhibitionView);
+		window = new FrameFixture(robot(), exhibitionSwingView);
 		window.show();
 
 	}
@@ -120,8 +121,8 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testDeleteButtonShouldBeEnabledOnlyWhenAnExhibitionIsSelected() {
 		GuiActionRunner.execute(() -> {
-			exhibitionView.getAllExhibitionsListModel().addElement(new Exhibition(EXHIBITION1_TEST, 10));
-			exhibitionView.getMuseumsExhibitionListModel().addElement(new Exhibition(EXHIBITION2_TEST, 10));
+			exhibitionSwingView.getAllExhibitionsListModel().addElement(new Exhibition(EXHIBITION1_TEST, 10));
+			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(new Exhibition(EXHIBITION2_TEST, 10));
 		});
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
@@ -142,8 +143,8 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testBookButtonshouldBeEnabledOnlyWhenAnExhibitionIsSelected() {
 		GuiActionRunner.execute(() -> {
-			exhibitionView.getAllExhibitionsListModel().addElement(new Exhibition(EXHIBITION1_TEST, 10));
-			exhibitionView.getMuseumsExhibitionListModel().addElement(new Exhibition(EXHIBITION2_TEST, 10));
+			exhibitionSwingView.getAllExhibitionsListModel().addElement(new Exhibition(EXHIBITION1_TEST, 10));
+			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(new Exhibition(EXHIBITION2_TEST, 10));
 		});
 
 		JListFixture listAllExhibitions = window.list("listAllExh");
@@ -166,7 +167,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
 		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
-		GuiActionRunner.execute(() -> exhibitionView.showAllExhibitions(Arrays.asList(exhibition1, exhibition2)));
+		GuiActionRunner.execute(() -> exhibitionSwingView.showAllExhibitions(Arrays.asList(exhibition1, exhibition2)));
 		String[] listContents = listAllExhibitions.contents();
 		assertThat(listContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0",
 				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
@@ -175,23 +176,64 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	public void testShowMuseumExhibitions() {
-		JListFixture listAllExhibitions = window.list("listMuseumExh");
+		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
 		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
-		GuiActionRunner.execute(() -> exhibitionView.showMuseumExhibitions(Arrays.asList(exhibition1, exhibition2)));
-		String[] listContents = listAllExhibitions.contents();
+		GuiActionRunner
+				.execute(() -> exhibitionSwingView.showMuseumExhibitions(Arrays.asList(exhibition1, exhibition2)));
+		String[] listContents = listMuseumExhibitions.contents();
 		assertThat(listContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0",
 				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
 
 	}
-	
+
 	@Test
 	public void testShowErrorShouldShowTheMessageInErrorLabel() {
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
-		GuiActionRunner.execute(() -> exhibitionView.showError("error message: ", exhibition1));
+		GuiActionRunner.execute(() -> exhibitionSwingView.showError("error message: ", exhibition1));
 		window.label("errorLabel").requireText("error message: " + exhibition1.getName());
 
 	}
-	
+
+	@Test
+	@GUITest
+	public void testExhibitionAddedShouldAddTheExhibitionAndResetMuseumExhibitionPart() {
+		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
+		window.textBox("findMuseumTextField").setText(MUSEUM1_TEST);
+		
+		GuiActionRunner.execute(() -> {
+			exhibitionSwingView.getAllExhibitionsListModel().addElement(exhibition1);
+			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(exhibition1);
+			exhibitionSwingView.exhibitionAdded((new Exhibition(EXHIBITION2_TEST, 10)));
+		});
+		JListFixture listAllExhibitions = window.list("listAllExh");
+		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
+
+		String[] listAllMuseumsContents = listAllExhibitions.contents();
+		String[] listMuseumExhibitionContents = listMuseumExhibitions.contents();
+
+		window.label("errorLabel").requireText(" ");
+		window.textBox("findMuseumTextField").requireText(" ");
+		assertThat(listAllMuseumsContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0",
+				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
+
+		assertThat(listMuseumExhibitionContents).isEmpty();
+	}
+
+	// @Test
+//	public void testExhibitionAddedShouldAddTheExhibitionAndResetBothTheErrorLabelAndMuseumExhibitionPart() {
+//		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
+//		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
+//		GuiActionRunner.execute(() -> {
+//			exhibitionSwingView.exhibitionAdded((new Exhibition(EXHIBITION1_TEST, 10)));
+//			exhibitionSwingView.showMuseumExhibitions(Arrays.asList(exhibition1, exhibition2));
+//		});
+//
+//		JListFixture listAllExhibitions = window.list("listAllExh");
+//		String[] listContents = listAllExhibitions.contents();
+//
+//		assertThat(listContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0");
+//		window.label("errorLabel").requireText(" ");
+//	}
 
 }

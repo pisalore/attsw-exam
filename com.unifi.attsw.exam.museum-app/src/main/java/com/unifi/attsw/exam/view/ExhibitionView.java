@@ -9,6 +9,8 @@ public interface ExhibitionView {
 	public void showAllExhibitions(List<Exhibition> exhibitions);
 
 	public void showMuseumExhibitions(List<Exhibition> exhibitions);
+	
+	public void exhibitionAdded(Exhibition exhibition);
 
 	public void showError(String message, Exhibition exhibition);
 

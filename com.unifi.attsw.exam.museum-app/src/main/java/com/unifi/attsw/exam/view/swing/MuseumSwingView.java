@@ -192,6 +192,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	@Override
 	public void museumAdded(Museum museum) {
 		museumListModel.addElement(museum);
+		errorMessageLabel.setText(" ");
 		
 	}
 
