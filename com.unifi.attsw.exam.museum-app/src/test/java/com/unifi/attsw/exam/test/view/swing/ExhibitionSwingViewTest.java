@@ -56,8 +56,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label(JLabelMatcher.withText("Exhibition"));
 		window.label(JLabelMatcher.withText("Total Seats"));
 		window.label(JLabelMatcher.withText("Museum"));
-		window.label("errorLabel1").requireText(" ");
-		window.label("errorLabel2").requireText(" ");
+		window.label("errorLabel").requireText(" ");
 		window.label(JLabelMatcher.withText("Museum Name"));
 		window.label(JLabelMatcher.withText("Exhibitions list for Museum"));
 		window.textBox("exhibitionTextField").requireEnabled();
@@ -185,5 +184,14 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
 
 	}
+	
+	@Test
+	public void testShowErrorShouldShowTheMessageInErrorLabel() {
+		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
+		GuiActionRunner.execute(() -> exhibitionView.showError("error message: ", exhibition1));
+		window.label("errorLabel").requireText("error message: " + exhibition1.getName());
+
+	}
+	
 
 }

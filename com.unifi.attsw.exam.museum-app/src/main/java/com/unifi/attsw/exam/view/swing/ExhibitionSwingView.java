@@ -6,7 +6,6 @@ import javax.swing.border.EmptyBorder;
 
 import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.model.Exhibition;
-import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.view.ExhibitionView;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -53,8 +52,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	private JScrollPane scrollPaneMuseumExh;
 	private JList<Exhibition> listMuseumExh;
 	private DefaultListModel<Exhibition> museumsExhibitionListModel;
-	private JLabel lblError1;
-	private JLabel lblError2;
+	private JLabel lblError;
 
 	/**
 	 * Create the frame.
@@ -238,25 +236,21 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		listMuseumExh.setCellRenderer(listRenderer);
 		scrollPaneMuseumExh.setViewportView(listMuseumExh);
 
-		lblError1 = new JLabel(" ");
-		lblError1.setName("errorLabel1");
-		lblError1.setForeground(Color.RED);
-		GridBagConstraints gbc_lblError = new GridBagConstraints();
-		gbc_lblError.anchor = GridBagConstraints.WEST;
-		gbc_lblError.insets = new Insets(0, 0, 5, 5);
-		gbc_lblError.gridx = 1;
-		gbc_lblError.gridy = 5;
-		contentPane.add(lblError1, gbc_lblError);
-
-		lblError2 = new JLabel(" ");
-		lblError2.setName("errorLabel2");
-		lblError2.setForeground(Color.RED);
 		GridBagConstraints gbc_lblError_1 = new GridBagConstraints();
 		gbc_lblError_1.anchor = GridBagConstraints.WEST;
 		gbc_lblError_1.insets = new Insets(0, 0, 5, 0);
 		gbc_lblError_1.gridx = 4;
 		gbc_lblError_1.gridy = 5;
-		contentPane.add(lblError2, gbc_lblError_1);
+		
+				lblError = new JLabel(" ");
+				lblError.setName("errorLabel");
+				lblError.setForeground(Color.RED);
+				GridBagConstraints gbc_lblError = new GridBagConstraints();
+				gbc_lblError.anchor = GridBagConstraints.WEST;
+				gbc_lblError.insets = new Insets(0, 0, 5, 5);
+				gbc_lblError.gridx = 2;
+				gbc_lblError.gridy = 5;
+				contentPane.add(lblError, gbc_lblError);
 
 		btnFindAll = new JButton("Find all");
 		GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
@@ -316,7 +310,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		exhibitions.stream().forEach(allExhibitionsListModel::addElement);
 
 	}
-	
+
 	@Override
 	public void showMuseumExhibitions(List<Exhibition> exhibitions) {
 		allExhibitionsListModel.clear();
@@ -326,7 +320,8 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
 	@Override
 	public void showError(String message, Exhibition exhibition) {
-		// TODO Auto-generated method stub
+		String exhibitionName = exhibition != null ? exhibition.getName() : "";
+		lblError.setText(message + exhibitionName);
 
 	}
 
