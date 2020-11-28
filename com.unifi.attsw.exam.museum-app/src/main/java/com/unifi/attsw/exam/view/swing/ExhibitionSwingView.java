@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.model.Exhibition;
+import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.view.ExhibitionView;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -13,14 +14,17 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import java.awt.Color;
+import java.awt.Component;
 
 public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
@@ -199,10 +203,23 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_scrollPaneAllExh.gridy = 4;
 		contentPane.add(scrollPaneAllExh, gbc_scrollPaneAllExh);
 
+		DefaultListCellRenderer listRenderer = new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Exhibition exhibition = (Exhibition) value;
+				return super.getListCellRendererComponent(list, getDisplayString(exhibition), index, isSelected,
+						cellHasFocus);
+			}
+		};
+
 		allExhibitionsListModel = new DefaultListModel<>();
 		listAllExh = new JList<>(allExhibitionsListModel);
 		listAllExh.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listAllExh.setName("listAllExh");
+		listAllExh.setCellRenderer(listRenderer);
 		scrollPaneAllExh.setViewportView(listAllExh);
 
 		scrollPaneMuseumExh = new JScrollPane();
@@ -213,11 +230,12 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_scrollPaneMuseumExh.gridx = 3;
 		gbc_scrollPaneMuseumExh.gridy = 4;
 		contentPane.add(scrollPaneMuseumExh, gbc_scrollPaneMuseumExh);
-		
+
 		museumsExhibitionListModel = new DefaultListModel<>();
 		listMuseumExh = new JList<>(museumsExhibitionListModel);
 		listMuseumExh.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listMuseumExh.setName("listMuseumExh");
+		listMuseumExh.setCellRenderer(listRenderer);
 		scrollPaneMuseumExh.setViewportView(listMuseumExh);
 
 		lblError1 = new JLabel(" ");
@@ -278,7 +296,6 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {
 		return allExhibitionsListModel;
 	}
-	
 
 	public DefaultListModel<Exhibition> getMuseumsExhibitionListModel() {
 		return museumsExhibitionListModel;
@@ -286,6 +303,25 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
 	public void setMuseumController(MuseumController museumController) {
 		this.museumController = museumController;
+	}
+
+	private String getDisplayString(Exhibition exhibition) {
+		return exhibition.getName() + " - Total Seats: " + exhibition.getTotalSeats() + " - Booked Seats: "
+				+ exhibition.getBookedSeats();
+	}
+
+	@Override
+	public void showAllExhibitions(List<Exhibition> exhibitions) {
+		allExhibitionsListModel.clear();
+		exhibitions.stream().forEach(allExhibitionsListModel::addElement);
+
+	}
+	
+	@Override
+	public void showMuseumExhibitions(List<Exhibition> exhibitions) {
+		allExhibitionsListModel.clear();
+		exhibitions.stream().forEach(museumsExhibitionListModel::addElement);
+
 	}
 
 	@Override

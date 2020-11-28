@@ -1,5 +1,9 @@
 package com.unifi.attsw.exam.test.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
+
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -156,6 +160,30 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		bookButton.requireEnabled();
 		listMuseumExhibitions.clearSelection();
 		bookButton.requireDisabled();
+	}
+
+	@Test
+	public void testShowAllExhibitions() {
+		JListFixture listAllExhibitions = window.list("listAllExh");
+		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
+		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
+		GuiActionRunner.execute(() -> exhibitionView.showAllExhibitions(Arrays.asList(exhibition1, exhibition2)));
+		String[] listContents = listAllExhibitions.contents();
+		assertThat(listContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0",
+				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
+
+	}
+
+	@Test
+	public void testShowMuseumExhibitions() {
+		JListFixture listAllExhibitions = window.list("listMuseumExh");
+		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
+		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
+		GuiActionRunner.execute(() -> exhibitionView.showMuseumExhibitions(Arrays.asList(exhibition1, exhibition2)));
+		String[] listContents = listAllExhibitions.contents();
+		assertThat(listContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0",
+				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
+
 	}
 
 }
