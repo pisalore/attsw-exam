@@ -1,6 +1,7 @@
 package com.unifi.attsw.exam.test.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -134,6 +136,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		listAllExhibitions.clearSelection();
 		deleteButton.requireDisabled();
 
+		listAllExhibitions.unselectItem(0);
 		listMuseumExhibitions.selectItem(0);
 		deleteButton.requireEnabled();
 		listMuseumExhibitions.clearSelection();
@@ -157,6 +160,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		listAllExhibitions.clearSelection();
 		bookButton.requireDisabled();
 
+		listAllExhibitions.unselectItem(0);
 		listMuseumExhibitions.selectItem(0);
 		bookButton.requireEnabled();
 		listMuseumExhibitions.clearSelection();
@@ -201,7 +205,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	public void testExhibitionAddedShouldAddTheExhibitionAndResetMuseumExhibitionPart() {
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
 		window.textBox("findMuseumTextField").setText(MUSEUM1_TEST);
-		
+
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView.getAllExhibitionsListModel().addElement(exhibition1);
 			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(exhibition1);
@@ -220,11 +224,70 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 
 		assertThat(listMuseumExhibitionContents).isEmpty();
 	}
-	
+
 	@Test
 	public void testFindAllButtonShouldDelegateToControllerGetExhibitions() {
 		window.button(JButtonMatcher.withText("Find all")).click();
 		verify(museumController).getAllExhibitions();
+	}
+
+	@Test
+	public void testAddExhibitionButtonShouldDelegateToControllerSaveExhibition() {
+		JTextComponentFixture exhibitionTextBox = window.textBox("exhibitionTextField");
+		JTextComponentFixture seatsTextBox = window.textBox("totalSeatsTextField");
+		JTextComponentFixture museumNameTextBox = window.textBox("museumNameTextField");
+
+		exhibitionTextBox.enterText(EXHIBITION1_TEST);
+		seatsTextBox.enterText(NUM_CONST);
+		museumNameTextBox.enterText(MUSEUM1_TEST);
+		window.button(JButtonMatcher.withText("Add Exhibition")).click();
+		verify(museumController).saveExhibition(MUSEUM1_TEST, new Exhibition(EXHIBITION1_TEST, 10));
+	}
+
+	@Test
+	public void testDeleteButtonShouldDelegateToControllerDeleteExhibition() {
+		InOrder inOrder = inOrder(museumController);
+		// setup
+		JListFixture listAllExhibitions = window.list("listAllExh");
+		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
+		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
+		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
+		GuiActionRunner.execute(() -> {
+			exhibitionSwingView.getAllExhibitionsListModel().addElement(exhibition1);
+			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(exhibition2);
+		});
+		listAllExhibitions.selectItem(0);
+		window.button(JButtonMatcher.withText("Delete")).click();
+
+		listAllExhibitions.unselectItem(0);
+		listMuseumExhibitions.selectItem(0);
+		window.button(JButtonMatcher.withText("Delete")).click();
+
+		inOrder.verify(museumController).deleteExhibition(exhibition1);
+		inOrder.verify(museumController).deleteExhibition(exhibition2);
+	}
+
+	@Test
+	public void testBookButtonShouldDelegateToControllerBookExhibition() {
+		InOrder inOrder = inOrder(museumController);
+		// setup
+		JListFixture listAllExhibitions = window.list("listAllExh");
+		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
+		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
+		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
+		GuiActionRunner.execute(() -> {
+			exhibitionSwingView.getAllExhibitionsListModel().addElement(exhibition1);
+			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(exhibition2);
+		});
+		listAllExhibitions.selectItem(0);
+		window.button(JButtonMatcher.withText("Book")).click();
+
+		listAllExhibitions.unselectItem(0);
+		listMuseumExhibitions.selectItem(0);
+		window.button(JButtonMatcher.withText("Book")).click();
+
+		inOrder.verify(museumController).bookExhibitionSeat(exhibition1);
+		inOrder.verify(museumController).bookExhibitionSeat(exhibition2);
 	}
 
 }

@@ -24,7 +24,7 @@ jobs:
       - name: Build with Maven
         run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify -DrepoToken=$COVERALLS_REPO_TOKEN $ADDITIONAL_MAVEN_ARGS
         env: 
-          ADDITIONAL_MAVEN_ARGS: -Pjacoco coveralls:report #org.pitest:pitest-maven:mutationCoverage
+          ADDITIONAL_MAVEN_ARGS: org.pitest:pitest-maven:mutationCoverage -Pjacoco coveralls:report
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           
       

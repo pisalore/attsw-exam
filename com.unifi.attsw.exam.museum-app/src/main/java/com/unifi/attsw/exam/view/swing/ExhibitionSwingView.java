@@ -290,6 +290,14 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		listMuseumExh.addListSelectionListener(e -> btnBook.setEnabled(listMuseumExh.getSelectedIndex() != -1));
 
 		btnFindAll.addActionListener(e -> museumController.getAllExhibitions());
+		btnAddExhibition.addActionListener(e -> museumController.saveExhibition(museumNameTextField.getText(),
+				new Exhibition(exhibitionTextField.getText(), Integer.parseInt(totalSeatsTextField.getText()))));
+
+		btnDelete.addActionListener(e -> museumController.deleteExhibition(listAllExh.getSelectedValue()));
+		btnDelete.addActionListener(e -> museumController.deleteExhibition(listMuseumExh.getSelectedValue()));
+
+		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listAllExh.getSelectedValue()));
+		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listMuseumExh.getSelectedValue()));
 	}
 
 	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {
