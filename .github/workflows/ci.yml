@@ -9,14 +9,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK 1.8 and xvfb
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - run: sudo apt-get install xvfb
       - name: Setup docker
         uses: docker-practice/actions-setup-docker@master
         with:
-          docker_channel: nightly
+          docker_version: 19.03
+          docker_channel: stable
           # this value please see https://github.com/AkihiroSuda/moby-snapshot/releases
           docker_nightly_version: snapshot-20201109
         env: 
