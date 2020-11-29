@@ -26,12 +26,9 @@ jobs:
         env: 
           ADDITIONAL_MAVEN_ARGS: org.pitest:pitest-maven:mutationCoverage -Pjacoco coveralls:report
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          
-      - name: Pull Requests, Java 9
-      	if: github.event_name == 'pull_request'
-      	uses: actions/setup-java@v1
-        with:
-          java-version: 1.9
+      - if: github.event_name == 'pull_request'
         run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify
-          
+
+
+                
       
