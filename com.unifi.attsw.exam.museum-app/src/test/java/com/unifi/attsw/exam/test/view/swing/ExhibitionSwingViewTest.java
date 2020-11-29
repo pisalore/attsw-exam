@@ -55,7 +55,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testExhibitionDashboardControlsInitialState() {
 		window.label(JLabelMatcher.withText("Exhibition"));
-		window.label(JLabelMatcher.withText("Total Seats"));
+		window.label(JLabelMatcher.withText("Seats"));
 		window.label(JLabelMatcher.withText("Museum"));
 		window.label("errorLabel").requireText(" ");
 		window.label(JLabelMatcher.withText("Museum Name"));
@@ -67,8 +67,8 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add Exhibition")).requireDisabled();
 		window.button(JButtonMatcher.withText("Find all")).requireEnabled();
 		window.button(JButtonMatcher.withText("Find Museum Exh.")).requireDisabled();
-		window.button(JButtonMatcher.withText("Book Selected")).requireDisabled();
-		window.button(JButtonMatcher.withText("Delete Selected")).requireDisabled();
+		window.button(JButtonMatcher.withText("Book")).requireDisabled();
+		window.button(JButtonMatcher.withText("Delete")).requireDisabled();
 		window.list("listAllExh");
 		window.list("listMuseumExh");
 	}
@@ -126,7 +126,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		});
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
-		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Delete Selected"));
+		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Delete"));
 
 		listAllExhibitions.selectItem(0);
 		deleteButton.requireEnabled();
@@ -149,7 +149,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
-		JButtonFixture bookButton = window.button(JButtonMatcher.withText("Book Selected"));
+		JButtonFixture bookButton = window.button(JButtonMatcher.withText("Book"));
 
 		listAllExhibitions.selectItem(0);
 		bookButton.requireEnabled();
