@@ -220,20 +220,4 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(listMuseumExhibitionContents).isEmpty();
 	}
 
-	// @Test
-//	public void testExhibitionAddedShouldAddTheExhibitionAndResetBothTheErrorLabelAndMuseumExhibitionPart() {
-//		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
-//		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
-//		GuiActionRunner.execute(() -> {
-//			exhibitionSwingView.exhibitionAdded((new Exhibition(EXHIBITION1_TEST, 10)));
-//			exhibitionSwingView.showMuseumExhibitions(Arrays.asList(exhibition1, exhibition2));
-//		});
-//
-//		JListFixture listAllExhibitions = window.list("listAllExh");
-//		String[] listContents = listAllExhibitions.contents();
-//
-//		assertThat(listContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0");
-//		window.label("errorLabel").requireText(" ");
-//	}
-
 }
