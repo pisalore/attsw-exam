@@ -22,5 +22,5 @@ jobs:
         env: 
           ADDITIONAL_MAVEN_ARGS: org.pitest:pitest-maven:mutationCoverage -Pjacoco coveralls:report
       - name: Build with Maven
-        run: mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS
+        run: xvfb-run mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS
       
