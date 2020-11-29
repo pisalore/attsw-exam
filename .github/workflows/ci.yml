@@ -13,8 +13,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - uses: docker-practice/actions-setup-docker@master
-      - name: setup docker
+      - name: Setup docker
+        uses: docker-practice/actions-setup-docker@master
         with:
           docker_channel: nightly
           # this value please see https://github.com/AkihiroSuda/moby-snapshot/releases
