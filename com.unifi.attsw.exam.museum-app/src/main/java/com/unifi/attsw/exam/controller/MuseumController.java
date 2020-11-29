@@ -27,6 +27,15 @@ public class MuseumController {
 			return;
 		}
 	}
+	
+	public void getAllExhibitions() {
+		try {
+			exhibitionView.showAllExhibitions(museumService.getAllExhibitions());
+		} catch (RepositoryException | IllegalStateException ex) {
+			museumView.showError("Impossibile to get all exhibitions.", null);
+			return;
+		}
+	}
 
 	public void saveMuseum(Museum museum) {
 		try {

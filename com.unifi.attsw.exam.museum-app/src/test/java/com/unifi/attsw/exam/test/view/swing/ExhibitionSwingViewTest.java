@@ -1,6 +1,7 @@
 package com.unifi.attsw.exam.test.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 
@@ -218,6 +219,12 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
 
 		assertThat(listMuseumExhibitionContents).isEmpty();
+	}
+	
+	@Test
+	public void testFindAllButtonShouldDelegateToControllerGetExhibitions() {
+		window.button(JButtonMatcher.withText("Find all")).click();
+		verify(museumController).getAllExhibitions();
 	}
 
 }

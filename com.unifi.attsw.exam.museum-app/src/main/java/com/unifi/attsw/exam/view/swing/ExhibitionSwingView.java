@@ -185,15 +185,15 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_btnAddExhibition.gridx = 1;
 		gbc_btnAddExhibition.gridy = 3;
 		contentPane.add(btnAddExhibition, gbc_btnAddExhibition);
-		
-				lblExhibitionsListFor = new JLabel("Exhibitions list for Museum");
-				GridBagConstraints gbc_lblExhibitionsListFor = new GridBagConstraints();
-				gbc_lblExhibitionsListFor.gridwidth = 2;
-				gbc_lblExhibitionsListFor.anchor = GridBagConstraints.SOUTHWEST;
-				gbc_lblExhibitionsListFor.insets = new Insets(0, 0, 5, 5);
-				gbc_lblExhibitionsListFor.gridx = 3;
-				gbc_lblExhibitionsListFor.gridy = 3;
-				contentPane.add(lblExhibitionsListFor, gbc_lblExhibitionsListFor);
+
+		lblExhibitionsListFor = new JLabel("Exhibitions list for Museum");
+		GridBagConstraints gbc_lblExhibitionsListFor = new GridBagConstraints();
+		gbc_lblExhibitionsListFor.gridwidth = 2;
+		gbc_lblExhibitionsListFor.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_lblExhibitionsListFor.insets = new Insets(0, 0, 5, 5);
+		gbc_lblExhibitionsListFor.gridx = 3;
+		gbc_lblExhibitionsListFor.gridy = 3;
+		contentPane.add(lblExhibitionsListFor, gbc_lblExhibitionsListFor);
 
 		scrollPaneAllExh = new JScrollPane();
 		GridBagConstraints gbc_scrollPaneAllExh = new GridBagConstraints();
@@ -254,14 +254,14 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_lblError.gridx = 2;
 		gbc_lblError.gridy = 5;
 		contentPane.add(lblError, gbc_lblError);
-		
-				btnFindAll = new JButton("Find all");
-				GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
-				gbc_btnFindAll.anchor = GridBagConstraints.SOUTHWEST;
-				gbc_btnFindAll.insets = new Insets(0, 0, 0, 5);
-				gbc_btnFindAll.gridx = 1;
-				gbc_btnFindAll.gridy = 6;
-				contentPane.add(btnFindAll, gbc_btnFindAll);
+
+		btnFindAll = new JButton("Find all");
+		GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
+		gbc_btnFindAll.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_btnFindAll.insets = new Insets(0, 0, 0, 5);
+		gbc_btnFindAll.gridx = 1;
+		gbc_btnFindAll.gridy = 6;
+		contentPane.add(btnFindAll, gbc_btnFindAll);
 
 		btnBook = new JButton("Book");
 		btnBook.setEnabled(false);
@@ -271,14 +271,14 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_btnBook.gridx = 2;
 		gbc_btnBook.gridy = 6;
 		contentPane.add(btnBook, gbc_btnBook);
-				
-						btnDelete = new JButton("Delete");
-						btnDelete.setEnabled(false);
-						GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-						gbc_btnDelete.anchor = GridBagConstraints.SOUTHWEST;
-						gbc_btnDelete.gridx = 4;
-						gbc_btnDelete.gridy = 6;
-						contentPane.add(btnDelete, gbc_btnDelete);
+
+		btnDelete = new JButton("Delete");
+		btnDelete.setEnabled(false);
+		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_btnDelete.gridx = 4;
+		gbc_btnDelete.gridy = 6;
+		contentPane.add(btnDelete, gbc_btnDelete);
 
 		/*
 		 * Actions
@@ -288,6 +288,8 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		listMuseumExh.addListSelectionListener(e -> btnDelete.setEnabled(listMuseumExh.getSelectedIndex() != -1));
 		listAllExh.addListSelectionListener(e -> btnBook.setEnabled(listAllExh.getSelectedIndex() != -1));
 		listMuseumExh.addListSelectionListener(e -> btnBook.setEnabled(listMuseumExh.getSelectedIndex() != -1));
+
+		btnFindAll.addActionListener(e -> museumController.getAllExhibitions());
 	}
 
 	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {
