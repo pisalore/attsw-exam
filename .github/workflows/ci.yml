@@ -25,10 +25,6 @@ jobs:
         run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify -DrepoToken=$COVERALLS_REPO_TOKEN $ADDITIONAL_MAVEN_ARGS
         env: 
           ADDITIONAL_MAVEN_ARGS: -Pjacoco coveralls:report #org.pitest:pitest-maven:mutationCoverage
-          COVERALLS_REPO_TOKEN: KvMAo0SLNtYHuey4a03zYBtGtraYYcHEc
-      - name: Coveralls report
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           
       
