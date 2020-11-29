@@ -22,9 +22,8 @@ jobs:
           # this value please see https://github.com/AkihiroSuda/moby-snapshot/releases
           docker_nightly_version: snapshot-20201109
       - name: Build with Maven
-        run:  $XVFB_ARGS mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS
+        run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS
         env: 
-          XVFB_ARGS: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24"
           ADDITIONAL_MAVEN_ARGS: org.pitest:pitest-maven:mutationCoverage -Pjacoco coveralls:report
           
       
