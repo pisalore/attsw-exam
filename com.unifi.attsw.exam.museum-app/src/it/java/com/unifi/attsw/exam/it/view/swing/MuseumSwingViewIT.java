@@ -15,7 +15,6 @@ import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.testcontainers.jdbc.ContainerDatabaseDriver;
 
 import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.model.Museum;
@@ -27,8 +26,6 @@ import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
 @RunWith(GUITestRunner.class)
 public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
-
-	private final static String JDBC_CONTAINER_URL = "jdbc:tc:postgresql:9.6.8:///databasenameTC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_empty.sql";
 
 	private static final String MUSEUM3_TEST = "museum3_test";
 	// already existing name in Museum table
@@ -117,9 +114,6 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 		entityManager.clear();
 		entityManager.close();
 		sessionFactory.close();
-		// This force to restart a docker container and re-execute the initialization
-		// script provided for not empty database.
-		ContainerDatabaseDriver.killContainer(JDBC_CONTAINER_URL);
 	}
 
 }

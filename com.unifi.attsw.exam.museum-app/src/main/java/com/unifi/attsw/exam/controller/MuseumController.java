@@ -60,6 +60,7 @@ public class MuseumController {
 	public void saveExhibition(String museumName, Exhibition exhibition) {
 		try {
 			museumService.addNewExhibition(museumName, exhibition);
+			exhibitionView.exhibitionAdded(exhibition);
 		} catch (RuntimeException ex) {
 			exhibitionView.showError("Impossible to add Exhibition.", exhibition);
 			return;

@@ -159,6 +159,7 @@ public class MuseumControllerTest {
 		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
+		inOrder.verify(exhibitionView).exhibitionAdded(exhibition);
 		verifyNoMoreInteractions(museumService);
 	}
 
