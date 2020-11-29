@@ -298,6 +298,8 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
 		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listAllExh.getSelectedValue()));
 		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listMuseumExh.getSelectedValue()));
+		
+		btnFind.addActionListener(e -> museumController.getAllMuseumExhibitions(findMuseumTextField.getText()));
 	}
 
 	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {

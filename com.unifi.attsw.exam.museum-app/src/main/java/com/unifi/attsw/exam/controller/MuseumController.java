@@ -36,6 +36,16 @@ public class MuseumController {
 			return;
 		}
 	}
+	
+	public void getAllMuseumExhibitions(String museumName) {
+		try {
+			Museum museum = museumService.getMuseumByName(museumName);
+			exhibitionView.showMuseumExhibitions(museumService.getAllMuseumExhibitions(museum));
+		} catch (RuntimeException ex) {
+			exhibitionView.showError("Impossibile to get all exhibitions.", null);
+			return;
+		}
+	}
 
 	public void saveMuseum(Museum museum) {
 		try {

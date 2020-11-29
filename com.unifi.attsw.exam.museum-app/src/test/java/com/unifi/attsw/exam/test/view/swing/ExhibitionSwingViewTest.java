@@ -289,5 +289,13 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		inOrder.verify(museumController).bookExhibitionSeat(exhibition1);
 		inOrder.verify(museumController).bookExhibitionSeat(exhibition2);
 	}
+	
+	@Test
+	public void testFindMuseumButtonShouldDelegateToControllerGetExhibitions() {
+		window.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
+		window.button(JButtonMatcher.withText("Find Museum Exh.")).click();
+		verify(museumController).getAllMuseumExhibitions(MUSEUM1_TEST);
+	}
+	
 
 }

@@ -53,10 +53,50 @@ public class MuseumControllerTest {
 
 	@Test
 	public void testShowAllMuseums() throws RepositoryException {
-		List<Museum> museums = asList(new Museum());
+		List<Museum> museums = asList(new Museum(MUSEUM1_TEST, NUM_CONSTANT1));
 		when(museumService.getAllMuseums()).thenReturn(museums);
 		museumController.getAllMuseums();
 		inOrder.verify(museumView).showAllMuseums(museums);
+	}
+
+	@Test
+	public void testShowAllExhibitions() throws RepositoryException {
+		List<Exhibition> exhibitions = asList(new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1));
+		when(museumService.getAllExhibitions()).thenReturn(exhibitions);
+		museumController.getAllExhibitions();
+		inOrder.verify(exhibitionView).showAllExhibitions(exhibitions);
+	}
+
+	@Test
+	public void testShowAllMuseumExhibitions() throws RepositoryException {
+		List<Exhibition> exhibitions = asList(new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1));
+		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
+		when(museumService.getAllMuseumExhibitions(museum)).thenReturn(exhibitions);
+		when(museumService.getMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
+		
+		museumController.getAllMuseumExhibitions(MUSEUM1_TEST);
+		inOrder.verify(museumService).getMuseumByName(MUSEUM1_TEST);
+		inOrder.verify(museumService).getAllMuseumExhibitions(museum);
+		inOrder.verify(exhibitionView).showMuseumExhibitions(exhibitions);
+	}
+	
+	@Test
+	public void testShowAllNullMuseumExhibitionsShouldThrow() throws RepositoryException {
+		doThrow(new RuntimeException()).when(museumService).getMuseumByName(null);
+		
+		museumController.getAllMuseumExhibitions(null);
+
+		inOrder.verify(museumService).getMuseumByName(null);
+		inOrder.verify(exhibitionView).showError("Impossibile to get all exhibitions.", null);
+	}
+	
+	@Test
+	public void testShowAllExhibitionsFromNotExistingMuseumShouldThrow() throws RepositoryException {
+		doThrow(new RuntimeException()).when(museumService).getMuseumByName(MUSEUM1_TEST);
+		museumController.getAllMuseumExhibitions(MUSEUM1_TEST);
+
+		inOrder.verify(museumService).getMuseumByName(MUSEUM1_TEST);
+		inOrder.verify(exhibitionView).showError("Impossibile to get all exhibitions.", null);
 	}
 
 	@Test
