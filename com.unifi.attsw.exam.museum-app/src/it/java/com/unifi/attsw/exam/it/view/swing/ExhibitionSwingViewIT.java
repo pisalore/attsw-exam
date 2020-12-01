@@ -84,15 +84,41 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add Exhibition")).click();
 		assertThat(listAllExhibitions.contents()).hasSize(1);
 	}
-	
+
 	@Test
 	@GUITest
 	public void testGetMuseumExhibitions() {
 		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
-		
+
 		window.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
 		window.button(JButtonMatcher.withText("Find Museum Exh.")).click();
 		assertThat(listMuseumExhibitions.contents()).hasSize(2);
+	}
+
+	@Test
+	@GUITest
+	public void testDeleteExhibition() {
+		GuiActionRunner.execute(() -> museumController.getAllExhibitions());
+		// select an exhibition
+		window.list("listAllExh").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete")).click();
+
+		window.button(JButtonMatcher.withText("Find all")).click();
+		assertThat(window.list("listAllExh").contents()).hasSize(1);
+	}
+
+	@Test
+	@GUITest
+	public void testBookExhibition() {
+		JListFixture listAllExhibitions = window.list("listAllExh");
+		GuiActionRunner.execute(() -> museumController.getAllExhibitions());
+		// select an exhibition
+		listAllExhibitions.selectItem(0);
+		window.button(JButtonMatcher.withText("Book")).click();
+
+		window.button(JButtonMatcher.withText("Find all")).click();
+		String[] listContents = listAllExhibitions.contents();
+		assertThat(listContents).contains("exhibition1_test - Total Seats: 100 - Booked Seats: 1");
 	}
 
 	@Override

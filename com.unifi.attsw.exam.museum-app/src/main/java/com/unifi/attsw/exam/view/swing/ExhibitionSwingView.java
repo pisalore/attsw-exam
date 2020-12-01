@@ -294,11 +294,9 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 				new Exhibition(exhibitionTextField.getText(), Integer.parseInt(totalSeatsTextField.getText()))));
 
 		btnDelete.addActionListener(e -> museumController.deleteExhibition(listAllExh.getSelectedValue()));
-		btnDelete.addActionListener(e -> museumController.deleteExhibition(listMuseumExh.getSelectedValue()));
 
 		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listAllExh.getSelectedValue()));
-		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listMuseumExh.getSelectedValue()));
-		
+
 		btnFind.addActionListener(e -> museumController.getAllMuseumExhibitions(findMuseumTextField.getText()));
 	}
 
@@ -339,6 +337,11 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		findMuseumTextField.setText(" ");
 		museumsExhibitionListModel.clear();
 		lblError.setText(" ");
+	}
+
+	@Override
+	public void exhibitionRemoved(Exhibition exhibition) {
+		allExhibitionsListModel.removeElement(exhibition);
 	}
 
 	@Override

@@ -79,6 +79,7 @@ public class MuseumController {
 	public void deleteExhibition(Exhibition exhibition) {
 		try {
 			museumService.deleteExhibition(exhibition);
+			exhibitionView.exhibitionRemoved(exhibition);
 		} catch (RuntimeException ex) {
 			exhibitionView.showError("Impossible to delete Exhbition.", exhibition);
 		}

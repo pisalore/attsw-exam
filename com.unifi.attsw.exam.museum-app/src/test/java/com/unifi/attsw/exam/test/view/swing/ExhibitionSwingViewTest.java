@@ -125,21 +125,13 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	public void testDeleteButtonShouldBeEnabledOnlyWhenAnExhibitionIsSelected() {
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView.getAllExhibitionsListModel().addElement(new Exhibition(EXHIBITION1_TEST, 10));
-			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(new Exhibition(EXHIBITION2_TEST, 10));
 		});
 		JListFixture listAllExhibitions = window.list("listAllExh");
-		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
 		JButtonFixture deleteButton = window.button(JButtonMatcher.withText("Delete"));
 
 		listAllExhibitions.selectItem(0);
 		deleteButton.requireEnabled();
 		listAllExhibitions.clearSelection();
-		deleteButton.requireDisabled();
-
-		listAllExhibitions.unselectItem(0);
-		listMuseumExhibitions.selectItem(0);
-		deleteButton.requireEnabled();
-		listMuseumExhibitions.clearSelection();
 		deleteButton.requireDisabled();
 
 	}
@@ -152,18 +144,11 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		});
 
 		JListFixture listAllExhibitions = window.list("listAllExh");
-		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
 		JButtonFixture bookButton = window.button(JButtonMatcher.withText("Book"));
 
 		listAllExhibitions.selectItem(0);
 		bookButton.requireEnabled();
 		listAllExhibitions.clearSelection();
-		bookButton.requireDisabled();
-
-		listAllExhibitions.unselectItem(0);
-		listMuseumExhibitions.selectItem(0);
-		bookButton.requireEnabled();
-		listMuseumExhibitions.clearSelection();
 		bookButton.requireDisabled();
 	}
 
@@ -249,22 +234,14 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		InOrder inOrder = inOrder(museumController);
 		// setup
 		JListFixture listAllExhibitions = window.list("listAllExh");
-		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
-		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView.getAllExhibitionsListModel().addElement(exhibition1);
-			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(exhibition2);
 		});
 		listAllExhibitions.selectItem(0);
 		window.button(JButtonMatcher.withText("Delete")).click();
 
-		listAllExhibitions.unselectItem(0);
-		listMuseumExhibitions.selectItem(0);
-		window.button(JButtonMatcher.withText("Delete")).click();
-
 		inOrder.verify(museumController).deleteExhibition(exhibition1);
-		inOrder.verify(museumController).deleteExhibition(exhibition2);
 	}
 
 	@Test
@@ -272,30 +249,21 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		InOrder inOrder = inOrder(museumController);
 		// setup
 		JListFixture listAllExhibitions = window.list("listAllExh");
-		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
-		Exhibition exhibition2 = new Exhibition(EXHIBITION2_TEST, 10);
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView.getAllExhibitionsListModel().addElement(exhibition1);
-			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(exhibition2);
 		});
 		listAllExhibitions.selectItem(0);
 		window.button(JButtonMatcher.withText("Book")).click();
 
-		listAllExhibitions.unselectItem(0);
-		listMuseumExhibitions.selectItem(0);
-		window.button(JButtonMatcher.withText("Book")).click();
-
 		inOrder.verify(museumController).bookExhibitionSeat(exhibition1);
-		inOrder.verify(museumController).bookExhibitionSeat(exhibition2);
 	}
-	
+
 	@Test
 	public void testFindMuseumButtonShouldDelegateToControllerGetExhibitions() {
 		window.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
 		window.button(JButtonMatcher.withText("Find Museum Exh.")).click();
 		verify(museumController).getAllMuseumExhibitions(MUSEUM1_TEST);
 	}
-	
 
 }
