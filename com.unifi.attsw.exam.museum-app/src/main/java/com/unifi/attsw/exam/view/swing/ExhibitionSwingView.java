@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 
 public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
@@ -259,9 +260,11 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_lblError_1.gridy = 5;
 		
 				lblError = new JLabel(" ");
+				lblError.setFont(new Font("Dialog", Font.BOLD, 11));
 				lblError.setName("errorLabel");
 				lblError.setForeground(Color.RED);
 				GridBagConstraints gbc_lblError = new GridBagConstraints();
+				gbc_lblError.gridwidth = 3;
 				gbc_lblError.anchor = GridBagConstraints.WEST;
 				gbc_lblError.insets = new Insets(0, 0, 5, 5);
 				gbc_lblError.gridx = 0;

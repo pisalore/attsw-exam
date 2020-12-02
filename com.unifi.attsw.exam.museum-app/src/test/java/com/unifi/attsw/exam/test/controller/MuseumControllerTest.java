@@ -73,23 +73,23 @@ public class MuseumControllerTest {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
 		when(museumService.getAllMuseumExhibitions(museum)).thenReturn(exhibitions);
 		when(museumService.getMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
-		
+
 		museumController.getAllMuseumExhibitions(MUSEUM1_TEST);
 		inOrder.verify(museumService).getMuseumByName(MUSEUM1_TEST);
 		inOrder.verify(museumService).getAllMuseumExhibitions(museum);
 		inOrder.verify(exhibitionView).showMuseumExhibitions(exhibitions);
 	}
-	
+
 	@Test
 	public void testShowAllNullMuseumExhibitionsShouldThrow() throws RepositoryException {
 		doThrow(new RuntimeException()).when(museumService).getMuseumByName(null);
-		
+
 		museumController.getAllMuseumExhibitions(null);
 
 		inOrder.verify(museumService).getMuseumByName(null);
 		inOrder.verify(exhibitionView).showError("Impossibile to get all exhibitions.", null);
 	}
-	
+
 	@Test
 	public void testShowAllExhibitionsFromNotExistingMuseumShouldThrow() throws RepositoryException {
 		doThrow(new RuntimeException()).when(museumService).getMuseumByName(MUSEUM1_TEST);
@@ -125,7 +125,7 @@ public class MuseumControllerTest {
 		museumController.saveExhibition(MUSEUM1_TEST, null);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, null);
-		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", null);
+		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition: ", null);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 
@@ -136,7 +136,7 @@ public class MuseumControllerTest {
 		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
-		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", exhibition);
+		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition: ", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 
 	}
@@ -148,7 +148,7 @@ public class MuseumControllerTest {
 		museumController.saveExhibition(null, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(null, exhibition);
-		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition.", exhibition);
+		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition: ", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 
 	}
@@ -199,7 +199,7 @@ public class MuseumControllerTest {
 		museumController.deleteExhibition(null);
 
 		inOrder.verify(museumService).deleteExhibition(null);
-		inOrder.verify(exhibitionView).showError("Impossible to delete Exhbition.", null);
+		inOrder.verify(exhibitionView).showError("Impossible to delete Exhibition: ", null);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 
@@ -210,7 +210,7 @@ public class MuseumControllerTest {
 		museumController.deleteExhibition(exhibition);
 
 		inOrder.verify(museumService).deleteExhibition(exhibition);
-		inOrder.verify(exhibitionView).showError("Impossible to delete Exhbition.", exhibition);
+		inOrder.verify(exhibitionView).showError("Impossible to delete Exhibition: ", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 
@@ -229,7 +229,7 @@ public class MuseumControllerTest {
 		museumController.bookExhibitionSeat(null);
 
 		inOrder.verify(museumService).bookExhibitionSeat(null);
-		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition.", null);
+		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition: ", null);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 
@@ -242,7 +242,7 @@ public class MuseumControllerTest {
 		museumController.bookExhibitionSeat(exhibition);
 
 		inOrder.verify(museumService).bookExhibitionSeat(exhibition);
-		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition.", exhibition);
+		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition: ", exhibition);
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 

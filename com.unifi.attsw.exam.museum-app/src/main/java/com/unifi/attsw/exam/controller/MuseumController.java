@@ -62,7 +62,7 @@ public class MuseumController {
 			museumService.addNewExhibition(museumName, exhibition);
 			exhibitionView.exhibitionAdded(exhibition);
 		} catch (RuntimeException ex) {
-			exhibitionView.showError("Impossible to add Exhibition.", exhibition);
+			exhibitionView.showError("Impossible to add Exhibition: ", exhibition);
 			return;
 		}
 	}
@@ -81,7 +81,7 @@ public class MuseumController {
 			museumService.deleteExhibition(exhibition);
 			exhibitionView.exhibitionRemoved(exhibition);
 		} catch (RuntimeException ex) {
-			exhibitionView.showError("Impossible to delete Exhbition.", exhibition);
+			exhibitionView.showError("Impossible to delete Exhibition: ", exhibition);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class MuseumController {
 		try {
 			museumService.bookExhibitionSeat(exhibition);
 		} catch (RuntimeException ex) {
-			exhibitionView.showError("Impossible to book a seat for Exhibition.", exhibition);
+			exhibitionView.showError("Impossible to book a seat for Exhibition: ", exhibition);
 		}
 	}
 
