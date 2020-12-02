@@ -20,6 +20,7 @@
 		<log4j.version>2.13.2</log4j.version>
 		<mockito.version>3.2.4</mockito.version>
 		<pitest.version>1.4.10</pitest.version>
+		<assertj.swing.version>3.9.2</assertj.swing.version>
 
 	</properties>
 
@@ -35,13 +36,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>${assertj.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -91,6 +85,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-swing-junit</artifactId>
+			<version>${assertj.swing.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -117,12 +118,18 @@
 					<artifactId>pitest-maven</artifactId>
 					<version>${pitest.version}</version>
 					<configuration>
-						<excludedClasses>
-							<param>com.unifi.attsw.exam.model.*</param>
-						</excludedClasses>
+						<targetClasses>
+							<param>com.unifi.attsw.exam.controller.*</param>
+							<param>com.unifi.attsw.exam.repository.postgres.*</param>
+							<param>com.unifi.attsw.exam.service.impl.*</param>
+							<param>com.unifi.attsw.exam.transaction.manager.postgres.*</param>
+						</targetClasses>
 						<targetTests>
-							<param>com.unifi.attsw.exam.*</param>
+							<param>com.unifi.attsw.exam.test.*</param>
 						</targetTests>
+						<excludedTestClasses>
+							<param>com.unifi.attsw.exam.test.view.swing.*</param>
+						</excludedTestClasses>
 						<timeoutFactor>4000</timeoutFactor>
 						<timeoutConstant>10000</timeoutConstant>
 						<mutators>
