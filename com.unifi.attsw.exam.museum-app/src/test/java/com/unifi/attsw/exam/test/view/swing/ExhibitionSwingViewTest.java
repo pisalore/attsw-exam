@@ -73,7 +73,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Book")).requireDisabled();
 		window.button(JButtonMatcher.withText("Delete")).requireDisabled();
 		window.list("listAllExh");
-		window.list("listMuseumExh");
+		window.list("listMuseumExh").requireDisabled();
 	}
 
 	@Test
