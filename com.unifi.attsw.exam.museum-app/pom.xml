@@ -153,7 +153,8 @@
 					<configuration>
 						<excludes>
 							<exclude>**/model/**</exclude>
-							<exclude>META-INF/**</exclude>
+							<exclude>**/META-INF/**</exclude>
+							<exlude>**/app/**</exlude>
 						</excludes>
 					</configuration>
 					<executions>
