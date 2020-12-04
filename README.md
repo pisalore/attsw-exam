@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.com/pisalore/attws-exam.svg?token=qNCcWFTeEcwj6KqJPVzx&branch=master)](https://travis-ci.com/pisalore/attws-exam)
-
+[![PIT, Coveralls, Java 8 Actions Status](https://github.com/{userName}/{repoName}/workflows/{workflowName}/badge.svg)](https://github.com/{userName}/{repoName}/actions)
 ### Museum App
 Advanced Tool and Techniques for Software Development exam project at UNIFI
