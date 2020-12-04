@@ -21,7 +21,7 @@
 		<mockito.version>3.2.4</mockito.version>
 		<pitest.version>1.4.10</pitest.version>
 		<assertj.swing.version>3.9.2</assertj.swing.version>
-
+		<picocli.version>4.2.0</picocli.version>
 	</properties>
 
 	<dependencies>
@@ -43,7 +43,7 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.11</version>
-			<scope>test</scope>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -58,6 +58,12 @@
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.testcontainers.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>${picocli.version}</version>
 		</dependency>
 
 		<dependency>

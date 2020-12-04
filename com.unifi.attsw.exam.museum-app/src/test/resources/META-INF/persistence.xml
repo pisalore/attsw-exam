@@ -16,7 +16,7 @@
 				value="jdbc:tc:postgresql:9.6.8:///databasenameTC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_empty.sql" />
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />
-<!-- 			<property name="hibernate.hbm2ddl.auto" value="create" /> -->
+			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
 		</properties>
 	</persistence-unit>
 
@@ -35,26 +35,6 @@
 				is created executing an sql script -->
 			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
 		</properties>
-	</persistence-unit>
-
-	
-<!-- 	LOCALHOST REAL DB -->
-	<persistence-unit name="real.postgres">
-	<class>com.unifi.attsw.exam.model.Museum</class>
-	<class>com.unifi.attsw.exam.model.Exhibition</class>
-
-	<properties>
-	<property name="javax.persistence.jdbc.driver"
-	value="org.postgresql.Driver" />
-	<property name="javax.persistence.jdbc.url"
-	value="jdbc:postgresql://localhost:5432/ATTWS_DB" />
-	<property name="javax.persistence.jdbc.user" value="attws" />
-	<property name="javax.persistence.jdbc.password" value="attws" />
-	<property name="hibernate.hbm2ddl.auto" value="none" />
-	<property name="hibernate.dialect"
-	value="org.hibernate.dialect.PostgreSQLDialect" />
-	</properties>
-
 	</persistence-unit>
 
 </persistence>
