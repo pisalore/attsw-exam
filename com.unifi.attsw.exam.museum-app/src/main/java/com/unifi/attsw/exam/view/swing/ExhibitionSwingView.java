@@ -59,6 +59,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	 * Create the frame.
 	 */
 	public ExhibitionSwingView() {
+		setTitle("Exhibitions Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
@@ -179,16 +180,16 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		exhibitionTextField.addKeyListener(btnAddEnabler);
 		totalSeatsTextField.addKeyListener(btnAddEnabler);
 		museumNameTextField.addKeyListener(btnAddEnabler);
-		
-				btnFindAll = new JButton("Find all");
-				GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
-				gbc_btnFindAll.anchor = GridBagConstraints.SOUTHWEST;
-				gbc_btnFindAll.insets = new Insets(0, 0, 5, 5);
-				gbc_btnFindAll.gridx = 0;
-				gbc_btnFindAll.gridy = 3;
-				contentPane.add(btnFindAll, gbc_btnFindAll);
-				
-						btnFindAll.addActionListener(e -> museumController.getAllExhibitions());
+
+		btnFindAll = new JButton("Find all");
+		GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
+		gbc_btnFindAll.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_btnFindAll.insets = new Insets(0, 0, 5, 5);
+		gbc_btnFindAll.gridx = 0;
+		gbc_btnFindAll.gridy = 3;
+		contentPane.add(btnFindAll, gbc_btnFindAll);
+
+		btnFindAll.addActionListener(e -> museumController.getAllExhibitions());
 
 		GridBagConstraints gbc_btnAddExhibition = new GridBagConstraints();
 		gbc_btnAddExhibition.anchor = GridBagConstraints.WEST;
@@ -258,40 +259,40 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_lblError_1.insets = new Insets(0, 0, 5, 0);
 		gbc_lblError_1.gridx = 4;
 		gbc_lblError_1.gridy = 5;
-		
-				lblError = new JLabel(" ");
-				lblError.setFont(new Font("Dialog", Font.BOLD, 11));
-				lblError.setName("errorLabel");
-				lblError.setForeground(Color.RED);
-				GridBagConstraints gbc_lblError = new GridBagConstraints();
-				gbc_lblError.gridwidth = 3;
-				gbc_lblError.anchor = GridBagConstraints.WEST;
-				gbc_lblError.insets = new Insets(0, 0, 5, 5);
-				gbc_lblError.gridx = 0;
-				gbc_lblError.gridy = 5;
-				contentPane.add(lblError, gbc_lblError);
-						
-								btnBook = new JButton("Book");
-								btnBook.setEnabled(false);
-								GridBagConstraints gbc_btnBook = new GridBagConstraints();
-								gbc_btnBook.anchor = GridBagConstraints.SOUTH;
-								gbc_btnBook.insets = new Insets(0, 0, 0, 5);
-								gbc_btnBook.gridx = 0;
-								gbc_btnBook.gridy = 6;
-								contentPane.add(btnBook, gbc_btnBook);
-								
-										btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listAllExh.getSelectedValue()));
-						
-								btnDelete = new JButton("Delete");
-								btnDelete.setEnabled(false);
-								GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-								gbc_btnDelete.insets = new Insets(0, 0, 0, 5);
-								gbc_btnDelete.anchor = GridBagConstraints.SOUTHWEST;
-								gbc_btnDelete.gridx = 1;
-								gbc_btnDelete.gridy = 6;
-								contentPane.add(btnDelete, gbc_btnDelete);
-				
-						btnDelete.addActionListener(e -> museumController.deleteExhibition(listAllExh.getSelectedValue()));
+
+		lblError = new JLabel(" ");
+		lblError.setFont(new Font("Dialog", Font.BOLD, 11));
+		lblError.setName("errorLabel");
+		lblError.setForeground(Color.RED);
+		GridBagConstraints gbc_lblError = new GridBagConstraints();
+		gbc_lblError.gridwidth = 3;
+		gbc_lblError.anchor = GridBagConstraints.WEST;
+		gbc_lblError.insets = new Insets(0, 0, 5, 5);
+		gbc_lblError.gridx = 0;
+		gbc_lblError.gridy = 5;
+		contentPane.add(lblError, gbc_lblError);
+
+		btnBook = new JButton("Book");
+		btnBook.setEnabled(false);
+		GridBagConstraints gbc_btnBook = new GridBagConstraints();
+		gbc_btnBook.anchor = GridBagConstraints.SOUTH;
+		gbc_btnBook.insets = new Insets(0, 0, 0, 5);
+		gbc_btnBook.gridx = 0;
+		gbc_btnBook.gridy = 6;
+		contentPane.add(btnBook, gbc_btnBook);
+
+		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listAllExh.getSelectedValue()));
+
+		btnDelete = new JButton("Delete");
+		btnDelete.setEnabled(false);
+		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.insets = new Insets(0, 0, 0, 5);
+		gbc_btnDelete.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_btnDelete.gridx = 1;
+		gbc_btnDelete.gridy = 6;
+		contentPane.add(btnDelete, gbc_btnDelete);
+
+		btnDelete.addActionListener(e -> museumController.deleteExhibition(listAllExh.getSelectedValue()));
 
 		/*
 		 * Actions

@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.apache.logging.log4j.core.tools.picocli.CommandLine.Option;
 
 import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.service.MuseumManagerService;
@@ -21,18 +20,19 @@ import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
 @Command(mixinStandardHelpOptions = true)
 public class MuseumSwingApp implements Callable<Void> {
 
-	@Option(names = { "--db-url" }, description = "Database url connection.")
-	private String databaseUrl = "jdbc:postgresql://localhost:5432/ATTSW_DB";
+	@Option(names = { "--database-url" }, description = "Database url connection.")
+	private String dbUrl = "jdbc:postgresql://localhost:5432/ATTSW_DB";
 
-	@Option(names = { "--db-user" }, description = "Database user.")
-	private String databaseUser = "museum_manager";
+	@Option(names = { "--database-user" }, description = "Database user.")
+	private String dbUser = "museum_manager";
 
-	@Option(names = { "--db-password" }, description = "Database password.")
-	private String databasePassword = "attsw";
+	@Option(names = { "--database-password" }, description = "Database password.")
+	private String dbPassword = "attsw";
 
 	public static void main(String[] args) {
 		new CommandLine(new MuseumSwingApp()).execute(args);
@@ -43,9 +43,9 @@ public class MuseumSwingApp implements Callable<Void> {
 		EventQueue.invokeLater(() -> {
 
 			Map<String, String> properties = new HashMap<>();
-			properties.put("javax.persistence.jdbc.url", databaseUrl);
-			properties.put("javax.persistence.jdbc.user", databaseUser);
-			properties.put("javax.persistence.jdbc.password", databasePassword);
+			properties.put("javax.persistence.jdbc.url", dbUrl);
+			properties.put("javax.persistence.jdbc.user", dbUser);
+			properties.put("javax.persistence.jdbc.password", dbPassword);
 
 			EntityManagerFactory sessionFactory = Persistence.createEntityManagerFactory("real.postgres", properties);
 			EntityManager entityManager = sessionFactory.createEntityManager();
@@ -59,7 +59,6 @@ public class MuseumSwingApp implements Callable<Void> {
 			museumView.setVisible(true);
 			exhibitionView.setVisible(true);
 			museumController.getAllMuseums();
-//			museumController.getAllExhibitions();
 		});
 		return null;
 	}
