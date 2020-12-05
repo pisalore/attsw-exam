@@ -59,6 +59,7 @@ public class MuseumSwingApp implements Callable<Void> {
 			museumView.setVisible(true);
 			exhibitionView.setVisible(true);
 			museumController.getAllMuseums();
+			museumController.getAllExhibitions();
 		});
 		return null;
 	}
