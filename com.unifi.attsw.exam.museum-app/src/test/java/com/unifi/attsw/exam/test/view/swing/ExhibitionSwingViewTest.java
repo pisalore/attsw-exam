@@ -140,7 +140,6 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	public void testBookButtonshouldBeEnabledOnlyWhenAnExhibitionIsSelected() {
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView.getAllExhibitionsListModel().addElement(new Exhibition(EXHIBITION1_TEST, 10));
-			exhibitionSwingView.getMuseumsExhibitionListModel().addElement(new Exhibition(EXHIBITION2_TEST, 10));
 		});
 
 		JListFixture listAllExhibitions = window.list("listAllExh");
