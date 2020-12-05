@@ -12,8 +12,8 @@
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-			<property name="hibernate.connection.provider_class"
-				value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+<!-- 			<property name="hibernate.connection.provider_class" -->
+<!-- 				value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" /> -->
 		</properties>
 
 	</persistence-unit>
