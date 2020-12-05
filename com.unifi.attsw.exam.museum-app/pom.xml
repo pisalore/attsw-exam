@@ -9,8 +9,8 @@
 	<description>Advanced Tool and Techniques for Software Development exam project at UNIFI </description>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hibernate.version>5.4.22.Final</hibernate.version>
 		<junit.version>4.13</junit.version>
@@ -23,6 +23,7 @@
 		<pitest.version>1.4.10</pitest.version>
 		<assertj.swing.version>3.9.2</assertj.swing.version>
 		<picocli.version>4.2.0</picocli.version>
+		<sonar.plugin.version>3.7.0.1746</sonar.plugin.version>
 	</properties>
 
 	<dependencies>
@@ -108,6 +109,10 @@
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.0</version>
+					<configuration>
+						<release>11</release>
+					</configuration>
+
 				</plugin>
 
 				<plugin>
@@ -203,6 +208,12 @@
 							<version>2.3.1</version>
 						</dependency>
 					</dependencies>
+				</plugin>
+
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonar.plugin.version}</version>
 				</plugin>
 
 			</plugins>
