@@ -32,7 +32,7 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 
 	@BeforeClass
 	public static void beforeClass() {
-		sessionFactory = Persistence.createEntityManagerFactory("postgres.e2e-tests.not-empty.database");
+		sessionFactory = Persistence.createEntityManagerFactory("postgres.e2e-tests");
 	}
 
 	@Override
