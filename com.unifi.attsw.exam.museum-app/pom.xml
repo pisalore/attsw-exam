@@ -24,6 +24,8 @@
 		<assertj.swing.version>3.17.1</assertj.swing.version>
 		<picocli.version>4.2.0</picocli.version>
 		<sonar.plugin.version>3.7.0.1746</sonar.plugin.version>
+		<!-- SonarCloud -->
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
