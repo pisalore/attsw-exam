@@ -291,7 +291,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_btnDelete.gridx = 1;
 		gbc_btnDelete.gridy = 6;
 		contentPane.add(btnDelete, gbc_btnDelete);
-		
+
 		btnMuseumsDashboard = new JButton("Museums Dashboard");
 		GridBagConstraints gbc_btnMuseumsDashboard = new GridBagConstraints();
 		gbc_btnMuseumsDashboard.gridx = 4;
@@ -340,7 +340,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
 	@Override
 	public void showMuseumExhibitions(List<Exhibition> exhibitions) {
-		allExhibitionsListModel.clear();
+		museumsExhibitionListModel.clear();
 		exhibitions.stream().forEach(museumsExhibitionListModel::addElement);
 		lblError.setText(" ");
 
