@@ -60,7 +60,6 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testFindAllMuseums() {
-		museumWindow.moveToFront();
 		String[] listAllMueums = museumWindow.list().contents();
 		museumWindow.button(JButtonMatcher.withText("Find all")).click();
 
@@ -72,7 +71,6 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddMuseumSuccess() {
-		museumWindow.moveToFront();
 		museumWindow.textBox("museum").enterText(MUSEUM3_TEST);
 		museumWindow.textBox("rooms").enterText(NUM_CONST);
 		museumWindow.button(JButtonMatcher.withText("Add")).click();
@@ -83,7 +81,6 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddMuseumError() {
-		museumWindow.moveToFront();
 		museumWindow.textBox("museum").enterText(MUSEUM1_TEST);
 		museumWindow.textBox("rooms").enterText(NUM_CONST);
 		museumWindow.button(JButtonMatcher.withText("Add")).click();
@@ -95,7 +92,6 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteMuseum() {
-		museumWindow.moveToFront();
 		museumWindow.list().selectItem(0);
 		museumWindow.button(JButtonMatcher.withText("Delete Selected")).click();
 

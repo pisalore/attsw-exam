@@ -63,7 +63,6 @@ public class ExhibitionSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testFindAllExhibitions() {
-		exhibitionWindow.moveToFront();
 		String[] listAllExhibitions = exhibitionWindow.list("listAllExh").contents();
 		exhibitionWindow.button(JButtonMatcher.withText("Find all")).click();
 
@@ -75,7 +74,6 @@ public class ExhibitionSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddExhibition() {
-		exhibitionWindow.moveToFront();
 		JListFixture listAllExhibitions = exhibitionWindow.list("listAllExh");
 
 		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION3_TEST);
@@ -89,7 +87,6 @@ public class ExhibitionSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddExhibitionError() {
-		exhibitionWindow.moveToFront();
 		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION1_TEST);
 		exhibitionWindow.textBox("totalSeatsTextField").enterText(NUM_CONST);
 		exhibitionWindow.textBox("museumNameTextField").enterText(MUSEUM1_TEST);
@@ -102,7 +99,6 @@ public class ExhibitionSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteExhibition() {
-		exhibitionWindow.moveToFront();
 		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION1_TEST);
 		
 		exhibitionWindow.list("listAllExh").selectItem(0);
@@ -115,7 +111,6 @@ public class ExhibitionSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testBookExhibition() {
-		exhibitionWindow.moveToFront();
 		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION1_TEST);
 
 		exhibitionWindow.list("listAllExh").selectItem(0);
@@ -128,7 +123,6 @@ public class ExhibitionSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testFindMuseumExhibitions() {
-		exhibitionWindow.moveToFront();
 		JListFixture listMuseumExhibitions = exhibitionWindow.list("listMuseumExh");
 
 		exhibitionWindow.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
