@@ -142,6 +142,10 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public void deleteExhibition(Exhibition exhibition) {
 		try {
+			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
+				return museumRepository.findMuseumById(exhibition.getMuseumId());
+			});
+			
 			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
 				return exhibitionRepository.findExhibitionByName(exhibition.getName());
 			});
@@ -149,8 +153,10 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			if (exhibitionToRemove == null) {
 				throw new NoSuchElementException("The selected exhibition does not exist!");
 			}
-			transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+			transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 				exhibitionRepository.deleteExhibition(exhibitionToRemove);
+				int occupiedRooms = museum.getOccupiedRooms();
+				museum.setOccupiedRooms(occupiedRooms - 1);
 				return null;
 			});
 

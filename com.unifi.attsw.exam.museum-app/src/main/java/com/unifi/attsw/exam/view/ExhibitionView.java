@@ -16,4 +16,6 @@ public interface ExhibitionView {
 
 	public void showError(String message, Exhibition exhibition);
 
+	public void exhibitionBooked();
+
 }

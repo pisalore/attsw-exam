@@ -202,7 +202,6 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		String[] listMuseumExhibitionContents = listMuseumExhibitions.contents();
 
 		window.label("errorLabel").requireText(" ");
-		window.textBox("findMuseumTextField").requireText(" ");
 		assertThat(listAllMuseumsContents).containsExactly("exhibition1_test - Total Seats: 10 - Booked Seats: 0",
 				"exhibition2_test - Total Seats: 10 - Booked Seats: 0");
 

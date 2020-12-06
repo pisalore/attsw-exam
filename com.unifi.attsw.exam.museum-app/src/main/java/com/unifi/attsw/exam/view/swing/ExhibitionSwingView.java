@@ -336,13 +336,13 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	public void showMuseumExhibitions(List<Exhibition> exhibitions) {
 		allExhibitionsListModel.clear();
 		exhibitions.stream().forEach(museumsExhibitionListModel::addElement);
+		lblError.setText(" ");
 
 	}
 
 	@Override
 	public void exhibitionAdded(Exhibition exhibition) {
 		allExhibitionsListModel.addElement(exhibition);
-		findMuseumTextField.setText(" ");
 		museumsExhibitionListModel.clear();
 		lblError.setText(" ");
 	}
@@ -350,6 +350,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	@Override
 	public void exhibitionRemoved(Exhibition exhibition) {
 		allExhibitionsListModel.removeElement(exhibition);
+		lblError.setText(" ");
 	}
 
 	@Override
@@ -357,6 +358,13 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		String exhibitionName = exhibition != null ? exhibition.getName() : "";
 		lblError.setText(message + exhibitionName);
 
+	}
+
+	@Override
+	public void exhibitionBooked() {
+		museumsExhibitionListModel.clear();
+		museumController.getAllExhibitions();
+		lblError.setText(" ");
 	}
 
 }
