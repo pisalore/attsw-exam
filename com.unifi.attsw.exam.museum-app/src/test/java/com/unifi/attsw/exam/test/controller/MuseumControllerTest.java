@@ -252,6 +252,7 @@ public class MuseumControllerTest {
 		museumController.bookExhibitionSeat(exhibition);
 
 		inOrder.verify(museumService).bookExhibitionSeat(exhibition);
+		inOrder.verify(exhibitionView).exhibitionBooked();
 		verifyNoMoreInteractions(museumService, exhibitionView);
 	}
 
