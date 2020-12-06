@@ -9,18 +9,25 @@
 	<description>Advanced Tool and Techniques for Software Development exam project at UNIFI </description>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hibernate.version>5.4.22.Final</hibernate.version>
-		<junit.version>4.13.1</junit.version>
+		<hikari.version>3.4.5</hikari.version>
+		<hibernate.hikaricp.version>5.4.11.Final</hibernate.hikaricp.version>
+		<junit.version>4.13</junit.version>
 		<assertj.version>3.15.0</assertj.version>
 		<testcontainers.version>1.12.5</testcontainers.version>
 		<postgresql.testcontainers.version>1.14.3</postgresql.testcontainers.version>
+		<jacoco.version>0.8.5</jacoco.version>
 		<log4j.version>2.13.2</log4j.version>
 		<mockito.version>3.2.4</mockito.version>
 		<pitest.version>1.4.10</pitest.version>
-
+		<assertj.swing.version>3.17.1</assertj.swing.version>
+		<picocli.version>4.5.2</picocli.version>
+		<sonar.plugin.version>3.7.0.1746</sonar.plugin.version>
+		<!-- SonarCloud -->
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
@@ -31,6 +38,18 @@
 			<version>${hibernate.version}</version>
 		</dependency>
 
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.zaxxer</groupId> -->
+<!-- 			<artifactId>HikariCP</artifactId> -->
+<!-- 			<version>${hikari.version}</version> -->
+<!-- 		</dependency> -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.hibernate</groupId> -->
+<!-- 			<artifactId>hibernate-hikaricp</artifactId> -->
+<!-- 			<version>${hibernate.hikaricp.version}</version> -->
+<!-- 		</dependency> -->
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -39,17 +58,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>${assertj.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.11</version>
-			<scope>test</scope>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -64,6 +76,12 @@
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.testcontainers.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>${picocli.version}</version>
 		</dependency>
 
 		<dependency>
@@ -88,6 +106,13 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-swing-junit</artifactId>
+			<version>${assertj.swing.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -117,12 +142,18 @@
 					<artifactId>pitest-maven</artifactId>
 					<version>${pitest.version}</version>
 					<configuration>
-						<excludedClasses>
-							<param>com.unifi.attsw.exam.model.*</param>
-						</excludedClasses>
+						<targetClasses>
+							<param>com.unifi.attsw.exam.controller.*</param>
+							<param>com.unifi.attsw.exam.repository.postgres.*</param>
+							<param>com.unifi.attsw.exam.service.impl.*</param>
+							<param>com.unifi.attsw.exam.transaction.manager.postgres.*</param>
+						</targetClasses>
 						<targetTests>
-							<param>com.unifi.attsw.exam.*</param>
+							<param>com.unifi.attsw.exam.test.*</param>
 						</targetTests>
+						<excludedTestClasses>
+							<param>com.unifi.attsw.exam.test.view.swing.*</param>
+						</excludedTestClasses>
 						<timeoutFactor>4000</timeoutFactor>
 						<timeoutConstant>10000</timeoutConstant>
 						<mutators>
@@ -135,10 +166,12 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.5</version>
+					<version>${jacoco.version}</version>
 					<configuration>
 						<excludes>
 							<exclude>**/model/**</exclude>
+							<exclude>**/META-INF/**</exclude>
+							<exlude>**/app/**</exlude>
 						</excludes>
 					</configuration>
 					<executions>
@@ -189,6 +222,12 @@
 					</dependencies>
 				</plugin>
 
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonar.plugin.version}</version>
+				</plugin>
+
 			</plugins>
 
 		</pluginManagement>
@@ -209,6 +248,7 @@
 						<configuration>
 							<sources>
 								<source>src/it/java</source>
+								<source>src/e2e/java</source>
 							</sources>
 						</configuration>
 					</execution>
@@ -225,6 +265,21 @@
 							<goal>integration-test</goal>
 							<goal>verify</goal>
 						</goals>
+					</execution>
+					<execution>
+						<id>e2e-tests</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/*IT.java</exclude>
+							</excludes>
+							<includes>
+								<include>**/*E2E.java</include>
+							</includes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

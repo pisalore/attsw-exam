@@ -138,7 +138,7 @@ public class MuseumManagerTest {
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Museum");
 
 	}
-	
+
 	@Test
 	public void testGetMuseumThatDoesNotExistByNameShouldThrow() {
 		assertThatThrownBy(() -> {
@@ -147,11 +147,11 @@ public class MuseumManagerTest {
 			doThrow(NoSuchElementException.class).doNothing();
 			inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
 			inOrder.verifyNoMoreInteractions();
-			
+
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Museum");
 
 	}
-	
+
 	@Test
 	public void testGetMuseumByName() {
 		Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1, MUSEUM_ID_1);
@@ -272,7 +272,7 @@ public class MuseumManagerTest {
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to delete Museum.");
 
 	}
-	
+
 	@Test
 	public void testGetExhibitionByNullNameShouldThrow() {
 		assertThatThrownBy(() -> {
@@ -283,7 +283,7 @@ public class MuseumManagerTest {
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Exhibition");
 
 	}
-	
+
 	@Test
 	public void testGetExhibitionThatDoesNotExistByNameShouldThrow() {
 		assertThatThrownBy(() -> {
@@ -292,11 +292,11 @@ public class MuseumManagerTest {
 			doThrow(NoSuchElementException.class).doNothing();
 			inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
 			inOrder.verifyNoMoreInteractions();
-			
+
 		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Exhibition");
 
 	}
-	
+
 	@Test
 	public void testGetExhibitionByName() {
 		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
@@ -372,7 +372,10 @@ public class MuseumManagerTest {
 	@Test
 	public void testDeleteExhibition() throws RepositoryException {
 		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(exhibition);
+		when(museumRepository.findMuseumById(exhibition.getMuseumId())).thenReturn(museum);
 		museumManager.deleteExhibition(exhibition);
+		
+		inOrder.verify(museumRepository).findMuseumById(exhibition.getMuseumId());
 		inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
 		inOrder.verify(exhibitionRepository).deleteExhibition(exhibition);
 		verifyNoMoreInteractions(exhibitionRepository);
