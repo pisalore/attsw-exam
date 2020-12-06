@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.controller.swingController.MuseumSwingController;
 import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
@@ -25,7 +25,7 @@ import com.unifi.attsw.exam.view.swing.ExhibitionSwingView;
 import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MuseumControllerTest {
+public class MuseumSwingControllerTest {
 
 	private static final String MUSEUM1_TEST = "museum1_test";
 	private static final String EXHIBITION1_TEST = "exhibition1_test";
@@ -42,7 +42,7 @@ public class MuseumControllerTest {
 	private ExhibitionSwingView exhibitionView;
 
 	@InjectMocks
-	private MuseumController museumController;
+	private MuseumSwingController museumSwingController;
 
 	private InOrder inOrder;
 
@@ -55,7 +55,7 @@ public class MuseumControllerTest {
 	public void testShowAllMuseums() throws RepositoryException {
 		List<Museum> museums = asList(new Museum(MUSEUM1_TEST, NUM_CONSTANT1));
 		when(museumService.getAllMuseums()).thenReturn(museums);
-		museumController.getAllMuseums();
+		museumSwingController.getAllMuseums();
 		inOrder.verify(museumView).showAllMuseums(museums);
 	}
 
@@ -63,7 +63,7 @@ public class MuseumControllerTest {
 	public void testShowAllExhibitions() throws RepositoryException {
 		List<Exhibition> exhibitions = asList(new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1));
 		when(museumService.getAllExhibitions()).thenReturn(exhibitions);
-		museumController.getAllExhibitions();
+		museumSwingController.getAllExhibitions();
 		inOrder.verify(exhibitionView).showAllExhibitions(exhibitions);
 	}
 
@@ -74,7 +74,7 @@ public class MuseumControllerTest {
 		when(museumService.getAllMuseumExhibitions(museum)).thenReturn(exhibitions);
 		when(museumService.getMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 
-		museumController.getAllMuseumExhibitions(MUSEUM1_TEST);
+		museumSwingController.getAllMuseumExhibitions(MUSEUM1_TEST);
 		inOrder.verify(museumService).getMuseumByName(MUSEUM1_TEST);
 		inOrder.verify(museumService).getAllMuseumExhibitions(museum);
 		inOrder.verify(exhibitionView).showMuseumExhibitions(exhibitions);
@@ -84,7 +84,7 @@ public class MuseumControllerTest {
 	public void testShowAllNullMuseumExhibitionsShouldThrow() throws RepositoryException {
 		doThrow(new RuntimeException()).when(museumService).getMuseumByName(null);
 
-		museumController.getAllMuseumExhibitions(null);
+		museumSwingController.getAllMuseumExhibitions(null);
 
 		inOrder.verify(museumService).getMuseumByName(null);
 		inOrder.verify(exhibitionView).showError("Impossibile to get all exhibitions.", null);
@@ -93,7 +93,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testShowAllExhibitionsFromNotExistingMuseumShouldThrow() throws RepositoryException {
 		doThrow(new RuntimeException()).when(museumService).getMuseumByName(MUSEUM1_TEST);
-		museumController.getAllMuseumExhibitions(MUSEUM1_TEST);
+		museumSwingController.getAllMuseumExhibitions(MUSEUM1_TEST);
 
 		inOrder.verify(museumService).getMuseumByName(MUSEUM1_TEST);
 		inOrder.verify(exhibitionView).showError("Impossibile to get all exhibitions.", null);
@@ -102,7 +102,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testSaveNullMuseumShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).saveMuseum(null);
-		museumController.saveMuseum(null);
+		museumSwingController.saveMuseum(null);
 
 		inOrder.verify(museumService).saveMuseum(null);
 		inOrder.verify(museumView).showError("Impossibile to add Museum: ", null);
@@ -112,7 +112,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testSaveMuseumWhichDoesNotExist() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
-		museumController.saveMuseum(museum);
+		museumSwingController.saveMuseum(museum);
 
 		inOrder.verify(museumService).saveMuseum(museum);
 		inOrder.verify(museumView).museumAdded(museum);
@@ -122,7 +122,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testAddNewNullExhibitionShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).addNewExhibition(MUSEUM1_TEST, null);
-		museumController.saveExhibition(MUSEUM1_TEST, null);
+		museumSwingController.saveExhibition(MUSEUM1_TEST, null);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, null);
 		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition: ", null);
@@ -133,7 +133,7 @@ public class MuseumControllerTest {
 	public void testAddNewExhibitionWhenMuseumDoesNotExistShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		doThrow(new RuntimeException()).when(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
-		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
+		museumSwingController.saveExhibition(MUSEUM1_TEST, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
 		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition: ", exhibition);
@@ -145,7 +145,7 @@ public class MuseumControllerTest {
 	public void testAddNewExhibitionWhenMuseumNameIsNullShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		doThrow(new RuntimeException()).when(museumService).addNewExhibition(null, exhibition);
-		museumController.saveExhibition(null, exhibition);
+		museumSwingController.saveExhibition(null, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(null, exhibition);
 		inOrder.verify(exhibitionView).showError("Impossible to add Exhibition: ", exhibition);
@@ -156,7 +156,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testAddNewExhibition() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		museumController.saveExhibition(MUSEUM1_TEST, exhibition);
+		museumSwingController.saveExhibition(MUSEUM1_TEST, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
 		inOrder.verify(exhibitionView).exhibitionAdded(exhibition);
@@ -166,7 +166,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testDeleteNullMuseumShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).deleteMuseum(null);
-		museumController.deleteMuseum(null);
+		museumSwingController.deleteMuseum(null);
 
 		inOrder.verify(museumService).deleteMuseum(null);
 		inOrder.verify(museumView).showError("Impossible to delete Museum: ", null);
@@ -177,7 +177,7 @@ public class MuseumControllerTest {
 	public void testDeleteMuseumWhichDoesNotExistShouldThrow() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
 		doThrow(new RuntimeException()).when(museumService).deleteMuseum(museum);
-		museumController.deleteMuseum(museum);
+		museumSwingController.deleteMuseum(museum);
 
 		inOrder.verify(museumService).deleteMuseum(museum);
 		inOrder.verify(museumView).showError("Impossible to delete Museum: ", museum);
@@ -187,7 +187,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testDeleteMuseum() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
-		museumController.deleteMuseum(museum);
+		museumSwingController.deleteMuseum(museum);
 
 		inOrder.verify(museumService).deleteMuseum(museum);
 		verifyNoMoreInteractions(museumService);
@@ -196,7 +196,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testDeleteNullExhibitionShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).deleteExhibition(null);
-		museumController.deleteExhibition(null);
+		museumSwingController.deleteExhibition(null);
 
 		inOrder.verify(museumService).deleteExhibition(null);
 		inOrder.verify(exhibitionView).showError("Impossible to delete Exhibition: ", null);
@@ -207,7 +207,7 @@ public class MuseumControllerTest {
 	public void testDeleteExhibitionWhichDoesNotExistShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		doThrow(new RuntimeException()).when(museumService).deleteExhibition(exhibition);
-		museumController.deleteExhibition(exhibition);
+		museumSwingController.deleteExhibition(exhibition);
 
 		inOrder.verify(museumService).deleteExhibition(exhibition);
 		inOrder.verify(exhibitionView).showError("Impossible to delete Exhibition: ", exhibition);
@@ -217,7 +217,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testDeleteExhibition() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		museumController.deleteExhibition(exhibition);
+		museumSwingController.deleteExhibition(exhibition);
 
 		inOrder.verify(museumService).deleteExhibition(exhibition);
 		verifyNoMoreInteractions(museumService);
@@ -226,7 +226,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testBookNullExhibitionSeatShouldThrow() {
 		doThrow(new RuntimeException()).when(museumService).bookExhibitionSeat(null);
-		museumController.bookExhibitionSeat(null);
+		museumSwingController.bookExhibitionSeat(null);
 
 		inOrder.verify(museumService).bookExhibitionSeat(null);
 		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition: ", null);
@@ -239,7 +239,7 @@ public class MuseumControllerTest {
 		exhibition.setBookedSeats(NUM_CONSTANT1);
 
 		doThrow(new RuntimeException()).when(museumService).bookExhibitionSeat(exhibition);
-		museumController.bookExhibitionSeat(exhibition);
+		museumSwingController.bookExhibitionSeat(exhibition);
 
 		inOrder.verify(museumService).bookExhibitionSeat(exhibition);
 		inOrder.verify(exhibitionView).showError("Impossible to book a seat for Exhibition: ", exhibition);
@@ -249,7 +249,7 @@ public class MuseumControllerTest {
 	@Test
 	public void testBookExhibition() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		museumController.bookExhibitionSeat(exhibition);
+		museumSwingController.bookExhibitionSeat(exhibition);
 
 		inOrder.verify(museumService).bookExhibitionSeat(exhibition);
 		inOrder.verify(exhibitionView).exhibitionBooked();
@@ -258,14 +258,14 @@ public class MuseumControllerTest {
 
 	@Test
 	public void testOpenMuseumsDashboard() {
-		museumController.openMuseumDashboard();
+		museumSwingController.openMuseumDashboard();
 		inOrder.verify(museumView).setVisible(true);
 		inOrder.verify(exhibitionView).setVisible(false);
 	}
 
 	@Test
 	public void testOpenExhibitionsDashboard() {
-		museumController.openExhibitionsDashboard();
+		museumSwingController.openExhibitionsDashboard();
 		inOrder.verify(exhibitionView).setVisible(true);
 		inOrder.verify(museumView).setVisible(false);
 	}

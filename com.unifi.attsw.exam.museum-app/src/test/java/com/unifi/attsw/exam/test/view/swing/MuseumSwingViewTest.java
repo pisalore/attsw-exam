@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.controller.swingController.MuseumSwingController;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
@@ -36,14 +36,14 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	private MuseumSwingView museumSwingView;
 
 	@Mock
-	private MuseumController museumController;
+	private MuseumSwingController museumSwingController;
 
 	@Override
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
 			museumSwingView = new MuseumSwingView();
-			museumSwingView.setMuseumController(museumController);
+			museumSwingView.setMuseumController(museumSwingController);
 			return museumSwingView;
 		});
 		window = new FrameFixture(robot(), museumSwingView);
@@ -148,7 +148,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testFindAllButtonShouldDelegateToControllerGetMuseums() {
 		window.button(JButtonMatcher.withText("Find all")).click();
-		verify(museumController).getAllMuseums();
+		verify(museumSwingController).getAllMuseums();
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("museum").enterText(MUSEUM1_TEST);
 		window.textBox("rooms").enterText(NUM_CONST);
 		window.button(JButtonMatcher.withText("Add")).click();
-		verify(museumController).saveMuseum(new Museum(MUSEUM1_TEST, 10));
+		verify(museumSwingController).saveMuseum(new Museum(MUSEUM1_TEST, 10));
 	}
 
 	@Test
@@ -171,13 +171,13 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		});
 		window.list("museumList").selectItem(1);
 		window.button(JButtonMatcher.withText("Delete Selected")).click();
-		verify(museumController).deleteMuseum(museum2);
+		verify(museumSwingController).deleteMuseum(museum2);
 	}
 
 	@Test
 	public void testChangeViewToExhibitionsDashboard() {
 		window.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
-		verify(museumController).openExhibitionsDashboard();
+		verify(museumSwingController).openExhibitionsDashboard();
 	}
 
 }

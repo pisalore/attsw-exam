@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.controller.swingController.MuseumSwingController;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.service.impl.MuseumManagerServiceImpl;
 import com.unifi.attsw.exam.transaction.manager.TransactionManager;
@@ -52,12 +52,12 @@ public class MuseumSwingApp implements Callable<Void> {
 			MuseumManagerService museumManagerService = new MuseumManagerServiceImpl(transactionManager);
 			MuseumSwingView museumView = new MuseumSwingView();
 			ExhibitionSwingView exhibitionView = new ExhibitionSwingView();
-			MuseumController museumController = new MuseumController(museumManagerService, museumView, exhibitionView);
-			museumView.setMuseumController(museumController);
-			exhibitionView.setMuseumController(museumController);
+			MuseumSwingController museumSwingController = new MuseumSwingController(museumManagerService, museumView, exhibitionView);
+			museumView.setMuseumController(museumSwingController);
+			exhibitionView.setMuseumController(museumSwingController);
 			museumView.setVisible(true);
-			museumController.getAllMuseums();
-			museumController.getAllExhibitions();
+			museumSwingController.getAllMuseums();
+			museumSwingController.getAllExhibitions();
 		});
 		return null;
 	}

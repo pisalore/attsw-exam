@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.controller.swingController.MuseumSwingController;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.service.impl.MuseumManagerServiceImpl;
@@ -45,7 +45,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Mock
 	private static MuseumSwingView museumView;
 
-	private static MuseumController museumController;
+	private static MuseumSwingController museumSwingController;
 
 	@Override
 	protected void onSetUp() {
@@ -56,8 +56,8 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView = new ExhibitionSwingView();
-			museumController = new MuseumController(museumManager, museumView, exhibitionSwingView);
-			exhibitionSwingView.setMuseumController(museumController);
+			museumSwingController = new MuseumSwingController(museumManager, museumView, exhibitionSwingView);
+			exhibitionSwingView.setMuseumController(museumSwingController);
 			return exhibitionSwingView;
 		});
 
@@ -114,7 +114,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteExhibition() {
-		GuiActionRunner.execute(() -> museumController.getAllExhibitions());
+		GuiActionRunner.execute(() -> museumSwingController.getAllExhibitions());
 		// select an exhibition
 		window.list("listAllExh").selectItem(0);
 		window.button(JButtonMatcher.withText("Delete")).click();
@@ -139,7 +139,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@GUITest
 	public void testBookExhibition() {
 		JListFixture listAllExhibitions = window.list("listAllExh");
-		GuiActionRunner.execute(() -> museumController.getAllExhibitions());
+		GuiActionRunner.execute(() -> museumSwingController.getAllExhibitions());
 		// select an exhibition
 		listAllExhibitions.selectItem(0);
 		window.button(JButtonMatcher.withText("Book")).click();

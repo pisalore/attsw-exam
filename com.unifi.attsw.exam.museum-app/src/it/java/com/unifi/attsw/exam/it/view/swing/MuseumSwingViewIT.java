@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.controller.swingController.MuseumSwingController;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.service.impl.MuseumManagerServiceImpl;
@@ -43,7 +43,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Mock
 	private static ExhibitionSwingView exhibitionView;
 
-	private static MuseumController museumController;
+	private static MuseumSwingController museumSwingController;
 
 	@Override
 	protected void onSetUp() {
@@ -54,8 +54,8 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 
 		GuiActionRunner.execute(() -> {
 			museumSwingView = new MuseumSwingView();
-			museumController = new MuseumController(museumManager, museumSwingView, exhibitionView);
-			museumSwingView.setMuseumController(museumController);
+			museumSwingController = new MuseumSwingController(museumManager, museumSwingView, exhibitionView);
+			museumSwingView.setMuseumController(museumSwingController);
 			return museumSwingView;
 		});
 
@@ -92,7 +92,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteButtonSuccess() {
-		GuiActionRunner.execute(() -> museumController.getAllMuseums());
+		GuiActionRunner.execute(() -> museumSwingController.getAllMuseums());
 		window.list().selectItem(0);
 		window.button(JButtonMatcher.withText("Delete Selected")).click();
 		assertThat(window.list().contents()).hasSize(1);

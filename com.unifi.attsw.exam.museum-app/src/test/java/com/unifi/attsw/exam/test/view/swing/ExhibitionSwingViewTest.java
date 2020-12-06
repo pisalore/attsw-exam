@@ -22,7 +22,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.controller.swingController.MuseumSwingController;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.view.swing.ExhibitionSwingView;
 
@@ -40,14 +40,14 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	private ExhibitionSwingView exhibitionSwingView;
 
 	@Mock
-	private MuseumController museumController;
+	private MuseumSwingController museumSwingController;
 
 	@Override
 	protected void onSetUp() {
 		MockitoAnnotations.initMocks(this);
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView = new ExhibitionSwingView();
-			exhibitionSwingView.setMuseumController(museumController);
+			exhibitionSwingView.setMuseumController(museumSwingController);
 			return exhibitionSwingView;
 		});
 		window = new FrameFixture(robot(), exhibitionSwingView);
@@ -212,7 +212,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testFindAllButtonShouldDelegateToControllerGetExhibitions() {
 		window.button(JButtonMatcher.withText("Find all")).click();
-		verify(museumController).getAllExhibitions();
+		verify(museumSwingController).getAllExhibitions();
 	}
 
 	@Test
@@ -225,12 +225,12 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		seatsTextBox.enterText(NUM_CONST);
 		museumNameTextBox.enterText(MUSEUM1_TEST);
 		window.button(JButtonMatcher.withText("Add Exhibition")).click();
-		verify(museumController).saveExhibition(MUSEUM1_TEST, new Exhibition(EXHIBITION1_TEST, 10));
+		verify(museumSwingController).saveExhibition(MUSEUM1_TEST, new Exhibition(EXHIBITION1_TEST, 10));
 	}
 
 	@Test
 	public void testDeleteButtonShouldDelegateToControllerDeleteExhibition() {
-		InOrder inOrder = inOrder(museumController);
+		InOrder inOrder = inOrder(museumSwingController);
 		// setup
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
@@ -240,12 +240,12 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		listAllExhibitions.selectItem(0);
 		window.button(JButtonMatcher.withText("Delete")).click();
 
-		inOrder.verify(museumController).deleteExhibition(exhibition1);
+		inOrder.verify(museumSwingController).deleteExhibition(exhibition1);
 	}
 
 	@Test
 	public void testBookButtonShouldDelegateToControllerBookExhibition() {
-		InOrder inOrder = inOrder(museumController);
+		InOrder inOrder = inOrder(museumSwingController);
 		// setup
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
@@ -255,20 +255,20 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		listAllExhibitions.selectItem(0);
 		window.button(JButtonMatcher.withText("Book")).click();
 
-		inOrder.verify(museumController).bookExhibitionSeat(exhibition1);
+		inOrder.verify(museumSwingController).bookExhibitionSeat(exhibition1);
 	}
 
 	@Test
 	public void testFindMuseumButtonShouldDelegateToControllerGetExhibitions() {
 		window.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
 		window.button(JButtonMatcher.withText("Find Museum Exh.")).click();
-		verify(museumController).getAllMuseumExhibitions(MUSEUM1_TEST);
+		verify(museumSwingController).getAllMuseumExhibitions(MUSEUM1_TEST);
 	}
 	
 	@Test
 	public void testChangeViewToMuseumsDashboard() {
 		window.button(JButtonMatcher.withText("Museums Dashboard")).click();
-		verify(museumController).openMuseumDashboard();
+		verify(museumSwingController).openMuseumDashboard();
 	}
 
 }

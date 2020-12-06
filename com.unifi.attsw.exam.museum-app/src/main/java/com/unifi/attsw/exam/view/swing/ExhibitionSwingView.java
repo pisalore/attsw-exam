@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.unifi.attsw.exam.controller.MuseumController;
+import com.unifi.attsw.exam.controller.swingController.MuseumSwingController;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.view.ExhibitionView;
 import java.awt.GridBagLayout;
@@ -28,7 +28,7 @@ import java.awt.Font;
 
 public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
-	private MuseumController museumController;
+	private MuseumSwingController museumSwingController;
 
 	/**
 	 * 
@@ -190,7 +190,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_btnFindAll.gridy = 3;
 		contentPane.add(btnFindAll, gbc_btnFindAll);
 
-		btnFindAll.addActionListener(e -> museumController.getAllExhibitions());
+		btnFindAll.addActionListener(e -> museumSwingController.getAllExhibitions());
 
 		GridBagConstraints gbc_btnAddExhibition = new GridBagConstraints();
 		gbc_btnAddExhibition.anchor = GridBagConstraints.WEST;
@@ -281,7 +281,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_btnBook.gridy = 6;
 		contentPane.add(btnBook, gbc_btnBook);
 
-		btnBook.addActionListener(e -> museumController.bookExhibitionSeat(listAllExh.getSelectedValue()));
+		btnBook.addActionListener(e -> museumSwingController.bookExhibitionSeat(listAllExh.getSelectedValue()));
 
 		btnDelete = new JButton("Delete");
 		btnDelete.setEnabled(false);
@@ -306,12 +306,12 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		listMuseumExh.addListSelectionListener(e -> btnDelete.setEnabled(listMuseumExh.getSelectedIndex() != -1));
 		listAllExh.addListSelectionListener(e -> btnBook.setEnabled(listAllExh.getSelectedIndex() != -1));
 		listMuseumExh.addListSelectionListener(e -> btnBook.setEnabled(listMuseumExh.getSelectedIndex() != -1));
-		btnAddExhibition.addActionListener(e -> museumController.saveExhibition(museumNameTextField.getText(),
+		btnAddExhibition.addActionListener(e -> museumSwingController.saveExhibition(museumNameTextField.getText(),
 				new Exhibition(exhibitionTextField.getText(), Integer.parseInt(totalSeatsTextField.getText()))));
 
-		btnFind.addActionListener(e -> museumController.getAllMuseumExhibitions(findMuseumTextField.getText()));
-		btnDelete.addActionListener(e -> museumController.deleteExhibition(listAllExh.getSelectedValue()));
-		btnMuseumsDashboard.addActionListener(e -> museumController.openMuseumDashboard());
+		btnFind.addActionListener(e -> museumSwingController.getAllMuseumExhibitions(findMuseumTextField.getText()));
+		btnDelete.addActionListener(e -> museumSwingController.deleteExhibition(listAllExh.getSelectedValue()));
+		btnMuseumsDashboard.addActionListener(e -> museumSwingController.openMuseumDashboard());
 	}
 
 	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {
@@ -322,8 +322,8 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		return museumsExhibitionListModel;
 	}
 
-	public void setMuseumController(MuseumController museumController) {
-		this.museumController = museumController;
+	public void setMuseumController(MuseumSwingController museumSwingController) {
+		this.museumSwingController = museumSwingController;
 	}
 
 	private String getDisplayString(Exhibition exhibition) {
@@ -369,7 +369,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	@Override
 	public void exhibitionBooked() {
 		museumsExhibitionListModel.clear();
-		museumController.getAllExhibitions();
+		museumSwingController.getAllExhibitions();
 		lblError.setText(" ");
 	}
 
