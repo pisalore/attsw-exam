@@ -140,7 +140,7 @@ public class MuseumManagerServiceIT {
 		int bookedExhibitionsBefore = exhibition.getBookedSeats();
 		museumManager.bookExhibitionSeat(exhibition);
 		int bookedExhibitionsAfter = exhibition.getBookedSeats();
-		assertThat(bookedExhibitionsBefore).isEqualTo(0);
+		assertThat(bookedExhibitionsBefore).isZero();
 		assertThat(bookedExhibitionsAfter).isEqualTo(1);
 		assertThat(bookedExhibitionsAfter).isGreaterThan(bookedExhibitionsBefore);
 	}
