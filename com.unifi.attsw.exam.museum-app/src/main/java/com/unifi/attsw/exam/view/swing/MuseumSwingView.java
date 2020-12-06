@@ -27,7 +27,7 @@ import java.util.List;
 import javax.swing.ListSelectionModel;
 
 public class MuseumSwingView extends JFrame implements MuseumView {
-	
+
 	private MuseumController museumController;
 
 	private static final long serialVersionUID = 1L;
@@ -42,6 +42,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	private JButton btnFindAll;
 	private JButton btnAdd;
 	private JButton btnDeleteSelected;
+	private JButton btnExhibitionsDashboard;
 
 	/**
 	 * Create the frame.
@@ -127,7 +128,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		JScrollPane scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.gridwidth = 4;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 3;
@@ -151,31 +152,39 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 		scrollPane.setViewportView(museumList);
 
+		museumList.addListSelectionListener(e -> btnDeleteSelected.setEnabled(museumList.getSelectedIndex() != -1));
+
+		btnDeleteSelected = new JButton("Delete Selected");
+		btnDeleteSelected.setEnabled(false);
+
+		btnDeleteSelected.addActionListener(e -> museumController.deleteMuseum(museumList.getSelectedValue()));
+
+		GridBagConstraints gbc_btnDeleteSelected = new GridBagConstraints();
+		gbc_btnDeleteSelected.gridwidth = 2;
+		gbc_btnDeleteSelected.anchor = GridBagConstraints.WEST;
+		gbc_btnDeleteSelected.insets = new Insets(0, 0, 5, 5);
+		gbc_btnDeleteSelected.gridx = 0;
+		gbc_btnDeleteSelected.gridy = 5;
+		contentPane.add(btnDeleteSelected, gbc_btnDeleteSelected);
+
 		errorMessageLabel = new JLabel(" ");
 		errorMessageLabel.setForeground(Color.RED);
 		errorMessageLabel.setName("errorMessageLabel");
 		GridBagConstraints gbc_errorMessageLabel = new GridBagConstraints();
 		gbc_errorMessageLabel.gridwidth = 3;
-		gbc_errorMessageLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_errorMessageLabel.gridx = 0;
-		gbc_errorMessageLabel.gridy = 5;
+		gbc_errorMessageLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_errorMessageLabel.gridx = 1;
+		gbc_errorMessageLabel.gridy = 6;
 		contentPane.add(errorMessageLabel, gbc_errorMessageLabel);
 
-		btnDeleteSelected = new JButton("Delete Selected");
-		btnDeleteSelected.setEnabled(false);
-
-		museumList.addListSelectionListener(e -> btnDeleteSelected.setEnabled(museumList.getSelectedIndex() != -1));
-
-		btnDeleteSelected.addActionListener(e -> museumController.deleteMuseum(museumList.getSelectedValue()));
-
-		GridBagConstraints gbc_btnDeleteSelected = new GridBagConstraints();
-		gbc_btnDeleteSelected.anchor = GridBagConstraints.EAST;
-		gbc_btnDeleteSelected.insets = new Insets(0, 0, 5, 0);
-		gbc_btnDeleteSelected.gridx = 3;
-		gbc_btnDeleteSelected.gridy = 5;
-		contentPane.add(btnDeleteSelected, gbc_btnDeleteSelected);
+		btnExhibitionsDashboard = new JButton("Exhibitions Dashboard");
+		btnExhibitionsDashboard.addActionListener(e -> museumController.openExhibitionsDashboard());
+		GridBagConstraints gbc_btnExhibitionsDashboard = new GridBagConstraints();
+		gbc_btnExhibitionsDashboard.gridx = 3;
+		gbc_btnExhibitionsDashboard.gridy = 7;
+		contentPane.add(btnExhibitionsDashboard, gbc_btnExhibitionsDashboard);
 	}
-	
+
 	@Override
 	public void showAllMuseums(List<Museum> museums) {
 		museumListModel.clear();
@@ -188,18 +197,18 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		errorMessageLabel.setText(message + museumName);
 
 	}
-	
+
 	@Override
 	public void museumAdded(Museum museum) {
 		museumListModel.addElement(museum);
 		errorMessageLabel.setText(" ");
-		
+
 	}
 
 	@Override
 	public void museumRemoved(Museum museum) {
 		museumListModel.removeElement(museum);
-		
+
 	}
 
 	public DefaultListModel<Museum> getMuseumListModel() {
@@ -210,7 +219,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		return museum.getName() + " - Total Rooms: " + museum.getTotalRooms() + " - Occupied Rooms: "
 				+ museum.getOccupiedRooms();
 	}
-	
+
 	public void setMuseumController(MuseumController museumController) {
 		this.museumController = museumController;
 	}

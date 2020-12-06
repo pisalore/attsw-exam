@@ -34,7 +34,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	private FrameFixture window;
 
 	private MuseumSwingView museumSwingView;
-	
+
 	@Mock
 	private MuseumController museumController;
 
@@ -60,6 +60,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Find all")).requireEnabled();
 		window.list("museumList");
 		window.button(JButtonMatcher.withText("Delete Selected")).requireDisabled();
+		window.button(JButtonMatcher.withText("Exhibitions Dashboard")).requireEnabled();
 		window.label("errorMessageLabel").requireText(" ");
 	}
 
@@ -143,13 +144,13 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(listContents).containsExactly("museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
 		window.label("errorMessageLabel").requireText(" ");
 	}
-	
+
 	@Test
 	public void testFindAllButtonShouldDelegateToControllerGetMuseums() {
 		window.button(JButtonMatcher.withText("Find all")).click();
 		verify(museumController).getAllMuseums();
 	}
-	
+
 	@Test
 	public void testAddButtonShouldDelegateToControllerSaveMuseum() {
 		window.textBox("museum").enterText(MUSEUM1_TEST);
@@ -157,7 +158,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add")).click();
 		verify(museumController).saveMuseum(new Museum(MUSEUM1_TEST, 10));
 	}
-	
+
 	@Test
 	public void testRemovedSelectedButtonShouldDelegateToControllerDeleteMuseum() {
 		// setup
@@ -171,6 +172,12 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("museumList").selectItem(1);
 		window.button(JButtonMatcher.withText("Delete Selected")).click();
 		verify(museumController).deleteMuseum(museum2);
+	}
+
+	@Test
+	public void testChangeViewToExhibitionsDashboard() {
+		window.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
+		verify(museumController).openExhibitionsDashboard();
 	}
 
 }

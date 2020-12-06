@@ -21,7 +21,7 @@ import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.service.impl.MuseumManagerServiceImpl;
 import com.unifi.attsw.exam.transaction.manager.postgres.PostgresTransactionManager;
-import com.unifi.attsw.exam.view.ExhibitionView;
+import com.unifi.attsw.exam.view.swing.ExhibitionSwingView;
 import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
 @RunWith(GUITestRunner.class)
@@ -41,7 +41,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 
 	// I want to test only the integration of controller and Museum swing view
 	@Mock
-	private static ExhibitionView exhibitionView;
+	private static ExhibitionSwingView exhibitionView;
 
 	private static MuseumController museumController;
 
@@ -97,13 +97,12 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Delete Selected")).click();
 		assertThat(window.list().contents()).hasSize(1);
 	}
-	
+
 	@Test
 	@GUITest
 	public void testDeleteButtonError() {
 		Museum notExistingMuseum = new Museum(MUSEUM3_TEST, 10);
-		GuiActionRunner.execute(
-				() -> museumSwingView.getMuseumListModel().addElement(notExistingMuseum));
+		GuiActionRunner.execute(() -> museumSwingView.getMuseumListModel().addElement(notExistingMuseum));
 		window.list().selectItem(0);
 		window.button(JButtonMatcher.withText("Delete Selected")).click();
 		window.label("errorMessageLabel").requireText("Impossible to delete Museum: " + MUSEUM3_TEST);

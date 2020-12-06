@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-
 import com.unifi.attsw.exam.controller.MuseumController;
 import com.unifi.attsw.exam.service.MuseumManagerService;
 import com.unifi.attsw.exam.service.impl.MuseumManagerServiceImpl;
@@ -57,7 +56,6 @@ public class MuseumSwingApp implements Callable<Void> {
 			museumView.setMuseumController(museumController);
 			exhibitionView.setMuseumController(museumController);
 			museumView.setVisible(true);
-			exhibitionView.setVisible(true);
 			museumController.getAllMuseums();
 			museumController.getAllExhibitions();
 		});

@@ -54,6 +54,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	private JList<Exhibition> listMuseumExh;
 	private DefaultListModel<Exhibition> museumsExhibitionListModel;
 	private JLabel lblError;
+	private JButton btnMuseumsDashboard;
 
 	/**
 	 * Create the frame.
@@ -238,7 +239,6 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		scrollPaneMuseumExh = new JScrollPane();
 		scrollPaneMuseumExh.setEnabled(false);
 		GridBagConstraints gbc_scrollPaneMuseumExh = new GridBagConstraints();
-		gbc_scrollPaneMuseumExh.gridheight = 3;
 		gbc_scrollPaneMuseumExh.gridwidth = 2;
 		gbc_scrollPaneMuseumExh.insets = new Insets(0, 0, 5, 0);
 		gbc_scrollPaneMuseumExh.fill = GridBagConstraints.BOTH;
@@ -291,8 +291,12 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gbc_btnDelete.gridx = 1;
 		gbc_btnDelete.gridy = 6;
 		contentPane.add(btnDelete, gbc_btnDelete);
-
-		btnDelete.addActionListener(e -> museumController.deleteExhibition(listAllExh.getSelectedValue()));
+		
+		btnMuseumsDashboard = new JButton("Museums Dashboard");
+		GridBagConstraints gbc_btnMuseumsDashboard = new GridBagConstraints();
+		gbc_btnMuseumsDashboard.gridx = 4;
+		gbc_btnMuseumsDashboard.gridy = 6;
+		contentPane.add(btnMuseumsDashboard, gbc_btnMuseumsDashboard);
 
 		/*
 		 * Actions
@@ -306,6 +310,8 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 				new Exhibition(exhibitionTextField.getText(), Integer.parseInt(totalSeatsTextField.getText()))));
 
 		btnFind.addActionListener(e -> museumController.getAllMuseumExhibitions(findMuseumTextField.getText()));
+		btnDelete.addActionListener(e -> museumController.deleteExhibition(listAllExh.getSelectedValue()));
+		btnMuseumsDashboard.addActionListener(e -> museumController.openMuseumDashboard());
 	}
 
 	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {

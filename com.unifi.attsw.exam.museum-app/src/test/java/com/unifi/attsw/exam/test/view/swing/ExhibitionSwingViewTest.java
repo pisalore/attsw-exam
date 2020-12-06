@@ -72,6 +72,7 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Find Museum Exh.")).requireDisabled();
 		window.button(JButtonMatcher.withText("Book")).requireDisabled();
 		window.button(JButtonMatcher.withText("Delete")).requireDisabled();
+		window.button(JButtonMatcher.withText("Museums Dashboard")).requireEnabled();
 		window.list("listAllExh");
 		window.list("listMuseumExh").requireDisabled();
 	}
@@ -262,6 +263,12 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
 		window.button(JButtonMatcher.withText("Find Museum Exh.")).click();
 		verify(museumController).getAllMuseumExhibitions(MUSEUM1_TEST);
+	}
+	
+	@Test
+	public void testChangeViewToMuseumsDashboard() {
+		window.button(JButtonMatcher.withText("Museums Dashboard")).click();
+		verify(museumController).openMuseumDashboard();
 	}
 
 }

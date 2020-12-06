@@ -4,21 +4,22 @@ import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
-import com.unifi.attsw.exam.view.ExhibitionView;
-import com.unifi.attsw.exam.view.MuseumView;
+import com.unifi.attsw.exam.view.swing.ExhibitionSwingView;
+import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
 public class MuseumController {
 
 	private MuseumManagerService museumService;
-	private MuseumView museumView;
-	private ExhibitionView exhibitionView;
+	private MuseumSwingView museumView;
+	private ExhibitionSwingView exhibitionView;
 
-	public MuseumController(MuseumManagerService museumService, MuseumView museumView, ExhibitionView exhibitionView) {
+	public MuseumController(MuseumManagerService museumService, MuseumSwingView museumView,
+			ExhibitionSwingView exhibitionView) {
 		this.museumService = museumService;
 		this.museumView = museumView;
 		this.exhibitionView = exhibitionView;
 	}
-	
+
 	public void getAllMuseums() {
 		try {
 			museumView.showAllMuseums(museumService.getAllMuseums());
@@ -27,7 +28,7 @@ public class MuseumController {
 			return;
 		}
 	}
-	
+
 	public void getAllExhibitions() {
 		try {
 			exhibitionView.showAllExhibitions(museumService.getAllExhibitions());
@@ -36,7 +37,7 @@ public class MuseumController {
 			return;
 		}
 	}
-	
+
 	public void getAllMuseumExhibitions(String museumName) {
 		try {
 			Museum museum = museumService.getMuseumByName(museumName);
@@ -92,6 +93,17 @@ public class MuseumController {
 		} catch (RuntimeException ex) {
 			exhibitionView.showError("Impossible to book a seat for Exhibition: ", exhibition);
 		}
+	}
+
+	public void openExhibitionsDashboard() {
+		exhibitionView.setVisible(true);
+		getAllExhibitions();
+		museumView.setVisible(false);
+	}
+
+	public void openMuseumDashboard() {
+		museumView.setVisible(true);
+		exhibitionView.setVisible(false);
 	}
 
 }

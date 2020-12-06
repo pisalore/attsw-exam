@@ -21,8 +21,8 @@ import com.unifi.attsw.exam.exception.RepositoryException;
 import com.unifi.attsw.exam.model.Exhibition;
 import com.unifi.attsw.exam.model.Museum;
 import com.unifi.attsw.exam.service.MuseumManagerService;
-import com.unifi.attsw.exam.view.ExhibitionView;
-import com.unifi.attsw.exam.view.MuseumView;
+import com.unifi.attsw.exam.view.swing.ExhibitionSwingView;
+import com.unifi.attsw.exam.view.swing.MuseumSwingView;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MuseumControllerTest {
@@ -36,10 +36,10 @@ public class MuseumControllerTest {
 	private MuseumManagerService museumService;
 
 	@Mock
-	private MuseumView museumView;
+	private MuseumSwingView museumView;
 
 	@Mock
-	private ExhibitionView exhibitionView;
+	private ExhibitionSwingView exhibitionView;
 
 	@InjectMocks
 	private MuseumController museumController;
@@ -254,6 +254,20 @@ public class MuseumControllerTest {
 		inOrder.verify(museumService).bookExhibitionSeat(exhibition);
 		inOrder.verify(exhibitionView).exhibitionBooked();
 		verifyNoMoreInteractions(museumService, exhibitionView);
+	}
+
+	@Test
+	public void testOpenMuseumsDashboard() {
+		museumController.openMuseumDashboard();
+		inOrder.verify(museumView).setVisible(true);
+		inOrder.verify(exhibitionView).setVisible(false);
+	}
+
+	@Test
+	public void testOpenExhibitionsDashboard() {
+		museumController.openExhibitionsDashboard();
+		inOrder.verify(exhibitionView).setVisible(true);
+		inOrder.verify(museumView).setVisible(false);
 	}
 
 }
