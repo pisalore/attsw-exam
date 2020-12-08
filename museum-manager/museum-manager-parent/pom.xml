@@ -65,6 +65,14 @@
 						</mutators>
 						<mutationThreshold>80</mutationThreshold>
 					</configuration>
+					<executions>
+						<execution>
+							<id>pit-mutationCoverage</id>
+							<goals>
+								<goal>mutationCoverage</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 
 				<plugin>
