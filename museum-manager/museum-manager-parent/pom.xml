@@ -64,7 +64,7 @@
 						<mutators>
 							<mutator>DEFAULTS</mutator>
 						</mutators>
-						<mutationThreshold>80</mutationThreshold>
+						<mutationThreshold>70</mutationThreshold>
 					</configuration>
 					<executions>
 						<execution>

@@ -24,6 +24,9 @@
 						<targetClasses>
 							<param>com.unifi.attsw.exam.core.service.impl.*</param>
 						</targetClasses>
+						<targetTests>
+							<param>com.unifi.attsw.exam.core.service.*</param>
+						</targetTests>
 					</configuration>
 				</plugin>
 			</plugins>
