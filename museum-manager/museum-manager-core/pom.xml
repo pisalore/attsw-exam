@@ -22,7 +22,7 @@
 					<artifactId>pitest-maven</artifactId>
 					<configuration>
 						<targetClasses>
-							<param>com.unifi.attsw.exam.core.service.impl*</param>
+							<param>com.unifi.attsw.exam.core.service.impl.*</param>
 						</targetClasses>
 					</configuration>
 				</plugin>
