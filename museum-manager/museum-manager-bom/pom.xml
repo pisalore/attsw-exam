@@ -33,6 +33,18 @@
 				<artifactId>museum-manager-repository</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>museum-manager-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>museum-manager-presentation</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.hibernate</groupId>

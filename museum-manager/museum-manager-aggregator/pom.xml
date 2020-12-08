@@ -11,7 +11,9 @@
 		<module>../museum-manager-bom</module>
 		<module>../museum-manager-parent</module>
 		<module>../museum-manager-repository</module>
-		<module>../museum-manager-service</module>
+		<module>../museum-manager-core</module>
+		<module>../museum-manager-presentation</module>
+		<module>../museum-manager-app</module>
 	</modules>
 
 </project>
