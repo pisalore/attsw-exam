@@ -32,7 +32,7 @@
 		<sonar.plugin.version>3.7.0.1746</sonar.plugin.version>
 		<!-- SonarCloud -->
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-	
+
 	</properties>
 	<build>
 		<pluginManagement>
@@ -58,18 +58,6 @@
 					<artifactId>pitest-maven</artifactId>
 					<version>${pitest.plugin.version}</version>
 					<configuration>
-						<targetClasses>
-							<param>com.unifi.attsw.exam.controller.*</param>
-							<param>com.unifi.attsw.exam.repository.postgres.*</param>
-							<param>com.unifi.attsw.exam.service.impl.*</param>
-							<param>com.unifi.attsw.exam.transaction.manager.postgres.*</param>
-						</targetClasses>
-						<targetTests>
-							<param>com.unifi.attsw.exam.test.*</param>
-						</targetTests>
-						<excludedTestClasses>
-							<param>com.unifi.attsw.exam.test.view.swing.*</param>
-						</excludedTestClasses>
 						<timeoutFactor>4000</timeoutFactor>
 						<timeoutConstant>10000</timeoutConstant>
 						<mutators>
@@ -83,13 +71,6 @@
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>${jacoco.plugin.version}</version>
-					<configuration>
-						<excludes>
-							<exclude>**/model/**</exclude>
-							<exclude>**/META-INF/**</exclude>
-							<exlude>**/app/**</exlude>
-						</excludes>
-					</configuration>
 					<executions>
 						<execution>
 							<goals>
@@ -210,6 +191,17 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>pit</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
 					</plugin>
 				</plugins>
 			</build>

@@ -32,7 +32,7 @@ jobs:
     - name: Maven Build
       run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" ./mvnw -f museum-manager/museum-manager-aggregator/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS -DrepoToken=$COVERALLS_REPO_TOKEN 
       env: 
-        ADDITIONAL_MAVEN_ARGS: org.pitest:pitest-maven:mutationCoverage -Pjacoco,coveralls
+        ADDITIONAL_MAVEN_ARGS: -Pjacoco,pit,coveralls
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
                 

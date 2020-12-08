@@ -16,4 +16,13 @@
 		<module>../museum-manager-app</module>
 	</modules>
 
+	<profiles>
+		<profile>
+			<id>jacoco</id>
+			<modules>
+				<module>../museum-manager-report</module>
+			</modules>
+
+		</profile>
+	</profiles>
 </project>

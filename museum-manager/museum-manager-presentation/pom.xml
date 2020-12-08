@@ -10,6 +10,29 @@
 	</parent>
 	<artifactId>museum-manager-presentation</artifactId>
 
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<configuration>
+						<excludedClasses>
+							<param>com.unifi.attsw.exam.presentation.view.swing.*</param>
+						</excludedClasses>
+						<excludedTestClasses>
+							<param>com.unifi.attsw.exam.presentation.view.swing.*</param>
+						</excludedTestClasses>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 	<dependencies>
 
 		<dependency>

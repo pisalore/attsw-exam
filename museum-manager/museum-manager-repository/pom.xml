@@ -10,6 +10,32 @@
 	</parent>
 
 	<artifactId>museum-manager-repository</artifactId>
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<configuration>
+						<excludes>
+							<exclude>**/model/*</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<configuration>
+						<targetClasses>
+							<param>com.unifi.attsw.exam.repository.repository.postgres.*</param>
+							<param>com.unifi.attsw.exam.repository.transaction.manager.postgres.*</param>
+						</targetClasses>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 	<dependencies>
 
@@ -69,4 +95,5 @@
 		</dependency>
 
 	</dependencies>
+
 </project>

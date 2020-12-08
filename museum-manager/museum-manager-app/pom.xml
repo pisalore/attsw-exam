@@ -9,6 +9,22 @@
 		<relativePath>../museum-manager-parent</relativePath>
 	</parent>
 	<artifactId>museum-manager-app</artifactId>
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<configuration>
+						<excludes>
+							<exclude>**/app/*</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 	<dependencies>
 		<dependency>
