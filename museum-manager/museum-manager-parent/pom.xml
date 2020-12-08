@@ -58,6 +58,7 @@
 					<artifactId>pitest-maven</artifactId>
 					<version>${pitest.plugin.version}</version>
 					<configuration>
+					<excludedTestClasses>com.unifi.attsw.exam.**.*IT</excludedTestClasses>
 						<timeoutFactor>4000</timeoutFactor>
 						<timeoutConstant>10000</timeoutConstant>
 						<mutators>
