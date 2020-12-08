@@ -8,8 +8,8 @@
 	version="2.0">
 
 	<persistence-unit name="postgres">
-		<class>com.unifi.attsw.exam.model.Museum</class>
-		<class>com.unifi.attsw.exam.model.Exhibition</class>
+		<class>com.unifi.attsw.exam.repository.model.Museum</class>
+		<class>com.unifi.attsw.exam.repository.model.Exhibition</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
@@ -27,9 +27,8 @@
 	</persistence-unit>
 
 	<persistence-unit name="postgres.not-empty.database">
-		<class>com.unifi.attsw.exam.model.Museum</class>
-		<class>com.unifi.attsw.exam.model.Exhibition</class>
-
+		<class>com.unifi.attsw.exam.repository.model.Museum</class>
+		<class>com.unifi.attsw.exam.repository.model.Exhibition</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
@@ -48,9 +47,8 @@
 	</persistence-unit>
 
 	<persistence-unit name="postgres.e2e-tests">
-		<class>com.unifi.attsw.exam.model.Museum</class>
-		<class>com.unifi.attsw.exam.model.Exhibition</class>
-
+		<class>com.unifi.attsw.exam.repository.model.Museum</class>
+		<class>com.unifi.attsw.exam.repository.model.Exhibition</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />

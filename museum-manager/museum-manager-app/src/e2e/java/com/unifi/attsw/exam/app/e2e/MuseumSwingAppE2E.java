@@ -53,7 +53,7 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 
 		populateDatabase();
 
-		application("com.unifi.attsw.exam.app.swing.MuseumSwingApp")
+		application("com.unifi.attsw.exam.app.MuseumSwingApp")
 				.withArgs("--database-url=" + sessionFactory.getProperties().get("javax.persistence.jdbc.url"),
 						"--database-user=museum_manager", "--database-password=attsw")
 				.start();

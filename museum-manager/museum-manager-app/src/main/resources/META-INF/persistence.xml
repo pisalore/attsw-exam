@@ -6,8 +6,8 @@
 	version="2.0">
 
 	<persistence-unit name="real.postgres">
-		<class>com.unifi.attsw.exam.model.Museum</class>
-		<class>com.unifi.attsw.exam.model.Exhibition</class>
+		<class>com.unifi.attsw.exam.repository.model.Museum</class>
+		<class>com.unifi.attsw.exam.repository.model.Exhibition</class>
 
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="update" />
