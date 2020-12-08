@@ -21,7 +21,7 @@ jobs:
       with:
         java-version: '11'
     - name: Analyze with SonarCloud
-      run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" mvn -f com.unifi.attsw.exam.museum-app/pom.xml -Pjacoco clean verify $SONAR_CLOUD_ARGS -Dsonar.login=$SONAR_TOKEN
+      run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" ./mvnw -f museum-manager/museum-manager-aggregator/pom.xml -Pjacoco clean verify $SONAR_CLOUD_ARGS -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_CLOUD_ARGS: sonar:sonar -Dsonar.projectKey=pisalore_attsw-exam -Dsonar.organization=pisalore -Dsonar.host.url=https://sonarcloud.io
