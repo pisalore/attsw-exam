@@ -31,7 +31,6 @@
 							<param>com.unifi.attsw.exam.repository.repository.postgres.*</param>
 							<param>com.unifi.attsw.exam.repository.transaction.manager.postgres.*</param>
 						</targetClasses>
-						<skip>true</skip>
 					</configuration>
 				</plugin>
 			</plugins>

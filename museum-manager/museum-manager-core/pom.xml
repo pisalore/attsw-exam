@@ -27,7 +27,6 @@
 						<targetTests>
 							<param>com.unifi.attsw.exam.core.service.*</param>
 						</targetTests>
-						<skip>true</skip>
 					</configuration>
 				</plugin>
 			</plugins>
