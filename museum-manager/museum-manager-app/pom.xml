@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.unifi.attsw.exam</groupId>
 		<artifactId>museum-manager-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../museum-manager-parent</relativePath>
 	</parent>
 	<artifactId>museum-manager-app</artifactId>
@@ -29,8 +29,66 @@
 						<skip>true</skip>
 					</configuration>
 				</plugin>
+				
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>add-test-source</id>
+							<phase>generate-test-sources</phase>
+							<goals>
+								<goal>add-test-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>src/e2e/java</source>
+								</sources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>add-test-resource</id>
+							<phase>generate-test-resources</phase>
+							<goals>
+								<goal>add-test-resource</goal>
+							</goals>
+							<configuration>
+								<resources>
+									<resource>
+										<directory>src/e2e/resources</directory>
+										<filtering>true</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>com.unifi.attsw.exam.app.MuseumSwingApp</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
 	<dependencies>
@@ -55,4 +113,46 @@
 			<artifactId>assertj-swing-junit</artifactId>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>build-app</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>docker:build</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+								<configuration>
+									<images>
+										<image>
+											<name>museum-manager-app</name>
+											<build>
+												<dockerFileDir>${project.basedir}</dockerFileDir>
+												<args>
+													<jarFile>${project.artifactId}-${project.version}</jarFile>
+												</args>
+												<tags>
+													<tag>${project.version}</tag>
+												</tags>
+											</build>
+											<run>
+												<!-- Don't run this container during integration tests -->
+												<skip>true</skip>
+											</run>
+										</image>
+									</images>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

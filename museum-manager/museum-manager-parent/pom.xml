@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.unifi.attsw.exam</groupId>
 		<artifactId>museum-manager-bom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../museum-manager-bom</relativePath>
 	</parent>
 
@@ -24,12 +24,20 @@
 		<maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
 		<maven-site-plugin.version>3.7.1</maven-site-plugin.version>
 		<maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
+		<maven-assembly.plugin.version>3.2.0</maven-assembly.plugin.version>
 		<build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
 		<coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
 		<javax.xml.bind.version>2.3.1</javax.xml.bind.version>
 		<jacoco.plugin.version>0.8.5</jacoco.plugin.version>
 		<pitest.plugin.version>1.4.10</pitest.plugin.version>
 		<sonar.plugin.version>3.7.0.1746</sonar.plugin.version>
+		<docker.plugin.version>0.33.0</docker.plugin.version>
+		<!-- Database configuration -->
+		<postgres.version>9.6.8</postgres.version>
+		<postgres.port>5432</postgres.port>
+		<postgres.user>museum_manager</postgres.user>
+		<postgres.password>attsw</postgres.password>
+		<postgres.database>database</postgres.database>
 		<!-- SonarCloud -->
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
@@ -58,7 +66,7 @@
 					<artifactId>pitest-maven</artifactId>
 					<version>${pitest.plugin.version}</version>
 					<configuration>
-					<excludedTestClasses>com.unifi.attsw.exam.**.*IT</excludedTestClasses>
+						<excludedTestClasses>com.unifi.attsw.exam.**.*IT</excludedTestClasses>
 						<timeoutFactor>4000</timeoutFactor>
 						<timeoutConstant>10000</timeoutConstant>
 						<mutators>
@@ -134,6 +142,16 @@
 					<version>${sonar.plugin.version}</version>
 				</plugin>
 
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>${docker.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven-assembly.plugin.version}</version>
+				</plugin>
 			</plugins>
 
 		</pluginManagement>
