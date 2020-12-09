@@ -30,9 +30,9 @@ jobs:
           # this value please see https://github.com/AkihiroSuda/moby-snapshot/releases
         docker_nightly_version: snapshot-20201109
     - name: Maven Build
-      run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" mvn -f com.unifi.attsw.exam.museum-app/pom.xml clean verify -DrepoToken=$COVERALLS_REPO_TOKEN $ADDITIONAL_MAVEN_ARGS
+      run: xvfb-run --auto-servernum --server-args "-screen 0 1024x768x24" ./mvnw -f museum-manager/museum-manager-aggregator/pom.xml clean verify $ADDITIONAL_MAVEN_ARGS -DrepoToken=$COVERALLS_REPO_TOKEN 
       env: 
-        ADDITIONAL_MAVEN_ARGS: org.pitest:pitest-maven:mutationCoverage -Pjacoco coveralls:report
+        ADDITIONAL_MAVEN_ARGS: -Pjacoco,pit,coveralls
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
                 

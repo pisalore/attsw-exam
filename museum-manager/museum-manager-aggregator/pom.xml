@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.unifi.attsw.exam</groupId>
+	<artifactId>museum-manager-aggregator</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>../museum-manager-bom</module>
+		<module>../museum-manager-parent</module>
+		<module>../museum-manager-repository</module>
+		<module>../museum-manager-core</module>
+		<module>../museum-manager-presentation</module>
+		<module>../museum-manager-app</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>jacoco</id>
+			<modules>
+				<module>../museum-manager-report</module>
+			</modules>
+
+		</profile>
+	</profiles>
+</project>
