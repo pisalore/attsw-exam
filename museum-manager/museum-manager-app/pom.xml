@@ -9,7 +9,7 @@
 		<relativePath>../museum-manager-parent</relativePath>
 	</parent>
 	<artifactId>museum-manager-app</artifactId>
-	
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -20,6 +20,13 @@
 						<excludes>
 							<exclude>**/app/*</exclude>
 						</excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<configuration>
+						<skip>true</skip>
 					</configuration>
 				</plugin>
 			</plugins>

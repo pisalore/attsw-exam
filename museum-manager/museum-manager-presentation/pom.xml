@@ -21,12 +21,12 @@
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
 					<configuration>
-						<excludedClasses>
-							<param>com.unifi.attsw.exam.presentation.view.swing.*</param>
-						</excludedClasses>
-						<excludedTestClasses>
-							<param>com.unifi.attsw.exam.presentation.view.swing.*</param>
-						</excludedTestClasses>
+						<targetClasses>
+							<param>com.unifi.attsw.exam.presentation.controller.swing.*</param>
+						</targetClasses>
+						<targetTests>
+							<param>com.unifi.attsw.exam.presentation.controller.swing.*</param>
+						</targetTests>
 					</configuration>
 				</plugin>
 			</plugins>
