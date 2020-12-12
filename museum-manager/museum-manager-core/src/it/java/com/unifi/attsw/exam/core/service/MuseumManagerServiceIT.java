@@ -10,10 +10,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.testcontainers.jdbc.ContainerDatabaseDriver;
 
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
 import com.unifi.attsw.exam.core.service.impl.MuseumManagerServiceImpl;
@@ -23,7 +23,6 @@ import com.unifi.attsw.exam.repository.repository.exception.RepositoryException;
 import com.unifi.attsw.exam.repository.transaction.manager.postgres.PostgresTransactionManager;
 
 public class MuseumManagerServiceIT {
-	private final static String JDBC_CONTAINER_URL = "jdbc:tc:postgresql:9.6.8:///databasenameTC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_empty.sql";
 
 	private static final String MUSEUM1_TEST = "museum1_test";
 	private static final String MUSEUM2_TEST = "museum2_test";
@@ -43,34 +42,46 @@ public class MuseumManagerServiceIT {
 	private static PostgresTransactionManager transactionManager;
 	private static MuseumManagerService museumManager;
 
+	@BeforeClass
+	public static void beforeClass() {
+		sessionFactory = Persistence.createEntityManagerFactory("postgres");
+	}
+
 	@Before
 	public void setUp() {
-		sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
 		entityManager = sessionFactory.createEntityManager();
 		transactionManager = new PostgresTransactionManager(entityManager);
 		museumManager = new MuseumManagerServiceImpl(transactionManager);
+
+		entityManager.getTransaction().begin();
+		entityManager.createNativeQuery("TRUNCATE TABLE Museums CASCADE").executeUpdate();
+		entityManager.getTransaction().commit();
 	}
 
 	@Test
 	public void testGetAllMuseums() throws RepositoryException {
+		populateDatabase();
 		List<Museum> museums = museumManager.getAllMuseums();
 		assertThat(museums).extracting(Museum::getName).contains(MUSEUM1_TEST, MUSEUM2_TEST);
 	}
 
 	@Test
 	public void testGetAllExhibitions() throws RepositoryException {
+		populateDatabase();
 		List<Exhibition> exhibitions = museumManager.getAllExhibitions();
 		assertThat(exhibitions).extracting(Exhibition::getName).contains(EXHIBITION1_TEST, EXHIBITION2_TEST);
 	}
 
 	@Test
 	public void testGetMuseumByName() {
+		populateDatabase();
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		assertThat(museum).extracting(Museum::getName, Museum::getId).containsExactly(MUSEUM1_TEST, MUSEUM_ID_1);
 	}
 
 	@Test
 	public void testGetExhibitionByName() {
+		populateDatabase();
 		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
 		assertThat(exhibition).extracting(Exhibition::getName, Exhibition::getId).containsExactly(EXHIBITION1_TEST,
 				EXHIBITION_ID_1);
@@ -78,6 +89,7 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testGetMuseumExhibitions() {
+		populateDatabase();
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		List<Exhibition> exhibitions = museumManager.getAllMuseumExhibitions(museum);
 		assertThat(exhibitions).extracting(Exhibition::getName).contains(EXHIBITION1_TEST, EXHIBITION2_TEST);
@@ -85,6 +97,7 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testAddNewMuseum() throws RepositoryException {
+		populateDatabase();
 		Museum museum = new Museum(MUSEUM3_TEST, NUM_CONST);
 		museumManager.saveMuseum(museum);
 		List<Museum> museums = museumManager.getAllMuseums();
@@ -94,6 +107,7 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testDeleteMuseum() throws RepositoryException {
+		populateDatabase();
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		museumManager.deleteMuseum(museum);
 		List<Museum> museums = museumManager.getAllMuseums();
@@ -104,6 +118,7 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testAddNewExhibitionToANotExistingMuseumShouldThrow() {
+		populateDatabase();
 		Exhibition exhibition = createTestExhibition(EXHIBITION3_TEST, NUM_CONST);
 
 		assertThatThrownBy(() -> {
@@ -113,6 +128,7 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testAddNewExhibition() {
+		populateDatabase();
 		Exhibition exhibition = createTestExhibition(EXHIBITION3_TEST, NUM_CONST);
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		museumManager.addNewExhibition(museum.getName(), exhibition);
@@ -123,6 +139,7 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testDeleteExhibition() throws RepositoryException {
+		populateDatabase();
 		Museum museum1 = museumManager.getMuseumByName(MUSEUM1_TEST);
 		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
 		museumManager.deleteExhibition(exhibition);
@@ -136,6 +153,7 @@ public class MuseumManagerServiceIT {
 
 	@Test
 	public void testBookExhibition() {
+		populateDatabase();
 		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
 		int bookedExhibitionsBefore = exhibition.getBookedSeats();
 		museumManager.bookExhibitionSeat(exhibition);
@@ -145,15 +163,13 @@ public class MuseumManagerServiceIT {
 		assertThat(bookedExhibitionsAfter).isGreaterThan(bookedExhibitionsBefore);
 	}
 
-	@After
-	public void tearDown() {
+	@AfterClass
+	public static void tearDown() {
 		entityManager.clear();
 		entityManager.close();
 		sessionFactory.close();
-		// This force to restart a docker container and re-execute the initialization
-		// script provided for not empty database.
-		ContainerDatabaseDriver.killContainer(JDBC_CONTAINER_URL);
 	}
+
 
 	/**
 	 * 
@@ -168,5 +184,32 @@ public class MuseumManagerServiceIT {
 	public Exhibition createTestExhibition(String exhibitionName, int numOfSeats) {
 		return new Exhibition(exhibitionName, numOfSeats);
 
+	}
+
+	/*
+	 * Utility method to populate database with data
+	 */
+
+	private void populateDatabase() {
+		entityManager.getTransaction().begin();
+		entityManager
+				.createNativeQuery("INSERT INTO museums (id, museum_name, number_of_occupied_rooms, number_of_rooms)"
+						+ "VALUES ( 'b433da18-ba5a-4b86-92af-ba11be6314e7' , 'museum1_test', 0, 10);")
+				.executeUpdate();
+		entityManager
+				.createNativeQuery("INSERT INTO museums (id, museum_name, number_of_occupied_rooms, number_of_rooms)"
+						+ "VALUES ( '94fe3013-9ebb-432e-ab55-e612dc797851' , 'museum2_test', 0, 10);")
+				.executeUpdate();
+
+		entityManager
+				.createNativeQuery("INSERT INTO exhibitions(id, museum_id, exhibition_name, total_seats, booked_seats)"
+						+ "VALUES ('49d13e51-2277-4911-929f-c9c067e2e8b4', 'b433da18-ba5a-4b86-92af-ba11be6314e7', 'exhibition1_test', 100, 0);")
+				.executeUpdate();
+		entityManager
+				.createNativeQuery("INSERT INTO exhibitions(id, museum_id, exhibition_name, total_seats, booked_seats)"
+						+ "VALUES ('b2cb1474-24ff-41eb-a8d7-963f32f6822d', 'b433da18-ba5a-4b86-92af-ba11be6314e7', 'exhibition2_test', 100, 0);")
+				.executeUpdate();
+
+		entityManager.getTransaction().commit();
 	}
 }

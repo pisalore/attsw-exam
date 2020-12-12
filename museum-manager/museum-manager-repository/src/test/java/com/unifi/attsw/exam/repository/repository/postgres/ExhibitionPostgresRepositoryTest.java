@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -210,10 +210,11 @@ public class ExhibitionPostgresRepositoryTest {
 		assertThat(postgresExhibitionRepository.findAllExhibitions()).containsExactly(exhibition2);
 	}
 
-	@After
-	public void closeEntityManager() {
+	@AfterClass
+	public static void tearDown() {
 		entityManager.clear();
 		entityManager.close();
+		sessionFactory.close();
 	}
 
 	/*

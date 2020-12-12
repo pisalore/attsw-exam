@@ -13,6 +13,8 @@ import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JListFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -47,12 +49,20 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 
 	private static MuseumSwingController museumSwingController;
 
+	@BeforeClass
+	public static void beforeClass() {
+		sessionFactory = Persistence.createEntityManagerFactory("postgres");
+	}
+
 	@Override
 	protected void onSetUp() {
-		sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
 		entityManager = sessionFactory.createEntityManager();
 		transactionManager = new PostgresTransactionManager(entityManager);
 		museumManager = new MuseumManagerServiceImpl(transactionManager);
+
+		entityManager.getTransaction().begin();
+		entityManager.createNativeQuery("TRUNCATE TABLE Museums CASCADE").executeUpdate();
+		entityManager.getTransaction().commit();
 
 		GuiActionRunner.execute(() -> {
 			exhibitionSwingView = new ExhibitionSwingView();
@@ -68,8 +78,9 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testGetAllExhibitions() {
-		JListFixture listAllExhibitions = window.list("listAllExh");
+		populateDatabase();
 
+		JListFixture listAllExhibitions = window.list("listAllExh");
 		window.button(JButtonMatcher.withText("Find all")).click();
 		assertThat(listAllExhibitions.contents()).isNotEmpty();
 	}
@@ -77,8 +88,9 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddExhibitionButtonSuccess() {
-		JListFixture listAllExhibitions = window.list("listAllExh");
+		populateDatabase();
 
+		JListFixture listAllExhibitions = window.list("listAllExh");
 		window.textBox("exhibitionTextField").enterText(EXHIBITION3_TEST);
 		window.textBox("totalSeatsTextField").enterText(NUM_CONST);
 		window.textBox("museumNameTextField").enterText(MUSEUM1_TEST);
@@ -90,8 +102,9 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddExhibitionButtonError() {
-		JListFixture listAllExhibitions = window.list("listAllExh");
+		populateDatabase();
 
+		JListFixture listAllExhibitions = window.list("listAllExh");
 		window.textBox("exhibitionTextField").enterText(EXHIBITION1_TEST);
 		window.textBox("totalSeatsTextField").enterText(NUM_CONST);
 		window.textBox("museumNameTextField").enterText(MUSEUM1_TEST);
@@ -104,6 +117,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testGetMuseumExhibitions() {
+		populateDatabase();
 		JListFixture listMuseumExhibitions = window.list("listMuseumExh");
 
 		window.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
@@ -114,6 +128,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteExhibition() {
+		populateDatabase();
 		GuiActionRunner.execute(() -> museumSwingController.getAllExhibitions());
 		// select an exhibition
 		window.list("listAllExh").selectItem(0);
@@ -126,6 +141,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteButtonError() {
+		populateDatabase();
 		Exhibition notExistingExhibition = new Exhibition(EXHIBITION3_TEST, 10);
 		GuiActionRunner
 				.execute(() -> exhibitionSwingView.getAllExhibitionsListModel().addElement(notExistingExhibition));
@@ -138,6 +154,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testBookExhibition() {
+		populateDatabase();
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		GuiActionRunner.execute(() -> museumSwingController.getAllExhibitions());
 		// select an exhibition
@@ -152,21 +169,44 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testBookExhibitionError() {
+		populateDatabase();
 		Exhibition notExistingExhibition = new Exhibition(EXHIBITION3_TEST, 10);
 		GuiActionRunner
 				.execute(() -> exhibitionSwingView.getAllExhibitionsListModel().addElement(notExistingExhibition));
 		JListFixture listAllExhibitions = window.list("listAllExh");
 		listAllExhibitions.selectItem(0);
 		window.button(JButtonMatcher.withText("Book")).click();
-		window.label("errorLabel")
-				.requireText("Impossible to book a seat for Exhibition: " + EXHIBITION3_TEST);
+		window.label("errorLabel").requireText("Impossible to book a seat for Exhibition: " + EXHIBITION3_TEST);
 	}
 
-	@Override
-	protected void onTearDown() {
+	@AfterClass
+	public static void afterClass() {
 		entityManager.clear();
 		entityManager.close();
 		sessionFactory.close();
+	}
+
+	private void populateDatabase() {
+		entityManager.getTransaction().begin();
+		entityManager
+				.createNativeQuery("INSERT INTO museums (id, museum_name, number_of_occupied_rooms, number_of_rooms)"
+						+ "VALUES ( 'b433da18-ba5a-4b86-92af-ba11be6314e7' , 'museum1_test', 0, 10);")
+				.executeUpdate();
+		entityManager
+				.createNativeQuery("INSERT INTO museums (id, museum_name, number_of_occupied_rooms, number_of_rooms)"
+						+ "VALUES ( '94fe3013-9ebb-432e-ab55-e612dc797851' , 'museum2_test', 0, 10);")
+				.executeUpdate();
+
+		entityManager
+				.createNativeQuery("INSERT INTO exhibitions(id, museum_id, exhibition_name, total_seats, booked_seats)"
+						+ "VALUES ('49d13e51-2277-4911-929f-c9c067e2e8b4', 'b433da18-ba5a-4b86-92af-ba11be6314e7', 'exhibition1_test', 100, 0);")
+				.executeUpdate();
+		entityManager
+				.createNativeQuery("INSERT INTO exhibitions(id, museum_id, exhibition_name, total_seats, booked_seats)"
+						+ "VALUES ('b2cb1474-24ff-41eb-a8d7-963f32f6822d', 'b433da18-ba5a-4b86-92af-ba11be6314e7', 'exhibition2_test', 100, 0);")
+				.executeUpdate();
+
+		entityManager.getTransaction().commit();
 	}
 
 }

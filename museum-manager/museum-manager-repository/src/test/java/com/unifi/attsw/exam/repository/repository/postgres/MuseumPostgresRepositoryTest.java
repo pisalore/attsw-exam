@@ -11,7 +11,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -199,10 +199,11 @@ public class MuseumPostgresRepositoryTest {
 		assertThat(postgresMuseumRepository.findAllMuseums()).hasSize(1);
 	}
 
-	@After
-	public void closeEntityManager() {
+	@AfterClass
+	public static void tearDown() {
 		entityManager.clear();
 		entityManager.close();
+		sessionFactory.close();
 	}
 
 	/*

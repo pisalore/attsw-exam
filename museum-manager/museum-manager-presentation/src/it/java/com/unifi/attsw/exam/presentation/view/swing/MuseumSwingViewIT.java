@@ -12,6 +12,8 @@ import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -45,12 +47,20 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 
 	private static MuseumSwingController museumSwingController;
 
+	@BeforeClass
+	public static void beforeClass() {
+		sessionFactory = Persistence.createEntityManagerFactory("postgres");
+	}
+
 	@Override
 	protected void onSetUp() {
-		sessionFactory = Persistence.createEntityManagerFactory("postgres.not-empty.database");
 		entityManager = sessionFactory.createEntityManager();
 		transactionManager = new PostgresTransactionManager(entityManager);
 		museumManager = new MuseumManagerServiceImpl(transactionManager);
+
+		entityManager.getTransaction().begin();
+		entityManager.createNativeQuery("TRUNCATE TABLE Museums CASCADE").executeUpdate();
+		entityManager.getTransaction().commit();
 
 		GuiActionRunner.execute(() -> {
 			museumSwingView = new MuseumSwingView();
@@ -66,6 +76,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testGetAllMuseums() {
+		populateDatabase();
 		window.button(JButtonMatcher.withText("Find all")).click();
 		assertThat(window.list().contents()).isNotEmpty();
 	}
@@ -73,6 +84,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddButtonSuccess() {
+		populateDatabase();
 		window.textBox("museum").enterText(MUSEUM3_TEST);
 		window.textBox("rooms").enterText(NUM_CONST);
 		window.button(JButtonMatcher.withText("Add")).click();
@@ -82,6 +94,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testAddButtonError() {
+		populateDatabase();
 		window.textBox("museum").enterText(MUSEUM1_TEST);
 		window.textBox("rooms").enterText(NUM_CONST);
 		window.button(JButtonMatcher.withText("Add")).click();
@@ -92,6 +105,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteButtonSuccess() {
+		populateDatabase();
 		GuiActionRunner.execute(() -> museumSwingController.getAllMuseums());
 		window.list().selectItem(0);
 		window.button(JButtonMatcher.withText("Delete Selected")).click();
@@ -101,6 +115,7 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testDeleteButtonError() {
+		populateDatabase();
 		Museum notExistingMuseum = new Museum(MUSEUM3_TEST, 10);
 		GuiActionRunner.execute(() -> museumSwingView.getMuseumListModel().addElement(notExistingMuseum));
 		window.list().selectItem(0);
@@ -108,11 +123,34 @@ public class MuseumSwingViewIT extends AssertJSwingJUnitTestCase {
 		window.label("errorMessageLabel").requireText("Impossible to delete Museum: " + MUSEUM3_TEST);
 	}
 
-	@Override
-	protected void onTearDown() {
+	@AfterClass
+	public static void afterClass() {
 		entityManager.clear();
 		entityManager.close();
 		sessionFactory.close();
+	}
+
+	private void populateDatabase() {
+		entityManager.getTransaction().begin();
+		entityManager
+				.createNativeQuery("INSERT INTO museums (id, museum_name, number_of_occupied_rooms, number_of_rooms)"
+						+ "VALUES ( 'b433da18-ba5a-4b86-92af-ba11be6314e7' , 'museum1_test', 0, 10);")
+				.executeUpdate();
+		entityManager
+				.createNativeQuery("INSERT INTO museums (id, museum_name, number_of_occupied_rooms, number_of_rooms)"
+						+ "VALUES ( '94fe3013-9ebb-432e-ab55-e612dc797851' , 'museum2_test', 0, 10);")
+				.executeUpdate();
+
+		entityManager
+				.createNativeQuery("INSERT INTO exhibitions(id, museum_id, exhibition_name, total_seats, booked_seats)"
+						+ "VALUES ('49d13e51-2277-4911-929f-c9c067e2e8b4', 'b433da18-ba5a-4b86-92af-ba11be6314e7', 'exhibition1_test', 100, 0);")
+				.executeUpdate();
+		entityManager
+				.createNativeQuery("INSERT INTO exhibitions(id, museum_id, exhibition_name, total_seats, booked_seats)"
+						+ "VALUES ('b2cb1474-24ff-41eb-a8d7-963f32f6822d', 'b433da18-ba5a-4b86-92af-ba11be6314e7', 'exhibition2_test', 100, 0);")
+				.executeUpdate();
+
+		entityManager.getTransaction().commit();
 	}
 
 }

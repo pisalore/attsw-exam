@@ -68,17 +68,6 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 
 	@Test
 	@GUITest
-	public void testFindAllMuseums() {
-		String[] listAllMueums = museumWindow.list().contents();
-		museumWindow.button(JButtonMatcher.withText("Find all")).click();
-
-		assertThat(listAllMueums).isNotEmpty().containsExactly("museum1_test - Total Rooms: 10 - Occupied Rooms: 0",
-				"museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
-
-	}
-
-	@Test
-	@GUITest
 	public void testAddMuseumSuccess() {
 		museumWindow.textBox("museum").enterText(MUSEUM3_TEST);
 		museumWindow.textBox("rooms").enterText(NUM_CONST);
@@ -107,24 +96,6 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 		assertThat(museumWindow.list().contents())
 				.containsExactly("museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
 
-	}
-
-	@Test
-	@GUITest
-	public void testFindAllExhibitions() {
-		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
-
-		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
-			protected boolean isMatching(JFrame frame) {
-				return "Exhibitions Dashboard".equals(frame.getTitle());
-			}
-		}).using(robot());
-
-		String[] listAllExhibitions = exhibitionWindow.list("listAllExh").contents();
-		exhibitionWindow.button(JButtonMatcher.withText("Find all")).click();
-
-		assertThat(listAllExhibitions).containsExactly("exhibition1_test - Total Seats: 100 - Booked Seats: 0",
-				"exhibition2_test - Total Seats: 100 - Booked Seats: 0");
 	}
 
 	@Test
