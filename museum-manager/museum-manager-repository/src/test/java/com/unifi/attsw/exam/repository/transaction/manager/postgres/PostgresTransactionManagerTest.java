@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -379,6 +380,11 @@ public class PostgresTransactionManagerTest {
 
 		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getBookedSeats()).isEqualTo(5);
 		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getTotalSeats()).isEqualTo(50);
+	}
+
+	@After
+	public void after() {
+		entityManager.clear();
 	}
 
 	@AfterClass
