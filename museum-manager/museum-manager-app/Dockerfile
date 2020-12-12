@@ -11,4 +11,4 @@ RUN adduser --system --uid 1000 --disabled-password applicationuser
 
 USER applicationuser
 
-CMD ["sh", "-c" , "java -jar /app/app.jar"]
+CMD ["sh", "-c" , "java -jar /app/app.jar --database-url=$JDBC_URL --database-user=$DB_USER --database-password=$DB_PASSWORD"]

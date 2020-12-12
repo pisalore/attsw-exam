@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+    museum-manager-app:
+        image: museum-manager-app
+        depends_on: 
+            - postgres
+        environment: 
+            - JDBC_URL=jdbc:postgresql://postgres:5432/ATTSW_DB
+            - DB_USER=museum_manager
+            - DB_PASSWORD=attsw
+            - DISPLAY=$DISPLAY
+        networks: 
+            - museum-manager-network
+        volumes: 
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - /etc/group:/etc/group
+    
+    postgres:
+        image: postgres:9.6.8
+        networks: 
+            - museum-manager-network
+        environment: 
+            - POSTGRES_USER=museum_manager
+            - POSTGRES_PASSWORD=attsw  
+            - POSTGRES_DB=ATTSW_DB
+        volumes:
+            - postgresql:/var/lib/postgresql
+            - postgresql_data:/var/lib/postgresql/data
+
+networks:
+    museum-manager-network:
+     driver: bridge
+
+volumes:
+    postgresql:
+    postgresql_data:

@@ -32,12 +32,6 @@
 		<pitest.plugin.version>1.4.10</pitest.plugin.version>
 		<sonar.plugin.version>3.7.0.1746</sonar.plugin.version>
 		<docker.plugin.version>0.33.0</docker.plugin.version>
-		<!-- Database configuration -->
-		<postgres.version>9.6.8</postgres.version>
-		<postgres.port>5432</postgres.port>
-		<postgres.user>museum_manager</postgres.user>
-		<postgres.password>attsw</postgres.password>
-		<postgres.database>database</postgres.database>
 		<!-- SonarCloud -->
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
