@@ -26,7 +26,6 @@ public class MuseumSwingController implements MuseumController {
 			museumView.showAllMuseums(museumService.getAllMuseums());
 		} catch (RepositoryException ex) {
 			museumView.showError("Impossibile to get museums.", null);
-			return;
 		}
 	}
 
@@ -35,7 +34,6 @@ public class MuseumSwingController implements MuseumController {
 			exhibitionView.showAllExhibitions(museumService.getAllExhibitions());
 		} catch (RepositoryException ex) {
 			museumView.showError("Impossibile to get all exhibitions.", null);
-			return;
 		}
 	}
 
@@ -45,7 +43,6 @@ public class MuseumSwingController implements MuseumController {
 			exhibitionView.showMuseumExhibitions(museumService.getAllMuseumExhibitions(museum));
 		} catch (RuntimeException ex) {
 			exhibitionView.showError("Impossibile to get all exhibitions.", null);
-			return;
 		}
 	}
 
@@ -55,7 +52,6 @@ public class MuseumSwingController implements MuseumController {
 			museumView.museumAdded(museum);
 		} catch (RuntimeException ex) {
 			museumView.showError("Impossibile to add Museum: ", museum);
-			return;
 		}
 	}
 
@@ -65,7 +61,6 @@ public class MuseumSwingController implements MuseumController {
 			exhibitionView.exhibitionAdded(exhibition);
 		} catch (RuntimeException ex) {
 			exhibitionView.showError("Impossible to add Exhibition: ", exhibition);
-			return;
 		}
 	}
 

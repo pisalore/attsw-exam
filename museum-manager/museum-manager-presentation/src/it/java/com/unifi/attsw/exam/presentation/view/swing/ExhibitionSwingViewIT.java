@@ -111,7 +111,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 
 		window.button(JButtonMatcher.withText("Add Exhibition")).click();
 		window.label("errorLabel").requireText("Impossible to add Exhibition: " + EXHIBITION1_TEST);
-		assertThat(listAllExhibitions.contents()).hasSize(0);
+		assertThat(listAllExhibitions.contents()).isEmpty();
 	}
 
 	@Test

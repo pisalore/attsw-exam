@@ -29,7 +29,7 @@ import javax.swing.ListSelectionModel;
 
 public class MuseumSwingView extends JFrame implements MuseumView {
 
-	private MuseumSwingController museumSwingController;
+	private transient MuseumSwingController museumSwingController;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -55,55 +55,55 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 100, 100, 152, 100 };
-		gbl_contentPane.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_contentPane.columnWeights = new double[] { 1.0, 1.0, 1.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		contentPane.setLayout(gbl_contentPane);
+		GridBagLayout gblContentPane = new GridBagLayout();
+		gblContentPane.columnWidths = new int[] { 100, 100, 152, 100 };
+		gblContentPane.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gblContentPane.columnWeights = new double[] { 1.0, 1.0, 1.0, Double.MIN_VALUE };
+		gblContentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		contentPane.setLayout(gblContentPane);
 
 		lblMuseum = new JLabel("Museum");
-		GridBagConstraints gbc_lblMuseum = new GridBagConstraints();
-		gbc_lblMuseum.anchor = GridBagConstraints.EAST;
-		gbc_lblMuseum.insets = new Insets(0, 0, 5, 5);
-		gbc_lblMuseum.gridx = 0;
-		gbc_lblMuseum.gridy = 0;
-		contentPane.add(lblMuseum, gbc_lblMuseum);
+		GridBagConstraints gbcLblMuseum = new GridBagConstraints();
+		gbcLblMuseum.anchor = GridBagConstraints.EAST;
+		gbcLblMuseum.insets = new Insets(0, 0, 5, 5);
+		gbcLblMuseum.gridx = 0;
+		gbcLblMuseum.gridy = 0;
+		contentPane.add(lblMuseum, gbcLblMuseum);
 
 		txtMuseum = new JTextField();
 		txtMuseum.setName("museum");
-		GridBagConstraints gbc_txtMuseum = new GridBagConstraints();
-		gbc_txtMuseum.insets = new Insets(0, 0, 5, 5);
-		gbc_txtMuseum.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtMuseum.gridx = 1;
-		gbc_txtMuseum.gridy = 0;
-		contentPane.add(txtMuseum, gbc_txtMuseum);
+		GridBagConstraints gbcTxtMuseum = new GridBagConstraints();
+		gbcTxtMuseum.insets = new Insets(0, 0, 5, 5);
+		gbcTxtMuseum.fill = GridBagConstraints.HORIZONTAL;
+		gbcTxtMuseum.gridx = 1;
+		gbcTxtMuseum.gridy = 0;
+		contentPane.add(txtMuseum, gbcTxtMuseum);
 		txtMuseum.setColumns(10);
 
 		btnFindAll = new JButton("Find all");
 		btnFindAll.addActionListener(e -> museumSwingController.getAllMuseums());
-		GridBagConstraints gbc_btnFindAll = new GridBagConstraints();
-		gbc_btnFindAll.insets = new Insets(0, 0, 5, 0);
-		gbc_btnFindAll.gridx = 3;
-		gbc_btnFindAll.gridy = 0;
-		contentPane.add(btnFindAll, gbc_btnFindAll);
+		GridBagConstraints gbcBtnFindAll = new GridBagConstraints();
+		gbcBtnFindAll.insets = new Insets(0, 0, 5, 0);
+		gbcBtnFindAll.gridx = 3;
+		gbcBtnFindAll.gridy = 0;
+		contentPane.add(btnFindAll, gbcBtnFindAll);
 
 		lblRooms = new JLabel("Rooms");
-		GridBagConstraints gbc_lblRooms = new GridBagConstraints();
-		gbc_lblRooms.anchor = GridBagConstraints.EAST;
-		gbc_lblRooms.insets = new Insets(0, 0, 5, 5);
-		gbc_lblRooms.gridx = 0;
-		gbc_lblRooms.gridy = 1;
-		contentPane.add(lblRooms, gbc_lblRooms);
+		GridBagConstraints gbcLblRooms = new GridBagConstraints();
+		gbcLblRooms.anchor = GridBagConstraints.EAST;
+		gbcLblRooms.insets = new Insets(0, 0, 5, 5);
+		gbcLblRooms.gridx = 0;
+		gbcLblRooms.gridy = 1;
+		contentPane.add(lblRooms, gbcLblRooms);
 
 		txtRooms = new JTextField();
 		txtRooms.setName("rooms");
-		GridBagConstraints gbc_txtRooms = new GridBagConstraints();
-		gbc_txtRooms.insets = new Insets(0, 0, 5, 5);
-		gbc_txtRooms.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtRooms.gridx = 1;
-		gbc_txtRooms.gridy = 1;
-		contentPane.add(txtRooms, gbc_txtRooms);
+		GridBagConstraints gbcTxtRooms = new GridBagConstraints();
+		gbcTxtRooms.insets = new Insets(0, 0, 5, 5);
+		gbcTxtRooms.fill = GridBagConstraints.HORIZONTAL;
+		gbcTxtRooms.gridx = 1;
+		gbcTxtRooms.gridy = 1;
+		contentPane.add(txtRooms, gbcTxtRooms);
 		txtRooms.setColumns(10);
 
 		btnAdd = new JButton("Add");
@@ -120,20 +120,20 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		txtMuseum.addKeyListener(btnAddEnabler);
 		txtRooms.addKeyListener(btnAddEnabler);
 
-		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.insets = new Insets(0, 0, 5, 5);
-		gbc_btnAdd.gridx = 1;
-		gbc_btnAdd.gridy = 2;
-		contentPane.add(btnAdd, gbc_btnAdd);
+		GridBagConstraints gbcBtnAdd = new GridBagConstraints();
+		gbcBtnAdd.insets = new Insets(0, 0, 5, 5);
+		gbcBtnAdd.gridx = 1;
+		gbcBtnAdd.gridy = 2;
+		contentPane.add(btnAdd, gbcBtnAdd);
 
 		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridwidth = 4;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 3;
-		contentPane.add(scrollPane, gbc_scrollPane);
+		GridBagConstraints gbcScrollPane = new GridBagConstraints();
+		gbcScrollPane.gridwidth = 4;
+		gbcScrollPane.insets = new Insets(0, 0, 5, 0);
+		gbcScrollPane.fill = GridBagConstraints.BOTH;
+		gbcScrollPane.gridx = 0;
+		gbcScrollPane.gridy = 3;
+		contentPane.add(scrollPane, gbcScrollPane);
 
 		museumListModel = new DefaultListModel<>();
 		museumList = new JList<>(museumListModel);
@@ -160,30 +160,30 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 		btnDeleteSelected.addActionListener(e -> museumSwingController.deleteMuseum(museumList.getSelectedValue()));
 
-		GridBagConstraints gbc_btnDeleteSelected = new GridBagConstraints();
-		gbc_btnDeleteSelected.gridwidth = 2;
-		gbc_btnDeleteSelected.anchor = GridBagConstraints.WEST;
-		gbc_btnDeleteSelected.insets = new Insets(0, 0, 5, 5);
-		gbc_btnDeleteSelected.gridx = 0;
-		gbc_btnDeleteSelected.gridy = 5;
-		contentPane.add(btnDeleteSelected, gbc_btnDeleteSelected);
+		GridBagConstraints gbcBtnDeleteSelected = new GridBagConstraints();
+		gbcBtnDeleteSelected.gridwidth = 2;
+		gbcBtnDeleteSelected.anchor = GridBagConstraints.WEST;
+		gbcBtnDeleteSelected.insets = new Insets(0, 0, 5, 5);
+		gbcBtnDeleteSelected.gridx = 0;
+		gbcBtnDeleteSelected.gridy = 5;
+		contentPane.add(btnDeleteSelected, gbcBtnDeleteSelected);
 
 		errorMessageLabel = new JLabel(" ");
 		errorMessageLabel.setForeground(Color.RED);
 		errorMessageLabel.setName("errorMessageLabel");
-		GridBagConstraints gbc_errorMessageLabel = new GridBagConstraints();
-		gbc_errorMessageLabel.gridwidth = 3;
-		gbc_errorMessageLabel.insets = new Insets(0, 0, 5, 0);
-		gbc_errorMessageLabel.gridx = 1;
-		gbc_errorMessageLabel.gridy = 6;
-		contentPane.add(errorMessageLabel, gbc_errorMessageLabel);
+		GridBagConstraints gbcErrorMessageLabel = new GridBagConstraints();
+		gbcErrorMessageLabel.gridwidth = 3;
+		gbcErrorMessageLabel.insets = new Insets(0, 0, 5, 0);
+		gbcErrorMessageLabel.gridx = 1;
+		gbcErrorMessageLabel.gridy = 6;
+		contentPane.add(errorMessageLabel, gbcErrorMessageLabel);
 
 		btnExhibitionsDashboard = new JButton("Exhibitions Dashboard");
 		btnExhibitionsDashboard.addActionListener(e -> museumSwingController.openExhibitionsDashboard());
-		GridBagConstraints gbc_btnExhibitionsDashboard = new GridBagConstraints();
-		gbc_btnExhibitionsDashboard.gridx = 3;
-		gbc_btnExhibitionsDashboard.gridy = 7;
-		contentPane.add(btnExhibitionsDashboard, gbc_btnExhibitionsDashboard);
+		GridBagConstraints gbcBtnExhibitionsDashboard = new GridBagConstraints();
+		gbcBtnExhibitionsDashboard.gridx = 3;
+		gbcBtnExhibitionsDashboard.gridy = 7;
+		contentPane.add(btnExhibitionsDashboard, gbcBtnExhibitionsDashboard);
 	}
 
 	@Override
