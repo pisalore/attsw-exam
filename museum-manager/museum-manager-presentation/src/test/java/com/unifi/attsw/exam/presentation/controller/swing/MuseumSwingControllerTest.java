@@ -58,6 +58,13 @@ public class MuseumSwingControllerTest {
 		museumSwingController.getAllMuseums();
 		inOrder.verify(museumView).showAllMuseums(museums);
 	}
+	
+	@Test
+	public void testShowAllMuseumsError() throws RepositoryException {
+		doThrow(new RepositoryException()).when(museumService).getAllMuseums();
+		museumSwingController.getAllMuseums();
+		inOrder.verify(museumView).showError("Impossibile to get museums.", null);
+	}
 
 	@Test
 	public void testShowAllExhibitions() throws RepositoryException {
@@ -65,6 +72,13 @@ public class MuseumSwingControllerTest {
 		when(museumService.getAllExhibitions()).thenReturn(exhibitions);
 		museumSwingController.getAllExhibitions();
 		inOrder.verify(exhibitionView).showAllExhibitions(exhibitions);
+	}
+	
+	@Test
+	public void testShowAllExhibitionsError() throws RepositoryException {
+		doThrow(new RepositoryException()).when(museumService).getAllExhibitions();
+		museumSwingController.getAllExhibitions();
+		inOrder.verify(museumView).showError("Impossibile to get all exhibitions.", null);
 	}
 
 	@Test
