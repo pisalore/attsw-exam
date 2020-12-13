@@ -1,7 +1,6 @@
 package com.unifi.attsw.exam.repository.transaction.manager.postgres;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 
 import com.unifi.attsw.exam.repository.repository.ExhibitionRepository;
 import com.unifi.attsw.exam.repository.repository.MuseumRepository;
@@ -33,9 +32,9 @@ public class PostgresTransactionManager implements TransactionManager {
 			T response = query.apply(museumRepository, exhibitionRepository);
 			commit();
 			return response;
-		} catch (PersistenceException | IllegalArgumentException ex) {
+		} catch (Exception ex) {
 			rollback();
-			throw new RepositoryException("Something went wrong committing to database, rollback");
+			throw new RepositoryException("Something went wrong committing to database, rollback", ex);
 		}
 	}
 
@@ -51,9 +50,9 @@ public class PostgresTransactionManager implements TransactionManager {
 			T response = query.apply(museumRepository);
 			commit();
 			return response;
-		} catch (PersistenceException | IllegalArgumentException ex) {
+		} catch (Exception ex) {
 			rollback();
-			throw new RepositoryException("Something went wrong committing to database, rollback");
+			throw new RepositoryException("Something went wrong committing to database, rollback", ex);
 		}
 	}
 
@@ -65,9 +64,9 @@ public class PostgresTransactionManager implements TransactionManager {
 			T response = query.apply(exhibitionRepository);
 			commit();
 			return response;
-		} catch (PersistenceException | IllegalArgumentException ex) {
+		} catch (Exception ex) {
 			rollback();
-			throw new RepositoryException("Something went wrong committing to database, rollback");
+			throw new RepositoryException("Something went wrong committing to database, rollback", ex);
 		}
 	}
 

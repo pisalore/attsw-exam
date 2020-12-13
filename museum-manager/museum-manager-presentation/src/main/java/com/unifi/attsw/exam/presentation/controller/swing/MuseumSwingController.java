@@ -24,7 +24,7 @@ public class MuseumSwingController implements MuseumController {
 	public void getAllMuseums() {
 		try {
 			museumView.showAllMuseums(museumService.getAllMuseums());
-		} catch (RepositoryException | IllegalStateException ex) {
+		} catch (RepositoryException ex) {
 			museumView.showError("Impossibile to get museums.", null);
 			return;
 		}
@@ -33,7 +33,7 @@ public class MuseumSwingController implements MuseumController {
 	public void getAllExhibitions() {
 		try {
 			exhibitionView.showAllExhibitions(museumService.getAllExhibitions());
-		} catch (RepositoryException | IllegalStateException ex) {
+		} catch (RepositoryException ex) {
 			museumView.showError("Impossibile to get all exhibitions.", null);
 			return;
 		}
