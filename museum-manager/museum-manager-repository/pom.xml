@@ -10,6 +10,13 @@
 	</parent>
 
 	<artifactId>museum-manager-repository</artifactId>
+	
+	<properties>
+		<sonar.coverage.exclusions>
+			**/model/*.*,
+			**/exception/*.*
+		</sonar.coverage.exclusions>
+	</properties>
 
 	<build>
 		<pluginManagement>

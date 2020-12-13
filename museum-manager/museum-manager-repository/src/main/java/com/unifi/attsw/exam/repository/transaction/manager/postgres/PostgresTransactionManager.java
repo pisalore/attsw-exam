@@ -18,6 +18,8 @@ public class PostgresTransactionManager implements TransactionManager {
 	MuseumRepository museumRepository;
 	ExhibitionRepository exhibitionRepository;
 
+	private static final String ERROR_MESSAGE = "Something went wrong committing to database, rollback";
+
 	public PostgresTransactionManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 		museumRepository = new PostgresMuseumRepository(this.entityManager);
@@ -34,7 +36,7 @@ public class PostgresTransactionManager implements TransactionManager {
 			return response;
 		} catch (Exception ex) {
 			rollback();
-			throw new RepositoryException("Something went wrong committing to database, rollback", ex);
+			throw new RepositoryException(ERROR_MESSAGE, ex);
 		}
 	}
 
@@ -52,7 +54,7 @@ public class PostgresTransactionManager implements TransactionManager {
 			return response;
 		} catch (Exception ex) {
 			rollback();
-			throw new RepositoryException("Something went wrong committing to database, rollback", ex);
+			throw new RepositoryException(ERROR_MESSAGE, ex);
 		}
 	}
 
@@ -66,7 +68,7 @@ public class PostgresTransactionManager implements TransactionManager {
 			return response;
 		} catch (Exception ex) {
 			rollback();
-			throw new RepositoryException("Something went wrong committing to database, rollback", ex);
+			throw new RepositoryException(ERROR_MESSAGE, ex);
 		}
 	}
 

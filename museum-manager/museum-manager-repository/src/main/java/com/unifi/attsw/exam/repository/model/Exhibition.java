@@ -1,5 +1,6 @@
 package com.unifi.attsw.exam.repository.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -11,31 +12,30 @@ import javax.persistence.Table;
 @Entity(name = "Exhibition")
 @Table(name = "exhibitions")
 public class Exhibition {
-	
+
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
-	
-	@Column(name = "Exhibition_Name", unique=true)
+
+	@Column(name = "Exhibition_Name", unique = true)
 	private String name;
-	
+
 	@Column(name = "Total_seats")
 	private int totalSeats;
-	
+
 	@Column(name = "Booked_seats")
 	private int bookedSeats;
-	
+
 	@Column(name = "Museum_id", nullable = false)
 	UUID museumId;
-	
 
 	public Exhibition(String name, int totalSeats) {
 		this.name = name;
 		this.totalSeats = totalSeats;
 	}
-	
+
 	public Exhibition() {
-		
+
 	}
 
 	public UUID getId() {
@@ -99,28 +99,8 @@ public class Exhibition {
 		if (getClass() != obj.getClass())
 			return false;
 		Exhibition other = (Exhibition) obj;
-		if (bookedSeats != other.bookedSeats)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (museumId == null) {
-			if (other.museumId != null)
-				return false;
-		} else if (!museumId.equals(other.museumId))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (totalSeats != other.totalSeats)
-			return false;
-		return true;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(totalSeats, other.totalSeats) && Objects.equals(bookedSeats, other.bookedSeats);
 	}
-	
-	
 
 }

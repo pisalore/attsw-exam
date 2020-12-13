@@ -1,7 +1,7 @@
 package com.unifi.attsw.exam.repository.transaction.manager.functions;
 
 @FunctionalInterface
-public interface RepositoryFunction<MuseumRepository, ExhibitionRepository, T> {
-	public T apply(MuseumRepository museumRepository, ExhibitionRepository exhibitionRepository);
+public interface RepositoryFunction<M, E, T> {
+	public T apply(M museumRepository, E exhibitionRepository);
 
 }

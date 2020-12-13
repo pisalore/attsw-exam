@@ -19,8 +19,7 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	@Override
 	public List<Exhibition> findAllExhibitions() {
-		List<Exhibition> exhibitions = entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
-		return exhibitions;
+		return entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
 	}
 
 	@Override

@@ -90,6 +90,12 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
 		window.button(JButtonMatcher.withText("Find Museum Exh.")).requireEnabled();
 	}
+	
+	@Test
+	public void testWhenMuseumNameIsNotFilledFindMuseumExhibitionButtonShouldBeDisabled() {
+		window.textBox("findMuseumTextField").enterText(" ");
+		window.button(JButtonMatcher.withText("Find Museum Exh.")).requireDisabled();
+	}
 
 	@Test
 	public void testWhenExhibitionOrSeatsOrMuseumAreBlankAddExhibitionButtonShouldBeDisabled() {
@@ -182,6 +188,14 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
 		GuiActionRunner.execute(() -> exhibitionSwingView.showError("error message: ", exhibition1));
 		window.label("errorLabel").requireText("error message: " + exhibition1.getName());
+
+	}
+	
+	@Test
+	@GUITest
+	public void testShowGeneralErrorShouldShowTheMessageInLabel() {
+		GuiActionRunner.execute(() -> exhibitionSwingView.showError("error message: ", null));
+		window.label("errorLabel").requireText("error message: ");
 
 	}
 

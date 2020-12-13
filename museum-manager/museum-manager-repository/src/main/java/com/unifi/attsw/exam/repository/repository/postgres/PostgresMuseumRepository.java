@@ -20,8 +20,7 @@ public class PostgresMuseumRepository implements MuseumRepository {
 
 	@Override
 	public List<Museum> findAllMuseums() {
-		List<Museum> museums = entityManager.createQuery("FROM Museum", Museum.class).getResultList();
-		return museums;
+		return entityManager.createQuery("FROM Museum", Museum.class).getResultList();
 	}
 
 	@Override

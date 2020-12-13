@@ -36,7 +36,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				return exhibitionRepository.findExhibitionsByMuseumId(museum.getId());
 			});
 		} catch (NullPointerException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to get Exhibitions for the selected Museum: " + museum);
+			throw new RuntimeException("Impossible to get Exhibitions for the selected Museum: " + museum, ex);
 		}
 
 	}
@@ -52,7 +52,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			}
 			return museum;
 		} catch (RepositoryException | NoSuchElementException ex) {
-			throw new RuntimeException("Impossible to find Museum");
+			throw new RuntimeException("Impossible to find Museum", ex);
 		}
 	}
 
@@ -68,7 +68,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 			});
 		} catch (NullPointerException | RepositoryException ex) {
-			throw new RuntimeException("Impossibile to add Museum.");
+			throw new RuntimeException("Impossibile to add Museum.", ex);
 		}
 
 	}
@@ -92,7 +92,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				return null;
 			});
 		} catch (NullPointerException | NoSuchElementException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to delete Museum.");
+			throw new RuntimeException("Impossible to delete Museum.", ex);
 		}
 
 	}
@@ -108,7 +108,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			}
 			return exhibition;
 		} catch (RepositoryException | NoSuchElementException ex) {
-			throw new RuntimeException("Impossible to find Exhibition");
+			throw new RuntimeException("Impossible to find Exhibition", ex);
 		}
 	}
 
@@ -135,7 +135,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				return exhibitionRepository.addNewExhibition(exhibition);
 			});
 		} catch (NoSuchElementException | RepositoryException | IllegalArgumentException ex) {
-			throw new RuntimeException("Impossible to add Exhibition.");
+			throw new RuntimeException("Impossible to add Exhibition.", ex);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			});
 
 		} catch (NoSuchElementException | NullPointerException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to delete Exhibition.");
+			throw new RuntimeException("Impossible to delete Exhibition.", ex);
 		}
 	}
 
@@ -182,7 +182,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			});
 
 		} catch (UnsupportedOperationException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to book a seat.");
+			throw new RuntimeException("Impossible to book a seat.", ex);
 		}
 
 	}
