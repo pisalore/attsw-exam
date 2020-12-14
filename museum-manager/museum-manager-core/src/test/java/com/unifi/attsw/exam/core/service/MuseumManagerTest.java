@@ -304,12 +304,11 @@ public class MuseumManagerTest {
 	public void testAddNewExhibitionWhenRoomsAreNotAvailableShouldThrow() throws RepositoryException {
 		museum.setOccupiedRooms(NUM_CONSTANT1);
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
-		when(museum.getOccupiedRooms() >= museum.getTotalRooms()).thenThrow(
-				(new IllegalArgumentException("Impossibile to add new Exhibition: all rooms are occupied!")));
 
 		assertThatThrownBy(() -> {
 			museumManager.addNewExhibition(museum.getName(), exhibition);
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to add Exhibition.");
+		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to add Exhibition.")
+				.hasCause(new IllegalArgumentException("Impossibile to add new Exhibition: all rooms are occupied!"));
 
 		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
 		inOrder.verify(exhibition).setMuseumId(museum.getId());
