@@ -158,9 +158,7 @@ public class MuseumManagerServiceIT {
 		int bookedExhibitionsBefore = exhibition.getBookedSeats();
 		museumManager.bookExhibitionSeat(exhibition);
 		int bookedExhibitionsAfter = exhibition.getBookedSeats();
-		assertThat(bookedExhibitionsBefore).isZero();
-		assertThat(bookedExhibitionsAfter).isEqualTo(1);
-		assertThat(bookedExhibitionsAfter).isGreaterThan(bookedExhibitionsBefore);
+		assertThat(bookedExhibitionsAfter).isEqualTo(bookedExhibitionsBefore + 1);
 	}
 
 	@AfterClass
@@ -169,7 +167,6 @@ public class MuseumManagerServiceIT {
 		entityManager.close();
 		sessionFactory.close();
 	}
-
 
 	/**
 	 * 

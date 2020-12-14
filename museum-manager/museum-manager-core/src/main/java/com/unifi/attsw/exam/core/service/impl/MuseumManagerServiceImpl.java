@@ -32,9 +32,8 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public List<Exhibition> getAllMuseumExhibitions(Museum museum) {
 		try {
-			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-				return exhibitionRepository.findExhibitionsByMuseumId(museum.getId());
-			});
+			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> exhibitionRepository
+					.findExhibitionsByMuseumId(museum.getId()));
 		} catch (NullPointerException | RepositoryException ex) {
 			throw new RuntimeException("Impossible to get Exhibitions for the selected Museum: " + museum, ex);
 		}
@@ -145,7 +144,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
 				return museumRepository.findMuseumById(exhibition.getMuseumId());
 			});
-			
+
 			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
 				return exhibitionRepository.findExhibitionByName(exhibition.getName());
 			});
