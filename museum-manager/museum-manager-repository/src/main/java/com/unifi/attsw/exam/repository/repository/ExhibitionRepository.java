@@ -3,7 +3,7 @@ package com.unifi.attsw.exam.repository.repository;
 import java.util.List;
 import java.util.UUID;
 
-import com.unifi.attsw.exam.repository.model.Exhibition;;
+import com.unifi.attsw.exam.repository.model.Exhibition;
 
 public interface ExhibitionRepository {
 	public List<Exhibition> findAllExhibitions();

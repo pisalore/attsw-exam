@@ -19,8 +19,7 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	@Override
 	public List<Exhibition> findAllExhibitions() {
-		List<Exhibition> exhibitions = entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
-		return exhibitions;
+		return entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
 	}
 
 	@Override
@@ -28,7 +27,7 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 		try {
 			return entityManager.find(Exhibition.class, exhibitionId);
 		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException("Cannot find entity, invalid or null id: " + exhibitionId);
+			throw new IllegalArgumentException("Cannot find entity, invalid or null id: " + exhibitionId, ex);
 		}
 
 	}
@@ -52,32 +51,20 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	@Override
 	public Exhibition addNewExhibition(Exhibition newExhibition) {
-		try {
 			entityManager.persist(newExhibition);
 			return newExhibition;
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException();
-		}
 
 	}
 
 	@Override
 	public Exhibition updateExhibition(Exhibition updatedExhibition) {
-		try {
 			return entityManager.merge(updatedExhibition);
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException();
-		}
 
 	}
 
 	@Override
 	public void deleteExhibition(Exhibition deletedExhibition) {
-		try {
 			entityManager.remove(deletedExhibition);
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException();
-		}
 
 	}
 

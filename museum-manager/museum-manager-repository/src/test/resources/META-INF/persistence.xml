@@ -18,54 +18,9 @@
 				value="jdbc:tc:postgresql:9.6.8:///databasenameTC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_empty.sql" />
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />
-				
-<!-- 			<property name="hibernate.connection.provider_class" -->
-<!-- 				value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" /> -->
+			<property name="hibernate.connection.provider_class"
+				value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
 
-			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
-		</properties>
-	</persistence-unit>
-
-	<persistence-unit name="postgres.not-empty.database">
-		<class>com.unifi.attsw.exam.repository.model.Museum</class>
-		<class>com.unifi.attsw.exam.repository.model.Exhibition</class>
-		<properties>
-			<property name="javax.persistence.jdbc.driver"
-				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
-			<property name="javax.persistence.jdbc.url"
-				value="jdbc:tc:postgresql:9.6.8:///databasename?TC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_not_empty.sql" />
-			<property name="hibernate.dialect"
-				value="org.hibernate.dialect.PostgreSQLDialect" />
-				
-<!-- 			<property name="hibernate.connection.provider_class" -->
-<!-- 				value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" /> -->
-
-			<!-- This line is commented since I want to use a non empty db, which 
-				is created executing an sql script -->
-			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
-		</properties>
-	</persistence-unit>
-
-	<persistence-unit name="postgres.e2e-tests">
-		<class>com.unifi.attsw.exam.repository.model.Museum</class>
-		<class>com.unifi.attsw.exam.repository.model.Exhibition</class>
-		<properties>
-			<property name="javax.persistence.jdbc.driver"
-				value="org.testcontainers.jdbc.ContainerDatabaseDriver" />
-			<property name="javax.persistence.jdbc.url"
-				value="jdbc:tc:postgresql:9.6.8:///ATTSW_DB?TC_INITSCRIPT=file:src/test/resources/META-INF/postgres_init_scripts/init_postgresql_empty.sql" />
-			<property name="javax.persistence.jdbc.user" value="e2e_museum_manager" />
-			<property name="javax.persistence.jdbc.password"
-				value="e2e_attsw" />
-			<property name="hibernate.dialect"
-				value="org.hibernate.dialect.PostgreSQLDialect" />
-				
-<!-- 			<property name="hibernate.connection.provider_class" -->
-<!-- 				value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" /> -->
-
-			<!-- This line is commented since I want to use a non empty db, which 
-				is created executing an sql script -->
-			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
 		</properties>
 	</persistence-unit>
 

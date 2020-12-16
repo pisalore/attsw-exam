@@ -1,5 +1,6 @@
 package com.unifi.attsw.exam.repository.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -88,21 +89,8 @@ public class Museum {
 		if (getClass() != obj.getClass())
 			return false;
 		Museum other = (Museum) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (occupiedRooms != other.occupiedRooms)
-			return false;
-		if (totalRooms != other.totalRooms)
-			return false;
-		return true;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(occupiedRooms, other.occupiedRooms) && Objects.equals(totalRooms, other.totalRooms);
 	}
 
 }

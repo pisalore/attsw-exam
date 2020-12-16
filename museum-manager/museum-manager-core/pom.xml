@@ -5,10 +5,17 @@
 	<parent>
 		<groupId>com.unifi.attsw.exam</groupId>
 		<artifactId>museum-manager-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 		<relativePath>../museum-manager-parent</relativePath>
 	</parent>
+	
 	<artifactId>museum-manager-core</artifactId>
+	
+	<properties>
+		<sonar.coverage.exclusions>
+			**/exception/*.*
+		</sonar.coverage.exclusions>
+	</properties>
 
 	<build>
 		<pluginManagement>
