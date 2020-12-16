@@ -124,7 +124,7 @@ public class MuseumManagerServiceIT {
 
 		assertThatThrownBy(() -> {
 			museumManager.addNewExhibition(MUSEUM3_TEST, exhibition);
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to add Exhibition.");
+		}).isInstanceOf(RuntimeException.class).hasMessage("The selected museum does not exist!");
 	}
 
 	@Test
