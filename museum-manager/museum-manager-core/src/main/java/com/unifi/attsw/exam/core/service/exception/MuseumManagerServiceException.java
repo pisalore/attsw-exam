@@ -8,5 +8,6 @@ public class MuseumManagerServiceException extends RuntimeException {
 	}
 
 	public MuseumManagerServiceException() {
+		super();
 	}
 }
