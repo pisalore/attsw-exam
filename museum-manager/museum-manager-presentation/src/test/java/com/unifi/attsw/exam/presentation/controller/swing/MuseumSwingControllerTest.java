@@ -97,7 +97,7 @@ public class MuseumSwingControllerTest {
 
 	@Test
 	public void testShowAllNullMuseumExhibitionsShouldThrow() throws RepositoryException {
-		doThrow(new MuseumManagerServiceException()).when(museumService).getMuseumByName(null);
+		doThrow(MuseumManagerServiceException.class).when(museumService).getMuseumByName(null);
 
 		museumSwingController.getAllMuseumExhibitions(null);
 
@@ -107,7 +107,7 @@ public class MuseumSwingControllerTest {
 
 	@Test
 	public void testShowAllExhibitionsFromNotExistingMuseumShouldThrow() throws RepositoryException {
-		doThrow(new MuseumManagerServiceException()).when(museumService).getMuseumByName(MUSEUM1_TEST);
+		doThrow(MuseumManagerServiceException.class).when(museumService).getMuseumByName(MUSEUM1_TEST);
 		museumSwingController.getAllMuseumExhibitions(MUSEUM1_TEST);
 
 		inOrder.verify(museumService).getMuseumByName(MUSEUM1_TEST);
@@ -116,7 +116,7 @@ public class MuseumSwingControllerTest {
 
 	@Test
 	public void testSaveNullMuseumShouldThrow() {
-		doThrow(new MuseumManagerServiceException()).when(museumService).saveMuseum(null);
+		doThrow(MuseumManagerServiceException.class).when(museumService).saveMuseum(null);
 		museumSwingController.saveMuseum(null);
 
 		inOrder.verify(museumService).saveMuseum(null);
@@ -136,7 +136,7 @@ public class MuseumSwingControllerTest {
 
 	@Test
 	public void testAddNewNullExhibitionShouldThrow() {
-		doThrow(new MuseumManagerServiceException()).when(museumService).addNewExhibition(MUSEUM1_TEST, null);
+		doThrow(MuseumManagerServiceException.class).when(museumService).addNewExhibition(MUSEUM1_TEST, null);
 		museumSwingController.saveExhibition(MUSEUM1_TEST, null);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, null);
@@ -147,7 +147,7 @@ public class MuseumSwingControllerTest {
 	@Test
 	public void testAddNewExhibitionWhenMuseumDoesNotExistShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		doThrow(new MuseumManagerServiceException()).when(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
+		doThrow(MuseumManagerServiceException.class).when(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
 		museumSwingController.saveExhibition(MUSEUM1_TEST, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(MUSEUM1_TEST, exhibition);
@@ -159,7 +159,7 @@ public class MuseumSwingControllerTest {
 	@Test
 	public void testAddNewExhibitionWhenMuseumNameIsNullShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		doThrow(new MuseumManagerServiceException()).when(museumService).addNewExhibition(null, exhibition);
+		doThrow(MuseumManagerServiceException.class).when(museumService).addNewExhibition(null, exhibition);
 		museumSwingController.saveExhibition(null, exhibition);
 
 		inOrder.verify(museumService).addNewExhibition(null, exhibition);
@@ -180,7 +180,7 @@ public class MuseumSwingControllerTest {
 
 	@Test
 	public void testDeleteNullMuseumShouldThrow() {
-		doThrow(new MuseumManagerServiceException()).when(museumService).deleteMuseum(null);
+		doThrow(MuseumManagerServiceException.class).when(museumService).deleteMuseum(null);
 		museumSwingController.deleteMuseum(null);
 
 		inOrder.verify(museumService).deleteMuseum(null);
@@ -191,7 +191,7 @@ public class MuseumSwingControllerTest {
 	@Test
 	public void testDeleteMuseumWhichDoesNotExistShouldThrow() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
-		doThrow(new MuseumManagerServiceException()).when(museumService).deleteMuseum(museum);
+		doThrow(MuseumManagerServiceException.class).when(museumService).deleteMuseum(museum);
 		museumSwingController.deleteMuseum(museum);
 
 		inOrder.verify(museumService).deleteMuseum(museum);
@@ -210,7 +210,7 @@ public class MuseumSwingControllerTest {
 
 	@Test
 	public void testDeleteNullExhibitionShouldThrow() {
-		doThrow(new MuseumManagerServiceException()).when(museumService).deleteExhibition(null);
+		doThrow(MuseumManagerServiceException.class).when(museumService).deleteExhibition(null);
 		museumSwingController.deleteExhibition(null);
 
 		inOrder.verify(museumService).deleteExhibition(null);
@@ -221,7 +221,7 @@ public class MuseumSwingControllerTest {
 	@Test
 	public void testDeleteExhibitionWhichDoesNotExistShouldThrow() {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
-		doThrow(new MuseumManagerServiceException()).when(museumService).deleteExhibition(exhibition);
+		doThrow(MuseumManagerServiceException.class).when(museumService).deleteExhibition(exhibition);
 		museumSwingController.deleteExhibition(exhibition);
 
 		inOrder.verify(museumService).deleteExhibition(exhibition);
@@ -240,7 +240,7 @@ public class MuseumSwingControllerTest {
 
 	@Test
 	public void testBookNullExhibitionSeatShouldThrow() {
-		doThrow(new MuseumManagerServiceException()).when(museumService).bookExhibitionSeat(null);
+		doThrow(MuseumManagerServiceException.class).when(museumService).bookExhibitionSeat(null);
 		museumSwingController.bookExhibitionSeat(null);
 
 		inOrder.verify(museumService).bookExhibitionSeat(null);
@@ -253,7 +253,7 @@ public class MuseumSwingControllerTest {
 		Exhibition exhibition = new Exhibition(EXHIBITION1_TEST, NUM_CONSTANT1);
 		exhibition.setBookedSeats(NUM_CONSTANT1);
 
-		doThrow(new MuseumManagerServiceException()).when(museumService).bookExhibitionSeat(exhibition);
+		doThrow(MuseumManagerServiceException.class).when(museumService).bookExhibitionSeat(exhibition);
 		museumSwingController.bookExhibitionSeat(exhibition);
 
 		inOrder.verify(museumService).bookExhibitionSeat(exhibition);

@@ -1,7 +1,6 @@
 package com.unifi.attsw.exam.core.service.impl;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
 import com.unifi.attsw.exam.core.service.exception.MuseumManagerServiceException;
@@ -48,10 +47,10 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			Museum museum = transactionManager
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
 			if (museum == null) {
-				throw new NoSuchElementException("Impossible to find the specified Museum: " + museumName);
+				throw new MuseumManagerServiceException("Impossible to find the specified Museum: " + museumName);
 			}
 			return museum;
-		} catch (RepositoryException | NoSuchElementException ex) {
+		} catch (RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to find Museum", ex);
 		}
 	}
@@ -80,7 +79,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museum.getName()));
 
 			if (museumToRemove == null) {
-				throw new NoSuchElementException("The selected museum does not exist!");
+				throw new MuseumManagerServiceException("The selected museum does not exist!");
 			}
 
 			transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
@@ -90,7 +89,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				museumRepository.deleteMuseum(museumToRemove);
 				return null;
 			});
-		} catch (NullPointerException | NoSuchElementException | RepositoryException ex) {
+		} catch (NullPointerException | RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to delete Museum.", ex);
 		}
 
@@ -102,10 +101,11 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			Exhibition exhibition = transactionManager.doInTransactionExhibition(
 					exhibitionRepository -> exhibitionRepository.findExhibitionByName(exhibitionName));
 			if (exhibition == null) {
-				throw new NoSuchElementException("Impossible to find the specified Exhibition: " + exhibitionName);
+				throw new MuseumManagerServiceException(
+						"Impossible to find the specified Exhibition: " + exhibitionName);
 			}
 			return exhibition;
-		} catch (RepositoryException | NoSuchElementException ex) {
+		} catch (RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to find Exhibition", ex);
 		}
 	}
@@ -117,7 +117,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
 
 			if (museum == null) {
-				throw new NoSuchElementException("The selected museum does not exist!");
+				throw new MuseumManagerServiceException("The selected museum does not exist!");
 			}
 
 			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
@@ -126,12 +126,13 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				int occupiedRooms = museum.getOccupiedRooms();
 				int rooms = museum.getTotalRooms();
 				if (occupiedRooms >= rooms) {
-					throw new IllegalArgumentException("Impossibile to add new Exhibition: all rooms are occupied!");
+					throw new MuseumManagerServiceException(
+							"Impossibile to add new Exhibition: all rooms are occupied!");
 				}
 				museum.setOccupiedRooms(occupiedRooms + 1);
 				return exhibitionRepository.addNewExhibition(exhibition);
 			});
-		} catch (NoSuchElementException | RepositoryException | IllegalArgumentException ex) {
+		} catch (RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to add Exhibition.", ex);
 		}
 	}
@@ -146,7 +147,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 					exhibitionRepository -> exhibitionRepository.findExhibitionByName(exhibition.getName()));
 
 			if (exhibitionToRemove == null) {
-				throw new NoSuchElementException("The selected exhibition does not exist!");
+				throw new MuseumManagerServiceException("The selected exhibition does not exist!");
 			}
 			transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 				exhibitionRepository.deleteExhibition(exhibitionToRemove);
@@ -155,7 +156,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				return null;
 			});
 
-		} catch (NoSuchElementException | NullPointerException | RepositoryException ex) {
+		} catch (NullPointerException | RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to delete Exhibition.", ex);
 		}
 	}
@@ -167,14 +168,14 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 					exhibitionRepository -> exhibitionRepository.findExhibitionById(exhibition.getId()));
 
 			if (existingExhibition.getBookedSeats() == existingExhibition.getTotalSeats()) {
-				throw new UnsupportedOperationException(
+				throw new MuseumManagerServiceException(
 						"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked");
 			}
 			exhibition.setBookedSeats(exhibition.getBookedSeats() + 1);
 			transactionManager.doInTransactionExhibition(
 					exhibitionRepository -> exhibitionRepository.updateExhibition(exhibition));
 
-		} catch (UnsupportedOperationException | RepositoryException ex) {
+		} catch (RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to book a seat.", ex);
 		}
 
