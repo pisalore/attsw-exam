@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 
-import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -192,7 +191,6 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
-	@GUITest
 	public void testShowGeneralErrorShouldShowTheMessageInLabel() {
 		GuiActionRunner.execute(() -> exhibitionSwingView.showError("error message: ", null));
 		window.label("errorLabel").requireText("error message: ");
@@ -200,7 +198,6 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	@GUITest
 	public void testExhibitionAddedShouldAddTheExhibitionAndResetMuseumExhibitionPart() {
 		Exhibition exhibition1 = new Exhibition(EXHIBITION1_TEST, 10);
 		window.textBox("findMuseumTextField").setText(MUSEUM1_TEST);

@@ -62,7 +62,7 @@ public class MuseumSwingControllerTest {
 	
 	@Test
 	public void testShowAllMuseumsError() throws RepositoryException {
-		doThrow(new RepositoryException()).when(museumService).getAllMuseums();
+		doThrow(RepositoryException.class).when(museumService).getAllMuseums();
 		museumSwingController.getAllMuseums();
 		inOrder.verify(museumView).showError("Impossibile to get museums.", null);
 	}
@@ -77,7 +77,7 @@ public class MuseumSwingControllerTest {
 	
 	@Test
 	public void testShowAllExhibitionsError() throws RepositoryException {
-		doThrow(new RepositoryException()).when(museumService).getAllExhibitions();
+		doThrow(RepositoryException.class).when(museumService).getAllExhibitions();
 		museumSwingController.getAllExhibitions();
 		inOrder.verify(museumView).showError("Impossibile to get all exhibitions.", null);
 	}

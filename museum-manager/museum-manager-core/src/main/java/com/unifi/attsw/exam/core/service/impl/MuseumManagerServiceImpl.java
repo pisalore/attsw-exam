@@ -47,7 +47,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			Museum museum = transactionManager
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
 			if (museum == null) {
-				throw new MuseumManagerServiceException("Impossible to find the specified Museum: " + museumName);
+				throw new RepositoryException("Impossible to find the specified Museum: " + museumName);
 			}
 			return museum;
 		} catch (RepositoryException ex) {
@@ -79,13 +79,13 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museum.getName()));
 
 			if (museumToRemove == null) {
-				throw new MuseumManagerServiceException("The selected museum does not exist!");
+				throw new RepositoryException("The selected museum does not exist!");
 			}
 
 			transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 				List<Exhibition> museumToRemoveExhibitions = exhibitionRepository
 						.findExhibitionsByMuseumId(museumToRemove.getId());
-				museumToRemoveExhibitions.forEach(e -> exhibitionRepository.deleteExhibition(e));
+				museumToRemoveExhibitions.forEach(exhibitionRepository::deleteExhibition);
 				museumRepository.deleteMuseum(museumToRemove);
 				return null;
 			});
@@ -101,8 +101,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			Exhibition exhibition = transactionManager.doInTransactionExhibition(
 					exhibitionRepository -> exhibitionRepository.findExhibitionByName(exhibitionName));
 			if (exhibition == null) {
-				throw new MuseumManagerServiceException(
-						"Impossible to find the specified Exhibition: " + exhibitionName);
+				throw new RepositoryException("Impossible to find the specified Exhibition: " + exhibitionName);
 			}
 			return exhibition;
 		} catch (RepositoryException ex) {
@@ -116,10 +115,6 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			Museum museum = transactionManager
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
 
-			if (museum == null) {
-				throw new MuseumManagerServiceException("The selected museum does not exist!");
-			}
-
 			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
 
 				exhibition.setMuseumId(museum.getId());
@@ -132,7 +127,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				museum.setOccupiedRooms(occupiedRooms + 1);
 				return exhibitionRepository.addNewExhibition(exhibition);
 			});
-		} catch (RepositoryException ex) {
+		} catch (NullPointerException | RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to add Exhibition.", ex);
 		}
 	}
@@ -140,16 +135,12 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public void deleteExhibition(Exhibition exhibition) {
 		try {
-			Museum museum = transactionManager.doInTransactionMuseum(
-					museumRepository -> museumRepository.findMuseumById(exhibition.getMuseumId()));
 
 			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(
 					exhibitionRepository -> exhibitionRepository.findExhibitionByName(exhibition.getName()));
 
-			if (exhibitionToRemove == null) {
-				throw new MuseumManagerServiceException("The selected exhibition does not exist!");
-			}
 			transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
+				Museum museum = museumRepository.findMuseumById(exhibition.getMuseumId());
 				exhibitionRepository.deleteExhibition(exhibitionToRemove);
 				int occupiedRooms = museum.getOccupiedRooms();
 				museum.setOccupiedRooms(occupiedRooms - 1);
@@ -168,14 +159,14 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 					exhibitionRepository -> exhibitionRepository.findExhibitionById(exhibition.getId()));
 
 			if (existingExhibition.getBookedSeats() == existingExhibition.getTotalSeats()) {
-				throw new MuseumManagerServiceException(
+				throw new UnsupportedOperationException(
 						"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked");
 			}
 			exhibition.setBookedSeats(exhibition.getBookedSeats() + 1);
 			transactionManager.doInTransactionExhibition(
 					exhibitionRepository -> exhibitionRepository.updateExhibition(exhibition));
 
-		} catch (RepositoryException ex) {
+		} catch (UnsupportedOperationException | RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to book a seat.", ex);
 		}
 

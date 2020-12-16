@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 import javax.swing.DefaultListModel;
 
-import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -90,7 +89,6 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	@GUITest
 	public void testDeleteButtonShouldBeEnabledOnlyWhenAMuseumIsSelected() {
 		GuiActionRunner.execute(() -> museumSwingView.getMuseumListModel().addElement(new Museum(MUSEUM1_TEST, 10)));
 		window.list("museumList").selectItem(0);
@@ -100,7 +98,6 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	@GUITest
 	public void testShowAllMuseums() {
 		Museum museum1 = new Museum(MUSEUM1_TEST, 10);
 		Museum museum2 = new Museum(MUSEUM2_TEST, 10);
@@ -111,7 +108,6 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	@GUITest
 	public void testShowErrorShouldShowTheMessageInLabel() {
 		Museum museum1 = new Museum(MUSEUM1_TEST, 10);
 		GuiActionRunner.execute(() -> museumSwingView.showError("error message: ", museum1));
@@ -120,7 +116,6 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
-	@GUITest
 	public void testShowGeneralErrorShouldShowTheMessageInLabel() {
 		GuiActionRunner.execute(() -> museumSwingView.showError("error message: ", null));
 		window.label("errorMessageLabel").requireText("error message: ");
