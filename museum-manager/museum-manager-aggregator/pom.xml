@@ -7,6 +7,32 @@
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Sonar properties -->
+		<sonar.issue.ignore.multicriteria>e1,e2,e3,e4,e5,e6</sonar.issue.ignore.multicriteria>
+		<!-- Inheritance tree of classes should not be too deep -->
+		<sonar.issue.ignore.multicriteria.e1.ruleKey>java:S110</sonar.issue.ignore.multicriteria.e1.ruleKey>
+		<sonar.issue.ignore.multicriteria.e1.resourceKey>**/*SwingView.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
+		<!-- Add at least one assertion to this test case (unit test) -->
+		<sonar.issue.ignore.multicriteria.e2.ruleKey>java:S2699</sonar.issue.ignore.multicriteria.e2.ruleKey>
+		<sonar.issue.ignore.multicriteria.e2.resourceKey>**/*SwingViewTest.java</sonar.issue.ignore.multicriteria.e2.resourceKey>
+		<!-- Add at least one assertion to this test case (integration test) -->
+		<sonar.issue.ignore.multicriteria.e3.ruleKey>java:S2699</sonar.issue.ignore.multicriteria.e3.ruleKey>
+		<sonar.issue.ignore.multicriteria.e3.resourceKey>**/*SwingViewIT.java</sonar.issue.ignore.multicriteria.e3.resourceKey>
+		<!-- Add at least one assertion to this test case (e2e test) -->
+		<sonar.issue.ignore.multicriteria.e4.ruleKey>java:S2699</sonar.issue.ignore.multicriteria.e4.ruleKey>
+		<sonar.issue.ignore.multicriteria.e4.resourceKey>**/MuseumSwingAppE2E.java</sonar.issue.ignore.multicriteria.e4.resourceKey>
+		<!-- "static" base class members should not be accessed via derived types -->
+		<sonar.issue.ignore.multicriteria.e5.ruleKey>java:S3252</sonar.issue.ignore.multicriteria.e5.ruleKey>
+		<sonar.issue.ignore.multicriteria.e5.resourceKey>**/*SwingView.java</sonar.issue.ignore.multicriteria.e5.resourceKey>
+		<!-- Rename class to match the regular expression: '^((Test|IT)[a-zA-Z0-9_]+|[A-Z][a-zA-Z0-9_]*(Test|Tests|TestCase|IT|ITCase))$' -->
+		<sonar.issue.ignore.multicriteria.e6.ruleKey>java:S3577</sonar.issue.ignore.multicriteria.e6.ruleKey>
+		<sonar.issue.ignore.multicriteria.e6.resourceKey>**/MuseumSwingAppE2E.java</sonar.issue.ignore.multicriteria.e6.resourceKey>
+		
+	</properties>
+
 	<modules>
 		<module>../museum-manager-bom</module>
 		<module>../museum-manager-parent</module>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
+import com.unifi.attsw.exam.core.service.exception.MuseumManagerServiceException;
 import com.unifi.attsw.exam.repository.model.Exhibition;
 import com.unifi.attsw.exam.repository.model.Museum;
 import com.unifi.attsw.exam.repository.repository.ExhibitionRepository;
@@ -32,11 +33,11 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public List<Exhibition> getAllMuseumExhibitions(Museum museum) {
 		try {
-			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> {
-				return exhibitionRepository.findExhibitionsByMuseumId(museum.getId());
-			});
+			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> exhibitionRepository
+					.findExhibitionsByMuseumId(museum.getId()));
 		} catch (NullPointerException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to get Exhibitions for the selected Museum: " + museum);
+			throw new MuseumManagerServiceException("Impossible to get Exhibitions for the selected Museum: " + museum,
+					ex);
 		}
 
 	}
@@ -52,7 +53,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			}
 			return museum;
 		} catch (RepositoryException | NoSuchElementException ex) {
-			throw new RuntimeException("Impossible to find Museum");
+			throw new MuseumManagerServiceException("Impossible to find Museum", ex);
 		}
 	}
 
@@ -68,7 +69,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 			});
 		} catch (NullPointerException | RepositoryException ex) {
-			throw new RuntimeException("Impossibile to add Museum.");
+			throw new MuseumManagerServiceException("Impossibile to add Museum.", ex);
 		}
 
 	}
@@ -92,7 +93,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				return null;
 			});
 		} catch (NullPointerException | NoSuchElementException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to delete Museum.");
+			throw new MuseumManagerServiceException("Impossible to delete Museum.", ex);
 		}
 
 	}
@@ -108,7 +109,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			}
 			return exhibition;
 		} catch (RepositoryException | NoSuchElementException ex) {
-			throw new RuntimeException("Impossible to find Exhibition");
+			throw new MuseumManagerServiceException("Impossible to find Exhibition", ex);
 		}
 	}
 
@@ -135,7 +136,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				return exhibitionRepository.addNewExhibition(exhibition);
 			});
 		} catch (NoSuchElementException | RepositoryException | IllegalArgumentException ex) {
-			throw new RuntimeException("Impossible to add Exhibition.");
+			throw new MuseumManagerServiceException("Impossible to add Exhibition.", ex);
 		}
 	}
 
@@ -145,7 +146,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
 				return museumRepository.findMuseumById(exhibition.getMuseumId());
 			});
-			
+
 			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
 				return exhibitionRepository.findExhibitionByName(exhibition.getName());
 			});
@@ -161,7 +162,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			});
 
 		} catch (NoSuchElementException | NullPointerException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to delete Exhibition.");
+			throw new MuseumManagerServiceException("Impossible to delete Exhibition.", ex);
 		}
 	}
 
@@ -182,7 +183,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 			});
 
 		} catch (UnsupportedOperationException | RepositoryException ex) {
-			throw new RuntimeException("Impossible to book a seat.");
+			throw new MuseumManagerServiceException("Impossible to book a seat.", ex);
 		}
 
 	}

@@ -33,13 +33,13 @@
 				<artifactId>museum-manager-repository</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>museum-manager-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>museum-manager-presentation</artifactId>
@@ -52,17 +52,11 @@
 				<version>${hibernate.version}</version>
 			</dependency>
 
-			<!-- <dependency> -->
-			<!-- <groupId>com.zaxxer</groupId> -->
-			<!-- <artifactId>HikariCP</artifactId> -->
-			<!-- <version>${hikari.version}</version> -->
-			<!-- </dependency> -->
-
-			<!-- <dependency> -->
-			<!-- <groupId>org.hibernate</groupId> -->
-			<!-- <artifactId>hibernate-hikaricp</artifactId> -->
-			<!-- <version>${hibernate.hikaricp.version}</version> -->
-			<!-- </dependency> -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-hikaricp</artifactId>
+				<version>${hibernate.hikaricp.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>junit</groupId>

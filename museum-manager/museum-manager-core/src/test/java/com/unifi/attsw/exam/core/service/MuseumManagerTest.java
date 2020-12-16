@@ -23,6 +23,7 @@ import java.util.UUID;
 import static java.util.Arrays.asList;
 
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
+import com.unifi.attsw.exam.core.service.exception.MuseumManagerServiceException;
 import com.unifi.attsw.exam.core.service.impl.MuseumManagerServiceImpl;
 import com.unifi.attsw.exam.repository.model.Exhibition;
 import com.unifi.attsw.exam.repository.model.Museum;
@@ -130,26 +131,25 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testGetMuseumByNullNameShouldThrow() {
+		doThrow(NoSuchElementException.class).when(museumRepository).findMuseumByName(null);
 		assertThatThrownBy(() -> {
 			museumManager.getMuseumByName(null);
-			doThrow(NoSuchElementException.class).doNothing();
-			inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
-			inOrder.verifyNoMoreInteractions();
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Museum");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Museum");
 
+		inOrder.verify(museumRepository).findMuseumByName(null);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
 	public void testGetMuseumThatDoesNotExistByNameShouldThrow() {
+		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
-			when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 			museumManager.getMuseumByName(MUSEUM1_TEST);
 			doThrow(NoSuchElementException.class).doNothing();
-			inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
-			inOrder.verifyNoMoreInteractions();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Museum");
 
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Museum");
-
+		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
@@ -168,7 +168,7 @@ public class MuseumManagerTest {
 			doThrow(new NullPointerException()).when(museum).getId();
 			inOrder.verify(exhibitionRepository).findExhibitionsByMuseumId(museum.getId());
 			verifyNoMoreInteractions(exhibitionRepository);
-		}).isInstanceOf(RuntimeException.class)
+		}).isInstanceOf(MuseumManagerServiceException.class)
 				.hasMessage("Impossible to get Exhibitions for the selected Museum: " + null);
 	}
 
@@ -182,7 +182,7 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testGetMuseumExhibitions() throws RepositoryException {
+	public void testGetMuseumExhibitions() {
 		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
 		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1, EXHIBITION_ID_2);
 		when(exhibitionRepository.findExhibitionsByMuseumId(museum.getId()))
@@ -195,18 +195,16 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testSaveNullMuseumShouldThrow() {
-		museum = null;
 		assertThatThrownBy(() -> {
 			museumManager.saveMuseum(null);
-			doThrow(new NullPointerException()).when(museum).getName();
-			inOrder.verify(museumRepository).addMuseum(museum);
-			inOrder.verify(museum).getName();
-			verifyNoMoreInteractions(museumRepository, museum);
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossibile to add Museum.");
+			doThrow(NullPointerException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossibile to add Museum.");
+
+		verifyNoMoreInteractions(museumRepository);
 	}
 
 	@Test
-	public void testSaveNewMuseum() throws RepositoryException {
+	public void testSaveNewMuseum() {
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 		museumManager.saveMuseum(museum);
 		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
@@ -215,7 +213,7 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testSaveMuseumWhenMuseumExistsUpdate() throws RepositoryException {
+	public void testSaveMuseumWhenMuseumExistsUpdate() {
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 		museumManager.saveMuseum(museum);
 		verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
@@ -224,7 +222,7 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testDeleteMuseumWithNoExhibitions() throws RepositoryException {
+	public void testDeleteMuseumWithNoExhibitions() {
 		when(exhibitionRepository.findExhibitionsByMuseumId(museum.getId())).thenReturn(asList());
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 		museumManager.deleteMuseum(museum);
@@ -236,7 +234,7 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testDeleteMuseumWithExhibitions() throws RepositoryException {
+	public void testDeleteMuseumWithExhibitions() {
 		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
 		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1, EXHIBITION_ID_2);
 
@@ -254,22 +252,22 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testDeleteNullMuseumShouldThrow() throws RepositoryException {
+	public void testDeleteNullMuseumShouldThrow() {
 		assertThatThrownBy(() -> {
 			museumManager.deleteMuseum(null);
-			doThrow(new NullPointerException()).when(museum).getName();
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to delete Museum.");
+			doThrow(NullPointerException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to delete Museum.")
+		;
 
 	}
 
 	@Test
-	public void testDeleteMuseumWhichDoesNotExistShouldThrow() throws RepositoryException {
+	public void testDeleteMuseumWhichDoesNotExistShouldThrow() {
+		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
-			when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 			museumManager.deleteMuseum(museum);
-			doThrow(new NoSuchElementException("The selected museum does not exist!")).doNothing();
-
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to delete Museum.");
+			doThrow(NoSuchElementException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to delete Museum.");
 
 	}
 
@@ -278,23 +276,19 @@ public class MuseumManagerTest {
 		assertThatThrownBy(() -> {
 			museumManager.getExhibitionByName(null);
 			doThrow(NoSuchElementException.class).doNothing();
-			inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
-			inOrder.verifyNoMoreInteractions();
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Exhibition");
-
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Exhibition");
 	}
 
 	@Test
 	public void testGetExhibitionThatDoesNotExistByNameShouldThrow() {
+		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
-			when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(null);
 			museumManager.getExhibitionByName(EXHIBITION1_TEST);
 			doThrow(NoSuchElementException.class).doNothing();
-			inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
-			inOrder.verifyNoMoreInteractions();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Exhibition");
 
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to find Exhibition");
-
+		inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	@Test
@@ -307,25 +301,24 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testAddNewExhibitionWhenRoomsAreNotAvailableShouldThrow() throws RepositoryException {
+	public void testAddNewExhibitionWhenRoomsAreNotAvailableShouldThrow() {
 		museum.setOccupiedRooms(NUM_CONSTANT1);
+		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 
 		assertThatThrownBy(() -> {
-			when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 			museumManager.addNewExhibition(museum.getName(), exhibition);
-			doThrow(new IllegalArgumentException("Impossibile to add new Exhibition: all rooms are occupied!"))
-					.when(museum.getOccupiedRooms() >= museum.getTotalRooms());
+			doThrow(IllegalArgumentException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to add Exhibition.");
 
-			inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
-			inOrder.verify(exhibition).setMuseumId(museum.getId());
-			inOrder.verify(museum).getOccupiedRooms();
-			inOrder.verify(museum).getTotalRooms();
-			verifyNoMoreInteractions(museumRepository, exhibitionRepository);
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to add Exhibition.");
+		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
+		inOrder.verify(exhibition).setMuseumId(museum.getId());
+		inOrder.verify(museum).getOccupiedRooms();
+		inOrder.verify(museum).getTotalRooms();
+		verifyNoMoreInteractions(museumRepository, exhibitionRepository);
 	}
 
 	@Test
-	public void testAddNewExhibitionWhenRoomsAreAvailable() throws RepositoryException {
+	public void testAddNewExhibitionWhenRoomsAreAvailable() {
 		int ouccupiedRooms = museum.getOccupiedRooms();
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 		museumManager.addNewExhibition(museum.getName(), exhibition);
@@ -340,41 +333,39 @@ public class MuseumManagerTest {
 	}
 
 	@Test
-	public void testAddNewExhibitionToAMuseumWhichDoesNotExistShouldThrow() throws RepositoryException {
+	public void testAddNewExhibitionToAMuseumWhichDoesNotExistShouldThrow() {
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
 			museumManager.addNewExhibition(MUSEUM1_TEST, exhibition);
-			when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
-			doThrow(new NoSuchElementException("The selected museum does not exist!")).doNothing();
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to add Exhibition.");
+			doThrow(NoSuchElementException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to add Exhibition.");
 	}
 
 	@Test
-	public void testDeleteNullExhibitionShouldThrow() throws RepositoryException {
+	public void testDeleteNullExhibitionShouldThrow() {
 		assertThatThrownBy(() -> {
 			museumManager.deleteExhibition(null);
-			doThrow(new NullPointerException()).when(exhibition).getName();
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to delete Exhibition.");
+			doThrow(NullPointerException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to delete Exhibition.");
 
 	}
 
 	@Test
-	public void testDeleteExhibitionhichDoesNotExistShouldThrow() throws RepositoryException {
+	public void testDeleteExhibitionhichDoesNotExistShouldThrow() {
+		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
 			museumManager.deleteExhibition(exhibition);
-			when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(null);
-			doThrow(new NoSuchElementException("The selected exhibition does not exist!")).doNothing();
-
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to delete Exhibition.");
+			doThrow(NoSuchElementException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to delete Exhibition.");
 
 	}
 
 	@Test
-	public void testDeleteExhibition() throws RepositoryException {
+	public void testDeleteExhibition() {
 		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(exhibition);
 		when(museumRepository.findMuseumById(exhibition.getMuseumId())).thenReturn(museum);
 		museumManager.deleteExhibition(exhibition);
-		
+
 		inOrder.verify(museumRepository).findMuseumById(exhibition.getMuseumId());
 		inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
 		inOrder.verify(exhibitionRepository).deleteExhibition(exhibition);
@@ -383,17 +374,15 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testBookExhibitionWhenAllSeatsAreBookedShouldThrow() {
+		exhibition.setBookedSeats(exhibition.getTotalSeats());
+		when(exhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).thenReturn(exhibition);
 		assertThatThrownBy(() -> {
-			exhibition.setBookedSeats(exhibition.getTotalSeats());
-			when(exhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).thenReturn(exhibition);
 			museumManager.bookExhibitionSeat(exhibition);
-			doThrow(new UnsupportedOperationException(
-					"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked"))
-							.when(exhibition.getBookedSeats() >= exhibition.getBookedSeats());
-			inOrder.verify(exhibition).getBookedSeats();
-			inOrder.verify(exhibition).getTotalSeats();
-		}).isInstanceOf(RuntimeException.class).hasMessage("Impossible to book a seat.");
+			doThrow(UnsupportedOperationException.class).doNothing();
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to book a seat.");
 
+		inOrder.verify(exhibition).getBookedSeats();
+		inOrder.verify(exhibition).getTotalSeats();
 	}
 
 	@Test

@@ -118,6 +118,14 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("errorMessageLabel").requireText("error message: " + museum1.getName());
 
 	}
+	
+	@Test
+	@GUITest
+	public void testShowGeneralErrorShouldShowTheMessageInLabel() {
+		GuiActionRunner.execute(() -> museumSwingView.showError("error message: ", null));
+		window.label("errorMessageLabel").requireText("error message: ");
+
+	}
 
 	@Test
 	public void testMuseumAddedShouldAddTheMuseumToTheListAndResetTheErrorLabel() {
