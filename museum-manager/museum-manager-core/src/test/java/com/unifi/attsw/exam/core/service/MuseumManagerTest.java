@@ -293,7 +293,7 @@ public class MuseumManagerTest {
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 
 		assertThatThrownBy(() -> {
-			museumManager.addNewExhibition(museum.getName(), exhibition);
+			museumManager.addNewExhibition(MUSEUM1_TEST, exhibition);
 		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to add Exhibition.");
 
 		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
