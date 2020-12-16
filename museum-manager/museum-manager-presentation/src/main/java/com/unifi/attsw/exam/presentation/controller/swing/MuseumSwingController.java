@@ -2,6 +2,7 @@ package com.unifi.attsw.exam.presentation.controller.swing;
 
 import com.unifi.attsw.exam.core.controller.MuseumController;
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
+import com.unifi.attsw.exam.core.service.exception.MuseumManagerServiceException;
 import com.unifi.attsw.exam.presentation.view.swing.ExhibitionSwingView;
 import com.unifi.attsw.exam.presentation.view.swing.MuseumSwingView;
 import com.unifi.attsw.exam.repository.model.Exhibition;
@@ -41,7 +42,7 @@ public class MuseumSwingController implements MuseumController {
 		try {
 			Museum museum = museumService.getMuseumByName(museumName);
 			exhibitionView.showMuseumExhibitions(museumService.getAllMuseumExhibitions(museum));
-		} catch (RuntimeException ex) {
+		} catch (MuseumManagerServiceException ex) {
 			exhibitionView.showError("Impossibile to get all exhibitions.", null);
 		}
 	}
@@ -50,7 +51,7 @@ public class MuseumSwingController implements MuseumController {
 		try {
 			museumService.saveMuseum(museum);
 			museumView.museumAdded(museum);
-		} catch (RuntimeException ex) {
+		} catch (MuseumManagerServiceException ex) {
 			museumView.showError("Impossibile to add Museum: ", museum);
 		}
 	}
@@ -59,7 +60,7 @@ public class MuseumSwingController implements MuseumController {
 		try {
 			museumService.addNewExhibition(museumName, exhibition);
 			exhibitionView.exhibitionAdded(exhibition);
-		} catch (RuntimeException ex) {
+		} catch (MuseumManagerServiceException ex) {
 			exhibitionView.showError("Impossible to add Exhibition: ", exhibition);
 		}
 	}
@@ -68,7 +69,7 @@ public class MuseumSwingController implements MuseumController {
 		try {
 			museumService.deleteMuseum(museum);
 			museumView.museumRemoved(museum);
-		} catch (RuntimeException ex) {
+		} catch (MuseumManagerServiceException ex) {
 			museumView.showError("Impossible to delete Museum: ", museum);
 		}
 	}
@@ -77,7 +78,7 @@ public class MuseumSwingController implements MuseumController {
 		try {
 			museumService.deleteExhibition(exhibition);
 			exhibitionView.exhibitionRemoved(exhibition);
-		} catch (RuntimeException ex) {
+		} catch (MuseumManagerServiceException ex) {
 			exhibitionView.showError("Impossible to delete Exhibition: ", exhibition);
 		}
 	}
@@ -86,7 +87,7 @@ public class MuseumSwingController implements MuseumController {
 		try {
 			museumService.bookExhibitionSeat(exhibition);
 			exhibitionView.exhibitionBooked();
-		} catch (RuntimeException ex) {
+		} catch (MuseumManagerServiceException ex) {
 			exhibitionView.showError("Impossible to book a seat for Exhibition: ", exhibition);
 		}
 	}

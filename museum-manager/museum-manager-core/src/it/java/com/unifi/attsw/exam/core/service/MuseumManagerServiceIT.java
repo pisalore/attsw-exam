@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
+import com.unifi.attsw.exam.core.service.exception.MuseumManagerServiceException;
 import com.unifi.attsw.exam.core.service.impl.MuseumManagerServiceImpl;
 import com.unifi.attsw.exam.repository.model.Exhibition;
 import com.unifi.attsw.exam.repository.model.Museum;
@@ -73,14 +74,14 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testGetMuseumByName() {
+	public void testGetMuseumByName() throws MuseumManagerServiceException {
 		populateDatabase();
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		assertThat(museum).extracting(Museum::getName, Museum::getId).containsExactly(MUSEUM1_TEST, MUSEUM_ID_1);
 	}
 
 	@Test
-	public void testGetExhibitionByName() {
+	public void testGetExhibitionByName() throws MuseumManagerServiceException {
 		populateDatabase();
 		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
 		assertThat(exhibition).extracting(Exhibition::getName, Exhibition::getId).containsExactly(EXHIBITION1_TEST,
@@ -88,7 +89,7 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testGetMuseumExhibitions() {
+	public void testGetMuseumExhibitions() throws MuseumManagerServiceException {
 		populateDatabase();
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		List<Exhibition> exhibitions = museumManager.getAllMuseumExhibitions(museum);
@@ -96,7 +97,7 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testAddNewMuseum() throws RepositoryException {
+	public void testAddNewMuseum() throws RepositoryException, MuseumManagerServiceException {
 		populateDatabase();
 		Museum museum = new Museum(MUSEUM3_TEST, NUM_CONST);
 		museumManager.saveMuseum(museum);
@@ -106,7 +107,7 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testDeleteMuseum() throws RepositoryException {
+	public void testDeleteMuseum() throws RepositoryException, MuseumManagerServiceException {
 		populateDatabase();
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		museumManager.deleteMuseum(museum);
@@ -127,7 +128,7 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testAddNewExhibition() {
+	public void testAddNewExhibition() throws MuseumManagerServiceException {
 		populateDatabase();
 		Exhibition exhibition = createTestExhibition(EXHIBITION3_TEST, NUM_CONST);
 		Museum museum = museumManager.getMuseumByName(MUSEUM1_TEST);
@@ -138,7 +139,7 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testDeleteExhibition() throws RepositoryException {
+	public void testDeleteExhibition() throws RepositoryException, MuseumManagerServiceException {
 		populateDatabase();
 		Museum museum1 = museumManager.getMuseumByName(MUSEUM1_TEST);
 		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
@@ -152,7 +153,7 @@ public class MuseumManagerServiceIT {
 	}
 
 	@Test
-	public void testBookExhibition() {
+	public void testBookExhibition() throws MuseumManagerServiceException {
 		populateDatabase();
 		Exhibition exhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
 		int bookedExhibitionsBefore = exhibition.getBookedSeats();

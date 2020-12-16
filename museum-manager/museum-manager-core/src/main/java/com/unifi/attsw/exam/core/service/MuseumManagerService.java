@@ -12,19 +12,19 @@ public interface MuseumManagerService {
 	public List<Exhibition> getAllExhibitions() throws RepositoryException;
 
 	public List<Exhibition> getAllMuseumExhibitions(Museum museum);
-	
+
 	public Museum getMuseumByName(String museumName);
 
 	public Museum saveMuseum(Museum museum);
 
 	public void deleteMuseum(Museum museum);
-	
+
 	public Exhibition getExhibitionByName(String exhibitionName);
 
 	public Exhibition addNewExhibition(String museumName, Exhibition exhibition);
 
 	public void deleteExhibition(Exhibition exhibition);
-	
+
 	public void bookExhibitionSeat(Exhibition exhibition);
 
 }
