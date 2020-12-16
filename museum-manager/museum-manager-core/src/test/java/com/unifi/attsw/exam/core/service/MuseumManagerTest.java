@@ -131,8 +131,7 @@ public class MuseumManagerTest {
 	public void testGetMuseumByNullNameShouldThrow() {
 		assertThatThrownBy(() -> {
 			museumManager.getMuseumByName(null);
-		}).isInstanceOf(MuseumManagerServiceException.class)
-				.hasMessage("Impossible to find Museum");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Museum");
 
 		inOrder.verify(museumRepository).findMuseumByName(null);
 		inOrder.verifyNoMoreInteractions();
@@ -143,8 +142,7 @@ public class MuseumManagerTest {
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
 			museumManager.getMuseumByName(MUSEUM1_TEST);
-		}).isInstanceOf(MuseumManagerServiceException.class)
-				.hasMessage("Impossible to find Museum");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Museum");
 
 		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
 		inOrder.verifyNoMoreInteractions();
@@ -193,7 +191,7 @@ public class MuseumManagerTest {
 	public void testSaveNullMuseumShouldThrow() {
 		assertThatThrownBy(() -> {
 			museumManager.saveMuseum(null);
-		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossibile to add Museum.");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to add Museum.");
 
 		verifyNoMoreInteractions(museumRepository);
 	}
@@ -266,8 +264,7 @@ public class MuseumManagerTest {
 	public void testGetExhibitionByNullNameShouldThrow() {
 		assertThatThrownBy(() -> {
 			museumManager.getExhibitionByName(null);
-		}).isInstanceOf(MuseumManagerServiceException.class)
-				.hasMessage("Impossible to find Exhibition");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Exhibition");
 	}
 
 	@Test
@@ -275,8 +272,7 @@ public class MuseumManagerTest {
 		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(null);
 		assertThatThrownBy(() -> {
 			museumManager.getExhibitionByName(EXHIBITION1_TEST);
-		}).isInstanceOf(MuseumManagerServiceException.class)
-				.hasMessage("Impossible to find Exhibition");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to find Exhibition");
 
 		inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
 		inOrder.verifyNoMoreInteractions();
@@ -293,13 +289,12 @@ public class MuseumManagerTest {
 
 	@Test
 	public void testAddNewExhibitionWhenRoomsAreNotAvailableShouldThrow() {
-		museum.setOccupiedRooms(NUM_CONSTANT1);
+		museum.setOccupiedRooms(museum.getTotalRooms());
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
 
 		assertThatThrownBy(() -> {
 			museumManager.addNewExhibition(museum.getName(), exhibition);
-		}).isInstanceOf(MuseumManagerServiceException.class)
-				.hasMessage("Impossibile to add new Exhibition: all rooms are occupied!");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to add Exhibition.");
 
 		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
 		inOrder.verify(exhibition).setMuseumId(museum.getId());
@@ -366,8 +361,7 @@ public class MuseumManagerTest {
 		when(exhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).thenReturn(exhibition);
 		assertThatThrownBy(() -> {
 			museumManager.bookExhibitionSeat(exhibition);
-		}).isInstanceOf(MuseumManagerServiceException.class)
-				.hasMessage("Impossible to book a seat.");
+		}).isInstanceOf(MuseumManagerServiceException.class).hasMessage("Impossible to book a seat.");
 
 		inOrder.verify(exhibition).getBookedSeats();
 		inOrder.verify(exhibition).getTotalSeats();

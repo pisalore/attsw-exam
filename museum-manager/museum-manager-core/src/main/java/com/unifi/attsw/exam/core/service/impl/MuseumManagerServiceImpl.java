@@ -67,7 +67,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 			});
 		} catch (NullPointerException | RepositoryException ex) {
-			throw new MuseumManagerServiceException("Impossibile to add Museum.", ex);
+			throw new MuseumManagerServiceException("Impossible to add Museum.", ex);
 		}
 
 	}
@@ -121,13 +121,13 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				int occupiedRooms = museum.getOccupiedRooms();
 				int rooms = museum.getTotalRooms();
 				if (occupiedRooms >= rooms) {
-					throw new MuseumManagerServiceException(
-							"Impossibile to add new Exhibition: all rooms are occupied!");
+					throw new UnsupportedOperationException(
+							"Impossible to add new Exhibition: all rooms are occupied!");
 				}
 				museum.setOccupiedRooms(occupiedRooms + 1);
 				return exhibitionRepository.addNewExhibition(exhibition);
 			});
-		} catch (NullPointerException | RepositoryException ex) {
+		} catch (UnsupportedOperationException | NullPointerException | RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to add Exhibition.", ex);
 		}
 	}
@@ -160,7 +160,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 
 			if (existingExhibition.getBookedSeats() == existingExhibition.getTotalSeats()) {
 				throw new UnsupportedOperationException(
-						"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked");
+						"Impossible to book a seat for " + exhibition.getName() + ": all seats are booked");
 			}
 			exhibition.setBookedSeats(exhibition.getBookedSeats() + 1);
 			transactionManager.doInTransactionExhibition(
