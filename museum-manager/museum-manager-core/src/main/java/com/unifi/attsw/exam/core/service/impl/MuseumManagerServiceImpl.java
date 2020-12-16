@@ -45,9 +45,8 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public Museum getMuseumByName(String museumName) {
 		try {
-			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
-				return museumRepository.findMuseumByName(museumName);
-			});
+			Museum museum = transactionManager
+					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
 			if (museum == null) {
 				throw new NoSuchElementException("Impossible to find the specified Museum: " + museumName);
 			}
@@ -77,9 +76,8 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public void deleteMuseum(Museum museum) {
 		try {
-			Museum museumToRemove = transactionManager.doInTransactionMuseum(museumRepository -> {
-				return museumRepository.findMuseumByName(museum.getName());
-			});
+			Museum museumToRemove = transactionManager
+					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museum.getName()));
 
 			if (museumToRemove == null) {
 				throw new NoSuchElementException("The selected museum does not exist!");
@@ -101,9 +99,8 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public Exhibition getExhibitionByName(String exhibitionName) {
 		try {
-			Exhibition exhibition = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-				return exhibitionRepository.findExhibitionByName(exhibitionName);
-			});
+			Exhibition exhibition = transactionManager.doInTransactionExhibition(
+					exhibitionRepository -> exhibitionRepository.findExhibitionByName(exhibitionName));
 			if (exhibition == null) {
 				throw new NoSuchElementException("Impossible to find the specified Exhibition: " + exhibitionName);
 			}
@@ -116,9 +113,8 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public Exhibition addNewExhibition(String museumName, Exhibition exhibition) {
 		try {
-			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
-				return museumRepository.findMuseumByName(museumName);
-			});
+			Museum museum = transactionManager
+					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
 
 			if (museum == null) {
 				throw new NoSuchElementException("The selected museum does not exist!");
@@ -143,13 +139,11 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public void deleteExhibition(Exhibition exhibition) {
 		try {
-			Museum museum = transactionManager.doInTransactionMuseum(museumRepository -> {
-				return museumRepository.findMuseumById(exhibition.getMuseumId());
-			});
+			Museum museum = transactionManager.doInTransactionMuseum(
+					museumRepository -> museumRepository.findMuseumById(exhibition.getMuseumId()));
 
-			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-				return exhibitionRepository.findExhibitionByName(exhibition.getName());
-			});
+			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(
+					exhibitionRepository -> exhibitionRepository.findExhibitionByName(exhibition.getName()));
 
 			if (exhibitionToRemove == null) {
 				throw new NoSuchElementException("The selected exhibition does not exist!");
@@ -169,18 +163,16 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	@Override
 	public void bookExhibitionSeat(Exhibition exhibition) {
 		try {
-			Exhibition existingExhibition = transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-				return exhibitionRepository.findExhibitionById(exhibition.getId());
-			});
+			Exhibition existingExhibition = transactionManager.doInTransactionExhibition(
+					exhibitionRepository -> exhibitionRepository.findExhibitionById(exhibition.getId()));
 
 			if (existingExhibition.getBookedSeats() == existingExhibition.getTotalSeats()) {
 				throw new UnsupportedOperationException(
 						"Impossibile to book a seat for " + exhibition.getName() + ": all seats are booked");
 			}
 			exhibition.setBookedSeats(exhibition.getBookedSeats() + 1);
-			transactionManager.doInTransactionExhibition(exhibitionRepository -> {
-				return exhibitionRepository.updateExhibition(exhibition);
-			});
+			transactionManager.doInTransactionExhibition(
+					exhibitionRepository -> exhibitionRepository.updateExhibition(exhibition));
 
 		} catch (UnsupportedOperationException | RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to book a seat.", ex);
