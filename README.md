@@ -4,7 +4,7 @@
 Advanced Tool and Techniques for Software Development exam project at UNIFI
 
 ##### Quality Code
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=pisalore_attsw-exam)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=pisalore_attsw-exam)](https://sonarcloud.io/dashboard?id=pisalore_attsw-exam)
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=pisalore_attsw-exam)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=pisalore_attsw-exam&metric=bugs)](https://sonarcloud.io/dashboard?id=pisalore_attsw-exam)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=pisalore_attsw-exam&metric=code_smells)](https://sonarcloud.io/dashboard?id=pisalore_attsw-exam)
