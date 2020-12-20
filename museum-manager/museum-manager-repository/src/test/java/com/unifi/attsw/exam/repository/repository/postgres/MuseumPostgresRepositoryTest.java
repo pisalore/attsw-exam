@@ -87,10 +87,10 @@ public class MuseumPostgresRepositoryTest {
 		Museum museum = createTestMuseum(MUSEUM_TEST_1, NUM_OF_ROOMS);
 
 		entityManager.getTransaction().begin();
-		postgresMuseumRepository.addMuseum(museum);
+		Museum persistedMuseum = postgresMuseumRepository.addMuseum(museum);
 		entityManager.getTransaction().commit();
-		assertThat(postgresMuseumRepository.findAllMuseums()).hasSize(1).extracting(Museum::getId)
-				.contains(museum.getId());
+		assertThat(postgresMuseumRepository.findMuseumById(museum.getId()))
+				.isEqualTo(persistedMuseum);
 	}
 
 	@Test
@@ -159,9 +159,9 @@ public class MuseumPostgresRepositoryTest {
 		Museum museum1 = postgresMuseumRepository.findMuseumById(MUSEUM_ID_1);
 		museum1.setOccupiedRooms(1);
 		entityManager.getTransaction().begin();
-		postgresMuseumRepository.updateMuseum(museum1);
+		Museum updatedMuseum = postgresMuseumRepository.updateMuseum(museum1);
 		entityManager.getTransaction().commit();
-		assertThat(postgresMuseumRepository.findMuseumById(museum1.getId()).getOccupiedRooms()).isEqualTo(1);
+		assertThat(postgresMuseumRepository.findMuseumById(museum1.getId())).isEqualTo(updatedMuseum);
 		assertThat(postgresMuseumRepository.findAllMuseums()).containsAll(persistedMuseums);
 
 	}

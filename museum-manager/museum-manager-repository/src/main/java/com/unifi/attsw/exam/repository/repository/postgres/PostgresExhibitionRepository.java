@@ -12,7 +12,7 @@ import com.unifi.attsw.exam.repository.repository.ExhibitionRepository;
 public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	private EntityManager entityManager;
-	
+
 	public PostgresExhibitionRepository(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
@@ -31,7 +31,7 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 		}
 
 	}
-	
+
 	@Override
 	public Exhibition findExhibitionByName(String exhibitionToFind) {
 		List<Exhibition> exhibitions = entityManager.createQuery("FROM Exhibition", Exhibition.class).getResultList();
@@ -51,8 +51,8 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	@Override
 	public Exhibition addNewExhibition(Exhibition newExhibition) {
-			entityManager.persist(newExhibition);
-			return newExhibition;
+		entityManager.persist(newExhibition);
+		return newExhibition;
 
 	}
 
@@ -64,7 +64,7 @@ public class PostgresExhibitionRepository implements ExhibitionRepository {
 
 	@Override
 	public void deleteExhibition(Exhibition deletedExhibition) {
-			entityManager.remove(deletedExhibition);
+		entityManager.remove(deletedExhibition);
 
 	}
 

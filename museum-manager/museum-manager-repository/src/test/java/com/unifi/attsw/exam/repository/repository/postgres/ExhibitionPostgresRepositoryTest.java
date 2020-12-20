@@ -140,13 +140,12 @@ public class ExhibitionPostgresRepositoryTest {
 		populateDatabase();
 		Exhibition exhibition = new Exhibition("test exhibition", UTILITY_CONST_NUM);
 		exhibition.setMuseumId(MUSEUM_ID_1);
-		
+
 		entityManager.getTransaction().begin();
-		postgresExhibitionRepository.addNewExhibition(exhibition);
+		Exhibition persistedExhibition = postgresExhibitionRepository.addNewExhibition(exhibition);
 		entityManager.getTransaction().commit();
 
-		assertThat(postgresExhibitionRepository.findAllExhibitions()).hasSize(3).extracting(Exhibition::getId)
-				.contains(exhibition.getId());
+		assertThat(postgresExhibitionRepository.findExhibitionById(exhibition.getId())).isEqualTo(persistedExhibition);
 	}
 
 	@Test
@@ -183,10 +182,12 @@ public class ExhibitionPostgresRepositoryTest {
 		populateDatabase();
 		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
 		exhibition1.setBookedSeats(UTILITY_CONST_NUM);
-		postgresExhibitionRepository.updateExhibition(exhibition1);
+		entityManager.getTransaction().begin();
+		Exhibition updatedExhibition = postgresExhibitionRepository.updateExhibition(exhibition1);
+		entityManager.getTransaction().commit();
 
-		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1).getBookedSeats())
-				.isEqualTo(UTILITY_CONST_NUM);
+		assertThat(postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).isEqualTo(updatedExhibition)
+		.hasFieldOrPropertyWithValue("bookedSeats", UTILITY_CONST_NUM);
 
 	}
 
@@ -201,11 +202,10 @@ public class ExhibitionPostgresRepositoryTest {
 		populateDatabase();
 		Exhibition exhibition1 = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_1);
 		Exhibition exhibition2 = postgresExhibitionRepository.findExhibitionById(EXHIBITION_ID_2);
-		
+
 		entityManager.getTransaction().begin();
 		postgresExhibitionRepository.deleteExhibition(exhibition1);
 		entityManager.getTransaction().commit();
-
 
 		assertThat(postgresExhibitionRepository.findAllExhibitions()).containsExactly(exhibition2);
 	}

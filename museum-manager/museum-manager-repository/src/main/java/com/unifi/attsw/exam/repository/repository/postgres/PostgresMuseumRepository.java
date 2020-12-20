@@ -42,18 +42,18 @@ public class PostgresMuseumRepository implements MuseumRepository {
 
 	@Override
 	public Museum addMuseum(Museum museum) {
-			entityManager.persist(museum);
+		entityManager.persist(museum);
 			return museum;
 	}
 
 	@Override
 	public Museum updateMuseum(Museum updatedMuseum) {
-			return entityManager.merge(updatedMuseum);
+		return entityManager.merge(updatedMuseum);
 	}
 
 	@Override
 	public void deleteMuseum(Museum museumToRemove) {
-			entityManager.remove(museumToRemove);
+		entityManager.remove(museumToRemove);
 	}
 
 }
