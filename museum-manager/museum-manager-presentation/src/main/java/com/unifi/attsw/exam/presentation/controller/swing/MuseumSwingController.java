@@ -94,7 +94,6 @@ public class MuseumSwingController implements MuseumController {
 
 	public void openExhibitionsDashboard() {
 		exhibitionView.setVisible(true);
-		getAllExhibitions();
 		museumView.setVisible(false);
 	}
 

@@ -203,8 +203,8 @@ public class MuseumSwingControllerTest {
 	public void testDeleteMuseum() {
 		Museum museum = new Museum(MUSEUM1_TEST, NUM_CONSTANT1);
 		museumSwingController.deleteMuseum(museum);
-
 		inOrder.verify(museumService).deleteMuseum(museum);
+		inOrder.verify(museumView).museumRemoved(museum);
 		verifyNoMoreInteractions(museumService);
 	}
 
@@ -235,6 +235,7 @@ public class MuseumSwingControllerTest {
 		museumSwingController.deleteExhibition(exhibition);
 
 		inOrder.verify(museumService).deleteExhibition(exhibition);
+		inOrder.verify(exhibitionView).exhibitionRemoved(exhibition);
 		verifyNoMoreInteractions(museumService);
 	}
 
