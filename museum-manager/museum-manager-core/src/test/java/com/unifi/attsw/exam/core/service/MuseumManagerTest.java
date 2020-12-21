@@ -16,6 +16,7 @@ import org.mockito.junit.VerificationCollector;
 import static org.mockito.Mockito.*;
 import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.ArgumentMatchers.any;
+import java.util.List;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
@@ -103,9 +104,11 @@ public class MuseumManagerTest {
 		Museum museum2 = createTestMuseum(MUSEUM2_TEST, NUM_CONSTANT1, MUSEUM_ID_2);
 		when(museumRepository.findAllMuseums()).thenReturn(asList(museum1, museum2));
 
-		museumManager.getAllMuseums();
-		verify(museumRepository).findAllMuseums();
+		List<Museum> mockedPersistedMuseumList = museumManager.getAllMuseums();
+		inOrder.verify(museumRepository).findAllMuseums();
 		verifyNoMoreInteractions(museumRepository);
+		
+		assertThat(mockedPersistedMuseumList).isNotNull();
 	}
 
 	@Test
@@ -122,9 +125,11 @@ public class MuseumManagerTest {
 		Exhibition exhibition2 = createExhibition(EXHIBITION2_TEST, NUM_CONSTANT1, EXHIBITION_ID_2);
 		when(exhibitionRepository.findAllExhibitions()).thenReturn(asList(exhibition1, exhibition2));
 
-		museumManager.getAllExhibitions();
+		List<Exhibition> mockedPersistedExhibitions = museumManager.getAllExhibitions();
 		inOrder.verify(exhibitionRepository).findAllExhibitions();
 		verifyNoMoreInteractions(exhibitionRepository);
+		
+		assertThat(mockedPersistedExhibitions).isNotNull();
 	}
 
 	@Test
@@ -152,9 +157,11 @@ public class MuseumManagerTest {
 	public void testGetMuseumByName() {
 		Museum museum = createTestMuseum(MUSEUM1_TEST, NUM_CONSTANT1, MUSEUM_ID_1);
 		when(museumRepository.findMuseumByName(MUSEUM1_TEST)).thenReturn(museum);
-		museumManager.getMuseumByName(MUSEUM1_TEST);
+		Museum mockedMuseum = museumManager.getMuseumByName(MUSEUM1_TEST);
 		inOrder.verify(museumRepository).findMuseumByName(MUSEUM1_TEST);
 		inOrder.verifyNoMoreInteractions();
+		
+		assertThat(mockedMuseum).isNotNull();
 	}
 
 	@Test
@@ -182,9 +189,11 @@ public class MuseumManagerTest {
 		when(exhibitionRepository.findExhibitionsByMuseumId(museum.getId()))
 				.thenReturn(asList(exhibition1, exhibition2));
 
-		museumManager.getAllMuseumExhibitions(museum);
+		List<Exhibition> mockedPersistedExhibitions = museumManager.getAllMuseumExhibitions(museum);
 		inOrder.verify(exhibitionRepository).findExhibitionsByMuseumId(museum.getId());
 		verifyNoMoreInteractions(exhibitionRepository);
+		
+		assertThat(mockedPersistedExhibitions).isNotNull();
 	}
 
 	@Test
@@ -282,9 +291,11 @@ public class MuseumManagerTest {
 	public void testGetExhibitionByName() {
 		Exhibition exhibition1 = createExhibition(EXHIBITION1_TEST, NUM_CONSTANT1, EXHIBITION_ID_1);
 		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(exhibition1);
-		museumManager.getExhibitionByName(EXHIBITION1_TEST);
+		Exhibition mockedExhibition = museumManager.getExhibitionByName(EXHIBITION1_TEST);
 		inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
 		inOrder.verifyNoMoreInteractions();
+		
+		assertThat(mockedExhibition).isNotNull();
 	}
 
 	@Test
@@ -347,11 +358,15 @@ public class MuseumManagerTest {
 	public void testDeleteExhibition() {
 		when(exhibitionRepository.findExhibitionByName(EXHIBITION1_TEST)).thenReturn(exhibition);
 		when(museumRepository.findMuseumById(exhibition.getMuseumId())).thenReturn(museum);
+		when(museum.getOccupiedRooms()).thenReturn(1);
 		museumManager.deleteExhibition(exhibition);
 
 		inOrder.verify(exhibitionRepository).findExhibitionByName(EXHIBITION1_TEST);
 		inOrder.verify(museumRepository).findMuseumById(exhibition.getMuseumId());
 		inOrder.verify(exhibitionRepository).deleteExhibition(exhibition);
+		inOrder.verify(museum).getOccupiedRooms();
+		inOrder.verify(museum).setOccupiedRooms(0);
+
 		verifyNoMoreInteractions(exhibitionRepository);
 	}
 
@@ -370,8 +385,11 @@ public class MuseumManagerTest {
 	@Test
 	public void testBookExhibitionWhenSeatsAreAvailable() {
 		when(exhibitionRepository.findExhibitionById(EXHIBITION_ID_1)).thenReturn(exhibition);
+		when(exhibition.getBookedSeats()).thenReturn(1);
 		museumManager.bookExhibitionSeat(exhibition);
-		inOrder.verify(exhibition).setBookedSeats(exhibition.getBookedSeats() + 1);
+		
+		inOrder.verify(exhibition).getBookedSeats();
+		inOrder.verify(exhibition).setBookedSeats(2);
 		inOrder.verify(exhibitionRepository).updateExhibition(exhibition);
 
 	}

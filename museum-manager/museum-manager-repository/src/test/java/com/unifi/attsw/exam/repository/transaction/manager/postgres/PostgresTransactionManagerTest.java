@@ -55,7 +55,7 @@ public class PostgresTransactionManagerTest {
 
 		transactionManager = new PostgresTransactionManager(entityManager);
 		postgresMuseumRepository = new PostgresMuseumRepository(transactionManager.getEntityManager());
-		postgresExhibitionRepository = new PostgresExhibitionRepository(entityManager);
+		postgresExhibitionRepository = new PostgresExhibitionRepository(transactionManager.getEntityManager());
 
 		entityManager.getTransaction().begin();
 		entityManager.createNativeQuery("TRUNCATE TABLE Museums CASCADE").executeUpdate();

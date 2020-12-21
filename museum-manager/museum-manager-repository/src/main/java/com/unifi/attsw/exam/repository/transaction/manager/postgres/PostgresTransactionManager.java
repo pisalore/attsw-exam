@@ -28,14 +28,14 @@ public class PostgresTransactionManager implements TransactionManager {
 
 	@Override
 	public <T> T doInTransaction(TransactionCode<T> query) throws RepositoryException {
-		startTransaction();
+		this.entityManager.getTransaction().begin();
 
 		try {
 			T response = query.apply(museumRepository, exhibitionRepository);
-			commit();
+			this.entityManager.getTransaction().commit();
 			return response;
 		} catch (Exception ex) {
-			rollback();
+			this.entityManager.getTransaction().rollback();
 			throw new RepositoryException(ERROR_MESSAGE, ex);
 		}
 	}
@@ -46,42 +46,29 @@ public class PostgresTransactionManager implements TransactionManager {
 
 	@Override
 	public <T> T doInTransactionMuseum(MuseumTransactionCode<T> query) throws RepositoryException {
-		startTransaction();
-
+		this.entityManager.getTransaction().begin();
 		try {
 			T response = query.apply(museumRepository);
-			commit();
+			this.entityManager.getTransaction().commit();
 			return response;
 		} catch (Exception ex) {
-			rollback();
+			this.entityManager.getTransaction().rollback();
 			throw new RepositoryException(ERROR_MESSAGE, ex);
 		}
 	}
 
 	@Override
 	public <T> T doInTransactionExhibition(ExhibitionTransactionCode<T> query) throws RepositoryException {
-		startTransaction();
+		this.entityManager.getTransaction().begin();
 
 		try {
 			T response = query.apply(exhibitionRepository);
-			commit();
+			this.entityManager.getTransaction().commit();
 			return response;
 		} catch (Exception ex) {
-			rollback();
+			this.entityManager.getTransaction().rollback();
 			throw new RepositoryException(ERROR_MESSAGE, ex);
 		}
-	}
-
-	public void startTransaction() {
-		this.entityManager.getTransaction().begin();
-	}
-
-	public void commit() {
-		this.entityManager.getTransaction().commit();
-	}
-
-	public void rollback() {
-		this.entityManager.getTransaction().rollback();
 	}
 
 }

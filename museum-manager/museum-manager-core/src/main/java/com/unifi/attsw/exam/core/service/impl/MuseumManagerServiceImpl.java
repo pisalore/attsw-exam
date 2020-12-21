@@ -162,9 +162,13 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 				throw new UnsupportedOperationException(
 						"Impossible to book a seat for " + exhibition.getName() + ": all seats are booked");
 			}
-			exhibition.setBookedSeats(exhibition.getBookedSeats() + 1);
-			transactionManager.doInTransactionExhibition(
-					exhibitionRepository -> exhibitionRepository.updateExhibition(exhibition));
+
+			transactionManager.doInTransactionExhibition(exhibitionRepository -> {
+				int bookedSeats = exhibition.getBookedSeats();
+				exhibition.setBookedSeats(bookedSeats + 1);
+				exhibitionRepository.updateExhibition(exhibition);
+				return null;
+			});
 
 		} catch (UnsupportedOperationException | RepositoryException ex) {
 			throw new MuseumManagerServiceException("Impossible to book a seat.", ex);

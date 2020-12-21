@@ -65,6 +65,7 @@
 							<mutator>DEFAULTS</mutator>
 						</mutators>
 						<mutationThreshold>70</mutationThreshold>
+						<timeoutConstant>15000</timeoutConstant>
 					</configuration>
 					<executions>
 						<execution>

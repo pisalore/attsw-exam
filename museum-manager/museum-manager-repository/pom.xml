@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>museum-manager-repository</artifactId>
-	
+
 	<properties>
 		<sonar.coverage.exclusions>
 			**/model/*.*,
@@ -38,6 +38,7 @@
 							<param>com.unifi.attsw.exam.repository.repository.postgres.*</param>
 							<param>com.unifi.attsw.exam.repository.transaction.manager.postgres.*</param>
 						</targetClasses>
+						<avoidCallsTo>javax.persistence.EntityManager</avoidCallsTo>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -50,7 +51,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-hikaricp</artifactId>
