@@ -27,6 +27,11 @@ import java.util.List;
 
 import javax.swing.ListSelectionModel;
 
+/**
+ * 
+ * Swing implementation for {@link MuseumView}.
+ *
+ */
 public class MuseumSwingView extends JFrame implements MuseumView {
 
 	private transient MuseumSwingController museumSwingController;
@@ -46,7 +51,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	private JButton btnExhibitionsDashboard;
 
 	/**
-	 * Create the frame.
+	 * Creates the frame.
 	 */
 	public MuseumSwingView() {
 		setTitle("Museum Dashboard");
@@ -81,7 +86,6 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		txtMuseum.setColumns(10);
 
 		btnFindAll = new JButton("Find all");
-		btnFindAll.addActionListener(e -> museumSwingController.getAllMuseums());
 		GridBagConstraints gbcBtnFindAll = new GridBagConstraints();
 		gbcBtnFindAll.insets = new Insets(0, 0, 5, 0);
 		gbcBtnFindAll.gridx = 3;
@@ -108,8 +112,6 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 		btnAdd = new JButton("Add");
 		btnAdd.setEnabled(false);
-		btnAdd.addActionListener(e -> museumSwingController
-				.saveMuseum(new Museum(txtMuseum.getText(), Integer.parseInt(txtRooms.getText()))));
 
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
@@ -153,12 +155,8 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 		scrollPane.setViewportView(museumList);
 
-		museumList.addListSelectionListener(e -> btnDeleteSelected.setEnabled(museumList.getSelectedIndex() != -1));
-
 		btnDeleteSelected = new JButton("Delete Selected");
 		btnDeleteSelected.setEnabled(false);
-
-		btnDeleteSelected.addActionListener(e -> museumSwingController.deleteMuseum(museumList.getSelectedValue()));
 
 		GridBagConstraints gbcBtnDeleteSelected = new GridBagConstraints();
 		gbcBtnDeleteSelected.gridwidth = 2;
@@ -179,11 +177,19 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		contentPane.add(errorMessageLabel, gbcErrorMessageLabel);
 
 		btnExhibitionsDashboard = new JButton("Exhibitions Dashboard");
-		btnExhibitionsDashboard.addActionListener(e -> museumSwingController.openExhibitionsDashboard());
 		GridBagConstraints gbcBtnExhibitionsDashboard = new GridBagConstraints();
 		gbcBtnExhibitionsDashboard.gridx = 3;
 		gbcBtnExhibitionsDashboard.gridy = 7;
 		contentPane.add(btnExhibitionsDashboard, gbcBtnExhibitionsDashboard);
+
+		// Actions
+		btnExhibitionsDashboard.addActionListener(e -> museumSwingController.openExhibitionsDashboard());
+		btnDeleteSelected.addActionListener(e -> museumSwingController.deleteMuseum(museumList.getSelectedValue()));
+		museumList.addListSelectionListener(e -> btnDeleteSelected.setEnabled(museumList.getSelectedIndex() != -1));
+		btnAdd.addActionListener(e -> museumSwingController
+				.saveMuseum(new Museum(txtMuseum.getText(), Integer.parseInt(txtRooms.getText()))));
+		btnFindAll.addActionListener(e -> museumSwingController.getAllMuseums());
+
 	}
 
 	@Override
@@ -212,15 +218,31 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 	}
 
+	/**
+	 * Get the List model for all Museums.
+	 * 
+	 * @return The List Model View for all Museums.
+	 */
 	public DefaultListModel<Museum> getMuseumListModel() {
 		return museumListModel;
 	}
 
+	/**
+	 * Display a formatted re-cap for the selected Exhibition.
+	 * 
+	 * @param museum The Museum for which display formatted info.
+	 * @return The formatted String with Museum info.
+	 */
 	private String getDisplayString(Museum museum) {
 		return museum.getName() + " - Total Rooms: " + museum.getTotalRooms() + " - Occupied Rooms: "
 				+ museum.getOccupiedRooms();
 	}
 
+	/**
+	 * Set the Swing controller for this Museum View.
+	 * 
+	 * @param museumSwingController
+	 */
 	public void setMuseumController(MuseumSwingController museumSwingController) {
 		this.museumSwingController = museumSwingController;
 	}

@@ -9,10 +9,25 @@ import com.unifi.attsw.exam.repository.model.Exhibition;
 import com.unifi.attsw.exam.repository.model.Museum;
 import com.unifi.attsw.exam.repository.repository.exception.RepositoryException;
 
+/**
+ * 
+ * Swing implementation for {@link MuseumController}.
+ *
+ */
 public class MuseumSwingController implements MuseumController {
-
+	/**
+	 * The {@link MuseumManagerService} .
+	 */
 	private MuseumManagerService museumService;
+
+	/**
+	 * The {@link MuseumSwingView} for this controller.
+	 */
 	private MuseumSwingView museumView;
+
+	/**
+	 * The {@link ExhibitionSwingView} for this controller.
+	 */
 	private ExhibitionSwingView exhibitionView;
 
 	public MuseumSwingController(MuseumManagerService museumService, MuseumSwingView museumView,

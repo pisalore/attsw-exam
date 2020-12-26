@@ -27,13 +27,15 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
+/**
+ * 
+ * Swing implementation for {@link ExhibitionView}.
+ *
+ */
 public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
 	private transient MuseumSwingController museumSwingController;
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField exhibitionTextField;
@@ -56,9 +58,10 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	private DefaultListModel<Exhibition> museumsExhibitionListModel;
 	private JLabel lblError;
 	private JButton btnMuseumsDashboard;
+	private JLabel lblExhibition;
 
 	/**
-	 * Create the frame.
+	 * Creates the frame.
 	 */
 	public ExhibitionSwingView() {
 		setTitle("Exhibitions Dashboard");
@@ -74,7 +77,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		gblContentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
 		contentPane.setLayout(gblContentPane);
 
-		JLabel lblExhibition = new JLabel("Exhibition");
+		lblExhibition = new JLabel("Exhibition");
 		GridBagConstraints gbcLblExhibition = new GridBagConstraints();
 		gbcLblExhibition.anchor = GridBagConstraints.WEST;
 		gbcLblExhibition.insets = new Insets(0, 0, 5, 5);
@@ -302,7 +305,6 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		/*
 		 * Actions
 		 */
-
 		listAllExh.addListSelectionListener(e -> btnDelete.setEnabled(listAllExh.getSelectedIndex() != -1));
 		listAllExh.addListSelectionListener(e -> btnBook.setEnabled(listAllExh.getSelectedIndex() != -1));
 		btnAddExhibition.addActionListener(e -> museumSwingController.saveExhibition(museumNameTextField.getText(),
@@ -311,23 +313,6 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		btnFind.addActionListener(e -> museumSwingController.getAllMuseumExhibitions(findMuseumTextField.getText()));
 		btnDelete.addActionListener(e -> museumSwingController.deleteExhibition(listAllExh.getSelectedValue()));
 		btnMuseumsDashboard.addActionListener(e -> museumSwingController.openMuseumDashboard());
-	}
-
-	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {
-		return allExhibitionsListModel;
-	}
-
-	public DefaultListModel<Exhibition> getMuseumsExhibitionListModel() {
-		return museumsExhibitionListModel;
-	}
-
-	public void setMuseumController(MuseumSwingController museumSwingController) {
-		this.museumSwingController = museumSwingController;
-	}
-
-	private String getDisplayString(Exhibition exhibition) {
-		return exhibition.getName() + " - Total Seats: " + exhibition.getTotalSeats() + " - Booked Seats: "
-				+ exhibition.getBookedSeats();
 	}
 
 	@Override
@@ -370,6 +355,44 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		museumsExhibitionListModel.clear();
 		museumSwingController.getAllExhibitions();
 		lblError.setText(" ");
+	}
+
+	/**
+	 * Get the List model for all Exhibitions.
+	 * 
+	 * @return The List Model View for all Exhibitions.
+	 */
+	public DefaultListModel<Exhibition> getAllExhibitionsListModel() {
+		return allExhibitionsListModel;
+	}
+
+	/**
+	 * Get the List model for all the Exhibitions of a selected Museum.
+	 * 
+	 * @return The List model view for all Exhibitions of a selected Museum.
+	 */
+	public DefaultListModel<Exhibition> getMuseumsExhibitionListModel() {
+		return museumsExhibitionListModel;
+	}
+
+	/**
+	 * Set the Swing controller for this Exhibition View.
+	 * 
+	 * @param museumSwingController
+	 */
+	public void setMuseumController(MuseumSwingController museumSwingController) {
+		this.museumSwingController = museumSwingController;
+	}
+
+	/**
+	 * Display a formatted re-cap for the selected Exhibition.
+	 * 
+	 * @param exhibition The Exhibition for which display formatted info.
+	 * @return The formatted String with Exhibition info.
+	 */
+	private String getDisplayString(Exhibition exhibition) {
+		return exhibition.getName() + " - Total Seats: " + exhibition.getTotalSeats() + " - Booked Seats: "
+				+ exhibition.getBookedSeats();
 	}
 
 }
