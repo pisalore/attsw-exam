@@ -13,6 +13,7 @@ import com.unifi.attsw.exam.repository.transaction.manager.code.TransactionCode;
  */
 public interface TransactionManager {
 	/**
+	 * Transaction Manager method for handling Museum and Exhibition operations
 	 * 
 	 * @param code The Database statement to execute interacting with both Museum
 	 *             and Exhibition entities
@@ -23,6 +24,7 @@ public interface TransactionManager {
 	<T> T doInTransaction(TransactionCode<T> code) throws RepositoryException;
 
 	/**
+	 * Transaction Manager method for handling Museum operations
 	 * 
 	 * @param code The Database statement to execute interacting with Museum entity
 	 * @return The query result
@@ -32,6 +34,7 @@ public interface TransactionManager {
 	<T> T doInTransactionMuseum(MuseumTransactionCode<T> code) throws RepositoryException;
 
 	/**
+	 * Transaction Manager method for handling Exhibition operations
 	 * 
 	 * @param code The Database statement to execute interacting with Exhibition
 	 *             entity

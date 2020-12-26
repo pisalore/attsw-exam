@@ -7,7 +7,7 @@ import com.unifi.attsw.exam.repository.model.Museum;
 
 /**
  * 
- * Repository layer interface for Museum entity
+ * Repository layer interface for Museum entity.
  * 
  */
 public interface MuseumRepository {

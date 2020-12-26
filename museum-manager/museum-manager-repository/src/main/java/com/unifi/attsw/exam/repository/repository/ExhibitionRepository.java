@@ -7,7 +7,7 @@ import com.unifi.attsw.exam.repository.model.Exhibition;
 
 /**
  * 
- * Repository layer interface for Exhibition entity
+ * Repository layer interface for Exhibition entity.
  * 
  */
 public interface ExhibitionRepository {

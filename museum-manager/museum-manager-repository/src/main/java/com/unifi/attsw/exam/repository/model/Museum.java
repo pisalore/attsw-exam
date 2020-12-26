@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 /**
  * 
- * Model for Museum entity
+ * Model for Museum entity.
  * 
  *
  */

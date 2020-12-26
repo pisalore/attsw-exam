@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 /**
  * 
- * Model for Exhibition entity
+ * Model for Exhibition entity.
  * 
  */
 @Entity(name = "Exhibition")
