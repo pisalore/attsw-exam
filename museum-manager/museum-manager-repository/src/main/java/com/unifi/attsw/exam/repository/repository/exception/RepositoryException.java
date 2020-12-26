@@ -1,7 +1,13 @@
 package com.unifi.attsw.exam.repository.repository.exception;
 
-@SuppressWarnings("serial")
+/**
+ * 
+ * Exception to be thrown when an error occurs during database's operations
+ *
+ */
 public class RepositoryException extends Exception {
+
+	private static final long serialVersionUID = 1L;
 
 	public RepositoryException(String message, Throwable ex) {
 		super(message);
