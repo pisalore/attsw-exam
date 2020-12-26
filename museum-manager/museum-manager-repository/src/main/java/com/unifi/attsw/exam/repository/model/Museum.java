@@ -11,8 +11,8 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author lorenzo
  * Model for Museum entity
+ * 
  *
  */
 @Entity(name = "Museum")
