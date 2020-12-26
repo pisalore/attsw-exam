@@ -5,11 +5,40 @@ import com.unifi.attsw.exam.repository.transaction.manager.code.ExhibitionTransa
 import com.unifi.attsw.exam.repository.transaction.manager.code.MuseumTransactionCode;
 import com.unifi.attsw.exam.repository.transaction.manager.code.TransactionCode;
 
+/**
+ * 
+ * The mid-level layer interface between Repository and Service which manages
+ * Database operations.
+ *
+ */
 public interface TransactionManager {
+	/**
+	 * 
+	 * @param code The Database statement to execute interacting with both Museum
+	 *             and Exhibition entities
+	 * @return The query result
+	 * @throws RepositoryException if an error occurs while operating with database
+	 * 
+	 */
 	<T> T doInTransaction(TransactionCode<T> code) throws RepositoryException;
 
+	/**
+	 * 
+	 * @param code The Database statement to execute interacting with Museum entity
+	 * @return The query result
+	 * @throws RepositoryException if an error occurs while operating with database
+	 * 
+	 */
 	<T> T doInTransactionMuseum(MuseumTransactionCode<T> code) throws RepositoryException;
-	
+
+	/**
+	 * 
+	 * @param code The Database statement to execute interacting with Exhibition
+	 *             entity
+	 * @return The query result
+	 * @throws RepositoryException if an error occurs while operating with database
+	 * 
+	 */
 	<T> T doInTransactionExhibition(ExhibitionTransactionCode<T> code) throws RepositoryException;
 
 }

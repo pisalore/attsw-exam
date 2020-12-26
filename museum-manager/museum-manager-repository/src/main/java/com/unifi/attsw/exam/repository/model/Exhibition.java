@@ -23,27 +23,28 @@ public class Exhibition {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
-	
+
 	/**
 	 * Exhibition name
 	 */
 	@Column(name = "Exhibition_Name", unique = true)
 	private String name;
-	
+
 	/**
 	 * Exhibition total number of seats (available or not)
 	 */
 	@Column(name = "Total_seats")
 	private int totalSeats;
-	
+
 	/**
 	 * Exhibition number of booked seats
 	 */
 	@Column(name = "Booked_seats")
 	private int bookedSeats;
-	
+
 	/**
-	 * Museum ID to which the exhibition belongs (this implements a many to one relation)
+	 * Museum ID to which the exhibition belongs (this implements a many to one
+	 * relation)
 	 */
 	@Column(name = "Museum_id", nullable = false)
 	UUID museumId;
