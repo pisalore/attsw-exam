@@ -9,20 +9,38 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author lorenzo
+ * Model for Museum entity
+ *
+ */
 @Entity(name = "Museum")
 @Table(name = "museums")
 public class Museum {
-
+	
+	/**
+	 * Museum ID, generated automatically by Hibernate
+	 */
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
-
+	
+	/*
+	 * Museum name
+	 */
 	@Column(name = "Museum_Name", unique = true)
 	private String name;
-
+	
+	/*
+	 * Museum total number of rooms (available or not)
+	 */
 	@Column(name = "Number_Of_Rooms")
 	private int totalRooms;
-
+	
+	/**
+	 * Museum number of occupied rooms (where there is an ongoing Exhibition)
+	 */
 	@Column(name = "Number_Of_Occupied_Rooms")
 	private int occupiedRooms;
 
