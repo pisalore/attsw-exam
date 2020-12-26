@@ -30,7 +30,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public List<Exhibition> getAllMuseumExhibitions(Museum museum) {
+	public List<Exhibition> getAllMuseumExhibitions(Museum museum) throws MuseumManagerServiceException {
 		try {
 			return transactionManager.doInTransaction((museumRepository, exhibitionRepository) -> exhibitionRepository
 					.findExhibitionsByMuseumId(museum.getId()));
@@ -42,7 +42,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public Museum getMuseumByName(String museumName) {
+	public Museum getMuseumByName(String museumName) throws MuseumManagerServiceException {
 		try {
 			Museum museum = transactionManager
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
@@ -56,7 +56,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public Museum saveMuseum(Museum museum) {
+	public Museum saveMuseum(Museum museum) throws MuseumManagerServiceException {
 		try {
 			return transactionManager.doInTransactionMuseum(museumRepository -> {
 				Museum existingMuseum = museumRepository.findMuseumByName(museum.getName());
@@ -73,7 +73,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public void deleteMuseum(Museum museum) {
+	public void deleteMuseum(Museum museum) throws MuseumManagerServiceException{
 		try {
 			Museum museumToRemove = transactionManager
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museum.getName()));
@@ -96,7 +96,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public Exhibition getExhibitionByName(String exhibitionName) {
+	public Exhibition getExhibitionByName(String exhibitionName) throws MuseumManagerServiceException{
 		try {
 			Exhibition exhibition = transactionManager.doInTransactionExhibition(
 					exhibitionRepository -> exhibitionRepository.findExhibitionByName(exhibitionName));
@@ -110,7 +110,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public Exhibition addNewExhibition(String museumName, Exhibition exhibition) {
+	public Exhibition addNewExhibition(String museumName, Exhibition exhibition) throws MuseumManagerServiceException{
 		try {
 			Museum museum = transactionManager
 					.doInTransactionMuseum(museumRepository -> museumRepository.findMuseumByName(museumName));
@@ -133,7 +133,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public void deleteExhibition(Exhibition exhibition) {
+	public void deleteExhibition(Exhibition exhibition) throws MuseumManagerServiceException{
 		try {
 
 			Exhibition exhibitionToRemove = transactionManager.doInTransactionExhibition(
@@ -153,7 +153,7 @@ public class MuseumManagerServiceImpl implements MuseumManagerService {
 	}
 
 	@Override
-	public void bookExhibitionSeat(Exhibition exhibition) {
+	public void bookExhibitionSeat(Exhibition exhibition) throws MuseumManagerServiceException{
 		try {
 			Exhibition existingExhibition = transactionManager.doInTransactionExhibition(
 					exhibitionRepository -> exhibitionRepository.findExhibitionById(exhibition.getId()));
