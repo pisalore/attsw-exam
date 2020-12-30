@@ -48,7 +48,6 @@
 			<modules>
 				<module>../museum-manager-report</module>
 			</modules>
-
 		</profile>
 	</profiles>
 </project>

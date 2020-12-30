@@ -12,7 +12,7 @@
 	<artifactId>museum-manager-parent</artifactId>
 	<packaging>pom</packaging>
 
-	<name>attsw-exam</name>
+	<name>attsw-exam-parent</name>
 	<description>Advanced Tool and Techniques for Software Development exam project at UNIFI </description>
 
 	<properties>
