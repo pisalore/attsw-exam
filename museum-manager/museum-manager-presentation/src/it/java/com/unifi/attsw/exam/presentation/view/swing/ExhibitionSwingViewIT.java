@@ -43,7 +43,7 @@ public class ExhibitionSwingViewIT extends AssertJSwingJUnitTestCase {
 	private static MuseumManagerService museumManager;
 	private static ExhibitionSwingView exhibitionSwingView;
 
-	// I want to test only the integration of controller and Museum swing view
+	// I want to test only the integration of controller and Exhibition swing view
 	@Mock
 	private static MuseumSwingView museumView;
 

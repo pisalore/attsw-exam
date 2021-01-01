@@ -356,6 +356,13 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		museumSwingController.getAllExhibitions();
 		lblError.setText(" ");
 	}
+	
+	@Override
+	public void resetView() {
+		museumsExhibitionListModel.clear();
+		allExhibitionsListModel.clear();
+		
+	}
 
 	/**
 	 * Get the List model for all Exhibitions.

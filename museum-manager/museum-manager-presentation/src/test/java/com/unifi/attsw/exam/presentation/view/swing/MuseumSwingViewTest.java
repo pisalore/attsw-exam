@@ -36,6 +36,9 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 
 	@Mock
 	private MuseumSwingController museumSwingController;
+	
+	@Mock
+	private ExhibitionSwingView exhibitionSwingView;
 
 	@Override
 	protected void onSetUp() {
@@ -114,7 +117,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("errorMessageLabel").requireText("error message: " + museum1.getName());
 
 	}
-	
+
 	@Test
 	public void testShowGeneralErrorShouldShowTheMessageInLabel() {
 		GuiActionRunner.execute(() -> museumSwingView.showError("error message: ", null));
