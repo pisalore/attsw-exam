@@ -46,11 +46,6 @@ public interface ExhibitionView {
 	 * @param exhibition The involved Exhibition.
 	 */
 	public void showError(String message, Exhibition exhibition);
-	
-	/**
-	 * Clear all exhibitions and museum exhibitions models
-	 */
-	public void resetView();
 
 	/**
 	 * Clear the view when an Exhibition is correctly booked.

@@ -84,7 +84,6 @@ public class MuseumSwingController implements MuseumController {
 		try {
 			museumService.deleteMuseum(museum);
 			museumView.museumRemoved(museum);
-			exhibitionView.resetView();
 			
 		} catch (MuseumManagerServiceException ex) {
 			museumView.showError("Impossible to delete Museum: ", museum);

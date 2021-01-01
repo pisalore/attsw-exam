@@ -183,7 +183,10 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		contentPane.add(btnExhibitionsDashboard, gbcBtnExhibitionsDashboard);
 
 		// Actions
-		btnExhibitionsDashboard.addActionListener(e -> museumSwingController.openExhibitionsDashboard());
+		btnExhibitionsDashboard.addActionListener(e -> {
+			museumSwingController.getAllExhibitions();
+			museumSwingController.openExhibitionsDashboard();
+		});
 		btnDeleteSelected.addActionListener(e -> museumSwingController.deleteMuseum(museumList.getSelectedValue()));
 		museumList.addListSelectionListener(e -> btnDeleteSelected.setEnabled(museumList.getSelectedIndex() != -1));
 		btnAdd.addActionListener(e -> museumSwingController

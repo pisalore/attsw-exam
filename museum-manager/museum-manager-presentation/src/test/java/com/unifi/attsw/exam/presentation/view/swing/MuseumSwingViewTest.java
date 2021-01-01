@@ -36,9 +36,6 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 
 	@Mock
 	private MuseumSwingController museumSwingController;
-	
-	@Mock
-	private ExhibitionSwingView exhibitionSwingView;
 
 	@Override
 	protected void onSetUp() {
@@ -183,6 +180,7 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testChangeViewToExhibitionsDashboard() {
 		window.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
+		verify(museumSwingController).getAllExhibitions();
 		verify(museumSwingController).openExhibitionsDashboard();
 	}
 

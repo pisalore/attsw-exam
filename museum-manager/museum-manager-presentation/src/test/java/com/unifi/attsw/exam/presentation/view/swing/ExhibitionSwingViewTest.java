@@ -279,6 +279,8 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testChangeViewToMuseumsDashboard() {
 		window.button(JButtonMatcher.withText("Museums Dashboard")).click();
+		window.label("errorLabel").requireText(" ");
+		assertThat(window.list("listAllExh").contents()).isEmpty();
 		verify(museumSwingController).openMuseumDashboard();
 	}
 

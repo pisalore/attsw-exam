@@ -205,7 +205,6 @@ public class MuseumSwingControllerTest {
 		museumSwingController.deleteMuseum(museum);
 		inOrder.verify(museumService).deleteMuseum(museum);
 		inOrder.verify(museumView).museumRemoved(museum);
-		inOrder.verify(exhibitionView).resetView();
 		verifyNoMoreInteractions(museumService, museumView, exhibitionView);
 	}
 

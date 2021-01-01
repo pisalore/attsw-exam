@@ -312,7 +312,10 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
 		btnFind.addActionListener(e -> museumSwingController.getAllMuseumExhibitions(findMuseumTextField.getText()));
 		btnDelete.addActionListener(e -> museumSwingController.deleteExhibition(listAllExh.getSelectedValue()));
-		btnMuseumsDashboard.addActionListener(e -> museumSwingController.openMuseumDashboard());
+		btnMuseumsDashboard.addActionListener(e -> {
+			lblError.setText(" ");
+			museumsExhibitionListModel.clear();
+			museumSwingController.openMuseumDashboard();});
 	}
 
 	@Override
@@ -357,13 +360,6 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		lblError.setText(" ");
 	}
 	
-	@Override
-	public void resetView() {
-		museumsExhibitionListModel.clear();
-		allExhibitionsListModel.clear();
-		
-	}
-
 	/**
 	 * Get the List model for all Exhibitions.
 	 * 
