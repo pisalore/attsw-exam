@@ -15,6 +15,7 @@ public interface TransactionManager {
 	/**
 	 * Transaction Manager method for handling Museum and Exhibition operations
 	 * 
+	 * @param <T> The generic type argument
 	 * @param code The Database statement to execute interacting with both Museum
 	 *             and Exhibition entities
 	 * @return The query result
@@ -26,6 +27,7 @@ public interface TransactionManager {
 	/**
 	 * Transaction Manager method for handling Museum operations
 	 * 
+	 * @param <T> The generic type argument
 	 * @param code The Database statement to execute interacting with Museum entity
 	 * @return The query result
 	 * @throws RepositoryException if an error occurs while operating with database
@@ -36,6 +38,7 @@ public interface TransactionManager {
 	/**
 	 * Transaction Manager method for handling Exhibition operations
 	 * 
+	 * @param <T> The generic type argument
 	 * @param code The Database statement to execute interacting with Exhibition
 	 *             entity
 	 * @return The query result
