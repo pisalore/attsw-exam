@@ -66,138 +66,143 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 
 	}
 
+//	@Test
+//	@GUITest
+//	public void testAddMuseumSuccess() {
+//		museumWindow.textBox("museum").enterText(MUSEUM3_TEST);
+//		museumWindow.textBox("rooms").enterText(NUM_CONST);
+//		museumWindow.button(JButtonMatcher.withText("Add")).click();
+//
+//		assertThat(museumWindow.list().contents()).contains("museum3_test - Total Rooms: 10 - Occupied Rooms: 0");
+//	}
+//
+//	@Test
+//	@GUITest
+//	public void testAddMuseumError() {
+//		museumWindow.textBox("museum").enterText(MUSEUM1_TEST);
+//		museumWindow.textBox("rooms").enterText(NUM_CONST);
+//		museumWindow.button(JButtonMatcher.withText("Add")).click();
+//
+//		museumWindow.label("errorMessageLabel").requireText("Impossibile to add Museum: " + MUSEUM1_TEST);
+//
+//	}
+//
+//	@Test
+//	@GUITest
+//	public void testDeleteMuseum() {
+//		museumWindow.list().selectItem(0);
+//		museumWindow.button(JButtonMatcher.withText("Delete Selected")).click();
+//
+//		assertThat(museumWindow.list().contents())
+//				.containsExactly("museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
+//
+//	}
+//
+//	@Test
+//	@GUITest
+//	public void testAddExhibition() {
+//		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
+//
+//		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
+//			protected boolean isMatching(JFrame frame) {
+//				return "Exhibitions Dashboard".equals(frame.getTitle());
+//			}
+//		}).using(robot());
+//
+//		JListFixture listAllExhibitions = exhibitionWindow.list("listAllExh");
+//
+//		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION3_TEST);
+//		exhibitionWindow.textBox("totalSeatsTextField").enterText(NUM_CONST);
+//		exhibitionWindow.textBox("museumNameTextField").enterText(MUSEUM1_TEST);
+//
+//		exhibitionWindow.button(JButtonMatcher.withText("Add Exhibition")).click();
+//		assertThat(listAllExhibitions.contents()).contains("exhibition3_test - Total Seats: 10 - Booked Seats: 0");
+//	}
+//
+//	@Test
+//	@GUITest
+//	public void testAddExhibitionError() {
+//		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
+//
+//		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
+//			protected boolean isMatching(JFrame frame) {
+//				return "Exhibitions Dashboard".equals(frame.getTitle());
+//			}
+//		}).using(robot());
+//
+//		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION1_TEST);
+//		exhibitionWindow.textBox("totalSeatsTextField").enterText(NUM_CONST);
+//		exhibitionWindow.textBox("museumNameTextField").enterText(MUSEUM1_TEST);
+//
+//		exhibitionWindow.button(JButtonMatcher.withText("Add Exhibition")).click();
+//		exhibitionWindow.label("errorLabel").requireText("Impossible to add Exhibition: " + EXHIBITION1_TEST);
+//
+//	}
+//
+//	@Test
+//	@GUITest
+//	public void testDeleteExhibition() {
+//		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
+//
+//		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
+//			protected boolean isMatching(JFrame frame) {
+//				return "Exhibitions Dashboard".equals(frame.getTitle());
+//			}
+//		}).using(robot());
+//
+//		exhibitionWindow.list("listAllExh").selectItem(0);
+//		exhibitionWindow.button(JButtonMatcher.withText("Delete")).click();
+//
+//		assertThat(exhibitionWindow.list("listAllExh").contents())
+//				.containsExactly("exhibition2_test - Total Seats: 100 - Booked Seats: 0");
+//	}
+//
+//	@Test
+//	@GUITest
+//	public void testBookExhibition() {
+//		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
+//
+//		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
+//			protected boolean isMatching(JFrame frame) {
+//				return "Exhibitions Dashboard".equals(frame.getTitle());
+//			}
+//		}).using(robot());
+//
+//		exhibitionWindow.list("listAllExh").selectItem(0);
+//		exhibitionWindow.button(JButtonMatcher.withText("Book")).click();
+//
+//		assertThat(exhibitionWindow.list("listAllExh").contents())
+//				.contains("exhibition1_test - Total Seats: 100 - Booked Seats: 1");
+//	}
+//
+//	@Test
+//	@GUITest
+//	public void testFindMuseumExhibitions() {
+//		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
+//
+//		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
+//			protected boolean isMatching(JFrame frame) {
+//				return "Exhibitions Dashboard".equals(frame.getTitle());
+//			}
+//		}).using(robot());
+//
+//		JListFixture listMuseumExhibitions = exhibitionWindow.list("listMuseumExh");
+//
+//		exhibitionWindow.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
+//		exhibitionWindow.button(JButtonMatcher.withText("Find Museum Exh.")).click();
+//		assertThat(listMuseumExhibitions.contents()).hasSize(2);
+//	}
+//
+//	@AfterClass
+//	public static void afterClass() {
+//		entityManager.clear();
+//		entityManager.close();
+//		sessionFactory.close();
+//	}
+	
 	@Test
-	@GUITest
-	public void testAddMuseumSuccess() {
-		museumWindow.textBox("museum").enterText(MUSEUM3_TEST);
-		museumWindow.textBox("rooms").enterText(NUM_CONST);
-		museumWindow.button(JButtonMatcher.withText("Add")).click();
-
-		assertThat(museumWindow.list().contents()).contains("museum3_test - Total Rooms: 10 - Occupied Rooms: 0");
-	}
-
-	@Test
-	@GUITest
-	public void testAddMuseumError() {
-		museumWindow.textBox("museum").enterText(MUSEUM1_TEST);
-		museumWindow.textBox("rooms").enterText(NUM_CONST);
-		museumWindow.button(JButtonMatcher.withText("Add")).click();
-
-		museumWindow.label("errorMessageLabel").requireText("Impossibile to add Museum: " + MUSEUM1_TEST);
-
-	}
-
-	@Test
-	@GUITest
-	public void testDeleteMuseum() {
-		museumWindow.list().selectItem(0);
-		museumWindow.button(JButtonMatcher.withText("Delete Selected")).click();
-
-		assertThat(museumWindow.list().contents())
-				.containsExactly("museum2_test - Total Rooms: 10 - Occupied Rooms: 0");
-
-	}
-
-	@Test
-	@GUITest
-	public void testAddExhibition() {
-		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
-
-		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
-			protected boolean isMatching(JFrame frame) {
-				return "Exhibitions Dashboard".equals(frame.getTitle());
-			}
-		}).using(robot());
-
-		JListFixture listAllExhibitions = exhibitionWindow.list("listAllExh");
-
-		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION3_TEST);
-		exhibitionWindow.textBox("totalSeatsTextField").enterText(NUM_CONST);
-		exhibitionWindow.textBox("museumNameTextField").enterText(MUSEUM1_TEST);
-
-		exhibitionWindow.button(JButtonMatcher.withText("Add Exhibition")).click();
-		assertThat(listAllExhibitions.contents()).contains("exhibition3_test - Total Seats: 10 - Booked Seats: 0");
-	}
-
-	@Test
-	@GUITest
-	public void testAddExhibitionError() {
-		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
-
-		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
-			protected boolean isMatching(JFrame frame) {
-				return "Exhibitions Dashboard".equals(frame.getTitle());
-			}
-		}).using(robot());
-
-		exhibitionWindow.textBox("exhibitionTextField").enterText(EXHIBITION1_TEST);
-		exhibitionWindow.textBox("totalSeatsTextField").enterText(NUM_CONST);
-		exhibitionWindow.textBox("museumNameTextField").enterText(MUSEUM1_TEST);
-
-		exhibitionWindow.button(JButtonMatcher.withText("Add Exhibition")).click();
-		exhibitionWindow.label("errorLabel").requireText("Impossible to add Exhibition: " + EXHIBITION1_TEST);
-
-	}
-
-	@Test
-	@GUITest
-	public void testDeleteExhibition() {
-		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
-
-		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
-			protected boolean isMatching(JFrame frame) {
-				return "Exhibitions Dashboard".equals(frame.getTitle());
-			}
-		}).using(robot());
-
-		exhibitionWindow.list("listAllExh").selectItem(0);
-		exhibitionWindow.button(JButtonMatcher.withText("Delete")).click();
-
-		assertThat(exhibitionWindow.list("listAllExh").contents())
-				.containsExactly("exhibition2_test - Total Seats: 100 - Booked Seats: 0");
-	}
-
-	@Test
-	@GUITest
-	public void testBookExhibition() {
-		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
-
-		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
-			protected boolean isMatching(JFrame frame) {
-				return "Exhibitions Dashboard".equals(frame.getTitle());
-			}
-		}).using(robot());
-
-		exhibitionWindow.list("listAllExh").selectItem(0);
-		exhibitionWindow.button(JButtonMatcher.withText("Book")).click();
-
-		assertThat(exhibitionWindow.list("listAllExh").contents())
-				.contains("exhibition1_test - Total Seats: 100 - Booked Seats: 1");
-	}
-
-	@Test
-	@GUITest
-	public void testFindMuseumExhibitions() {
-		museumWindow.button(JButtonMatcher.withText("Exhibitions Dashboard")).click();
-
-		exhibitionWindow = WindowFinder.findFrame(new GenericTypeMatcher<JFrame>(JFrame.class, true) {
-			protected boolean isMatching(JFrame frame) {
-				return "Exhibitions Dashboard".equals(frame.getTitle());
-			}
-		}).using(robot());
-
-		JListFixture listMuseumExhibitions = exhibitionWindow.list("listMuseumExh");
-
-		exhibitionWindow.textBox("findMuseumTextField").enterText(MUSEUM1_TEST);
-		exhibitionWindow.button(JButtonMatcher.withText("Find Museum Exh.")).click();
-		assertThat(listMuseumExhibitions.contents()).hasSize(2);
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		entityManager.clear();
-		entityManager.close();
-		sessionFactory.close();
+	public void test() {
+		
 	}
 
 	/*

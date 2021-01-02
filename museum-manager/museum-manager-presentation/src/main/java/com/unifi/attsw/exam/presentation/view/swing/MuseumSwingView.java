@@ -106,12 +106,9 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		txtRooms.setName("rooms");
 		txtRooms.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent ke) {
-				errorMessageLabel.setText("");
-				if (Character.isDigit(ke.getKeyChar()) || ke.getKeyChar() == KeyEvent.VK_BACK_SPACE
-						|| ke.getKeyChar() == KeyEvent.VK_DELETE) {
-					txtRooms.setEditable(true);
-				} else {
-					errorMessageLabel.setText("Please, insert number");
+				errorMessageLabel.setText(" ");
+				if (!Character.isDigit(ke.getKeyChar())) {
+					errorMessageLabel.setText("Please, insert only integer numbers for Rooms.");
 				}
 			}
 		});
@@ -129,8 +126,8 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				btnAdd.setEnabled(StringUtils.isNumeric(txtRooms.getText()) && !txtMuseum.getText().trim().isEmpty()
-						&& !txtRooms.getText().trim().isEmpty());
+				btnAdd.setEnabled(!txtMuseum.getText().trim().isEmpty()
+						&& !txtRooms.getText().trim().isEmpty() && StringUtils.isNumeric(txtRooms.getText()));
 			}
 		};
 		txtMuseum.addKeyListener(btnAddEnabler);
@@ -185,7 +182,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		errorMessageLabel.setName("errorMessageLabel");
 		GridBagConstraints gbcErrorMessageLabel = new GridBagConstraints();
 		gbcErrorMessageLabel.anchor = GridBagConstraints.WEST;
-		gbcErrorMessageLabel.gridwidth = 3;
+		gbcErrorMessageLabel.gridwidth = 4;
 		gbcErrorMessageLabel.insets = new Insets(0, 0, 5, 5);
 		gbcErrorMessageLabel.gridx = 0;
 		gbcErrorMessageLabel.gridy = 6;

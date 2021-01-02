@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.unifi.attsw.exam.core.view.ExhibitionView;
 import com.unifi.attsw.exam.presentation.controller.swing.MuseumSwingController;
 import com.unifi.attsw.exam.repository.model.Exhibition;
@@ -123,6 +125,14 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		contentPane.add(lblTotalSeats, gbcLblTotalSeats);
 
 		totalSeatsTextField = new JTextField();
+		totalSeatsTextField.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				lblError.setText("");
+				if (!Character.isDigit(ke.getKeyChar())) {
+					lblError.setText("Please, insert only integer numbers for Seats.");
+				}
+			}
+		});
 		GridBagConstraints gbcTotalSeatsTextField = new GridBagConstraints();
 		gbcTotalSeatsTextField.insets = new Insets(0, 0, 5, 5);
 		gbcTotalSeatsTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -176,9 +186,11 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				btnAddExhibition.setEnabled(!exhibitionTextField.getText().trim().isEmpty()
+				btnAddExhibition.setEnabled(
+						!exhibitionTextField.getText().trim().isEmpty()
+						&& !museumNameTextField.getText().trim().isEmpty()
 						&& !totalSeatsTextField.getText().trim().isEmpty()
-						&& !museumNameTextField.getText().trim().isEmpty());
+						&& StringUtils.isNumeric(totalSeatsTextField.getText()));
 			}
 		};
 
@@ -315,7 +327,8 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		btnMuseumsDashboard.addActionListener(e -> {
 			lblError.setText(" ");
 			museumsExhibitionListModel.clear();
-			museumSwingController.openMuseumDashboard();});
+			museumSwingController.openMuseumDashboard();
+		});
 	}
 
 	@Override
@@ -359,7 +372,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		museumSwingController.getAllExhibitions();
 		lblError.setText(" ");
 	}
-	
+
 	/**
 	 * Get the List model for all Exhibitions.
 	 * 

@@ -126,6 +126,30 @@ public class ExhibitionSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add Exhibition")).requireDisabled();
 
 	}
+	
+	@Test
+	public void testWhenSeatsInputIsNotAnIntegerNumberAddExhibitionButtonShouldBeDisabled() {
+		JTextComponentFixture exhibitionTextBox = window.textBox("exhibitionTextField");
+		JTextComponentFixture seatsTextBox = window.textBox("totalSeatsTextField");
+		JTextComponentFixture museumNameTextBox = window.textBox("museumNameTextField");
+
+		exhibitionTextBox.enterText(EXHIBITION1_TEST);
+		seatsTextBox.enterText("s");
+		museumNameTextBox.enterText(MUSEUM1_TEST);
+		window.button(JButtonMatcher.withText("Add Exhibition")).requireDisabled();
+		window.label("errorLabel").requireText("Please, insert only integer numbers for Seats.");
+
+		
+		exhibitionTextBox.setText("");
+		seatsTextBox.setText("");
+		museumNameTextBox.setText("");
+		
+		exhibitionTextBox.enterText(EXHIBITION1_TEST);
+		seatsTextBox.enterText("0s");
+		museumNameTextBox.enterText(MUSEUM1_TEST);
+		window.button(JButtonMatcher.withText("Add Exhibition")).requireDisabled();
+		window.label("errorLabel").requireText("Please, insert only integer numbers for Seats.");
+	}
 
 	@Test
 	public void testDeleteButtonShouldBeEnabledOnlyWhenAnExhibitionIsSelected() {

@@ -87,28 +87,25 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add")).requireDisabled();
 
 	}
-	
+
 	@Test
-	public void testWhenRoomsTextFieldContainsNoNUmbersAddBUttonShouldBeDisabled() {
+	public void testWhenRoomsInputIsNotAnIntegerNumberAddButtonShouldBeDisabled() {
 		JTextComponentFixture museumTextBox = window.textBox("museum");
 		JTextComponentFixture roomsTextBox = window.textBox("rooms");
 
 		museumTextBox.enterText(MUSEUM1_TEST);
-		roomsTextBox.enterText("string");
+		roomsTextBox.enterText("s");
 		window.button(JButtonMatcher.withText("Add")).requireDisabled();
-		
+		window.label("errorMessageLabel").requireText("Please, insert only integer numbers for Rooms.");
+
 		museumTextBox.setText("");
 		roomsTextBox.setText("");
-		
+
 		museumTextBox.enterText(MUSEUM1_TEST);
-		roomsTextBox.enterText("0string");
-		
-		museumTextBox.setText("");
-		roomsTextBox.setText("");
-		
-		museumTextBox.enterText(MUSEUM1_TEST);
-		roomsTextBox.enterText("1 1");
+		roomsTextBox.enterText("0s");
 		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+		window.label("errorMessageLabel").requireText("Please, insert only integer numbers for Rooms.");
+
 	}
 
 	@Test
