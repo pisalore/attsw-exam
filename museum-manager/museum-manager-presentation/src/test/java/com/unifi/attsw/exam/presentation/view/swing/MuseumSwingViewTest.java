@@ -87,6 +87,29 @@ public class MuseumSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add")).requireDisabled();
 
 	}
+	
+	@Test
+	public void testWhenRoomsTextFieldContainsNoNUmbersAddBUttonShouldBeDisabled() {
+		JTextComponentFixture museumTextBox = window.textBox("museum");
+		JTextComponentFixture roomsTextBox = window.textBox("rooms");
+
+		museumTextBox.enterText(MUSEUM1_TEST);
+		roomsTextBox.enterText("string");
+		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+		
+		museumTextBox.setText("");
+		roomsTextBox.setText("");
+		
+		museumTextBox.enterText(MUSEUM1_TEST);
+		roomsTextBox.enterText("0string");
+		
+		museumTextBox.setText("");
+		roomsTextBox.setText("");
+		
+		museumTextBox.enterText(MUSEUM1_TEST);
+		roomsTextBox.enterText("1 1");
+		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+	}
 
 	@Test
 	public void testDeleteButtonShouldBeEnabledOnlyWhenAMuseumIsSelected() {

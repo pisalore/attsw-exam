@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.unifi.attsw.exam.core.view.MuseumView;
 import com.unifi.attsw.exam.presentation.controller.swing.MuseumSwingController;
 import com.unifi.attsw.exam.repository.model.Museum;
@@ -102,6 +104,17 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 
 		txtRooms = new JTextField();
 		txtRooms.setName("rooms");
+		txtRooms.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				errorMessageLabel.setText("");
+				if (Character.isDigit(ke.getKeyChar()) || ke.getKeyChar() == KeyEvent.VK_BACK_SPACE
+						|| ke.getKeyChar() == KeyEvent.VK_DELETE) {
+					txtRooms.setEditable(true);
+				} else {
+					errorMessageLabel.setText("Please, insert number");
+				}
+			}
+		});
 		GridBagConstraints gbcTxtRooms = new GridBagConstraints();
 		gbcTxtRooms.insets = new Insets(0, 0, 5, 5);
 		gbcTxtRooms.fill = GridBagConstraints.HORIZONTAL;
@@ -116,7 +129,8 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				btnAdd.setEnabled(!txtMuseum.getText().trim().isEmpty() && !txtRooms.getText().trim().isEmpty());
+				btnAdd.setEnabled(StringUtils.isNumeric(txtRooms.getText()) && !txtMuseum.getText().trim().isEmpty()
+						&& !txtRooms.getText().trim().isEmpty());
 			}
 		};
 		txtMuseum.addKeyListener(btnAddEnabler);
@@ -170,9 +184,10 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		errorMessageLabel.setForeground(Color.RED);
 		errorMessageLabel.setName("errorMessageLabel");
 		GridBagConstraints gbcErrorMessageLabel = new GridBagConstraints();
+		gbcErrorMessageLabel.anchor = GridBagConstraints.WEST;
 		gbcErrorMessageLabel.gridwidth = 3;
-		gbcErrorMessageLabel.insets = new Insets(0, 0, 5, 0);
-		gbcErrorMessageLabel.gridx = 1;
+		gbcErrorMessageLabel.insets = new Insets(0, 0, 5, 5);
+		gbcErrorMessageLabel.gridx = 0;
 		gbcErrorMessageLabel.gridy = 6;
 		contentPane.add(errorMessageLabel, gbcErrorMessageLabel);
 
