@@ -126,6 +126,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 
 		totalSeatsTextField = new JTextField();
 		totalSeatsTextField.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent ke) {
 				lblError.setText("");
 				if (!Character.isDigit(ke.getKeyChar())) {
@@ -186,8 +187,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				btnAddExhibition.setEnabled(
-						!exhibitionTextField.getText().trim().isEmpty()
+				btnAddExhibition.setEnabled(!exhibitionTextField.getText().trim().isEmpty()
 						&& !museumNameTextField.getText().trim().isEmpty()
 						&& !totalSeatsTextField.getText().trim().isEmpty()
 						&& StringUtils.isNumeric(totalSeatsTextField.getText()));
@@ -394,7 +394,7 @@ public class ExhibitionSwingView extends JFrame implements ExhibitionView {
 	/**
 	 * Set the Swing controller for this Exhibition View.
 	 * 
-	 * @param museumSwingController
+	 * @param museumSwingController The MuseumController to interact with.
 	 */
 	public void setMuseumController(MuseumSwingController museumSwingController) {
 		this.museumSwingController = museumSwingController;

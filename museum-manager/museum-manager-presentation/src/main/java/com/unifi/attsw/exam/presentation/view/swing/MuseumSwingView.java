@@ -105,6 +105,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		txtRooms = new JTextField();
 		txtRooms.setName("rooms");
 		txtRooms.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent ke) {
 				errorMessageLabel.setText(" ");
 				if (!Character.isDigit(ke.getKeyChar())) {
@@ -126,8 +127,8 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 		KeyAdapter btnAddEnabler = new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				btnAdd.setEnabled(!txtMuseum.getText().trim().isEmpty()
-						&& !txtRooms.getText().trim().isEmpty() && StringUtils.isNumeric(txtRooms.getText()));
+				btnAdd.setEnabled(!txtMuseum.getText().trim().isEmpty() && !txtRooms.getText().trim().isEmpty()
+						&& StringUtils.isNumeric(txtRooms.getText()));
 			}
 		};
 		txtMuseum.addKeyListener(btnAddEnabler);
@@ -256,7 +257,7 @@ public class MuseumSwingView extends JFrame implements MuseumView {
 	/**
 	 * Set the Swing controller for this Museum View.
 	 * 
-	 * @param museumSwingController
+	 * @param museumSwingController The MuseumController to interact with.
 	 */
 	public void setMuseumController(MuseumSwingController museumSwingController) {
 		this.museumSwingController = museumSwingController;
