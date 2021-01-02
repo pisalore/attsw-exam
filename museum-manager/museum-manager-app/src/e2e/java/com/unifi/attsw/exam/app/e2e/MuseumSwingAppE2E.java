@@ -200,10 +200,6 @@ public class MuseumSwingAppE2E extends AssertJSwingJUnitTestCase {
 		sessionFactory.close();
 	}
 	
-	@Test
-	public void test() {
-		
-	}
 
 	/*
 	 * Utility method to populate database with data
