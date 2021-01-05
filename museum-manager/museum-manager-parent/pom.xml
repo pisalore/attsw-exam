@@ -31,7 +31,7 @@
 		<jacoco.plugin.version>0.8.5</jacoco.plugin.version>
 		<pitest.plugin.version>1.4.10</pitest.plugin.version>
 		<sonar.plugin.version>3.7.0.1746</sonar.plugin.version>
-		<docker.plugin.version>0.33.0</docker.plugin.version>
+		<docker.plugin.version>0.34.1</docker.plugin.version>
 		<maven.javadoc.version>3.2.0</maven.javadoc.version>
 		<!-- SonarCloud -->
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
