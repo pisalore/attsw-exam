@@ -32,15 +32,13 @@ cd attsw-exam
   ```
 4. Run the application: once you have build the app and generated its jar, you can decide to run the app:
   * exploiting **docker-compose** (th following command will orchestrate one PostgreSQL container with a MuseumManagerapp container):
-  ```console
-  cd attsw-exam
-  docker-compose up
-  ```
+   ```console
+   cd attsw-exam
+   docker-compose up
+   ```
   * creating your database in PostgreSQL and passing your credentials from Command Line:
-    ```console
-    cd museum-manager/museum-manager-app
-    java -jar ./target/museum-manager-app-*-jar-with-dependencies.jar --database-url=<JDBC_URL> --database-user=<DB_USER> --database-password=<DB_PASSWORD> 
-    ```
- 
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=pisalore_attsw-exam)
-
+  
+   ```console
+   cd museum-manager/museum-manager-app
+   java -jar ./target/museum-manager-app-*-jar-with-dependencies.jar --database-url=<JDBC_URL> --database-user=<DB_USER> --database-password=<DB_PASSWORD> 
+   ```
