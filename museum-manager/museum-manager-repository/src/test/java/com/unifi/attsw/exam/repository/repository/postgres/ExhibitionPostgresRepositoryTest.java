@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import com.unifi.attsw.exam.repository.model.Exhibition;
 import com.unifi.attsw.exam.repository.repository.ExhibitionRepository;
-import com.unifi.attsw.exam.repository.repository.postgres.PostgresExhibitionRepository;
 
 public class ExhibitionPostgresRepositoryTest {
 

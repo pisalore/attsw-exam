@@ -21,7 +21,6 @@ import com.unifi.attsw.exam.repository.repository.MuseumRepository;
 import com.unifi.attsw.exam.repository.repository.exception.RepositoryException;
 import com.unifi.attsw.exam.repository.repository.postgres.PostgresExhibitionRepository;
 import com.unifi.attsw.exam.repository.repository.postgres.PostgresMuseumRepository;
-import com.unifi.attsw.exam.repository.transaction.manager.postgres.PostgresTransactionManager;
 
 public class PostgresTransactionManagerTest {
 

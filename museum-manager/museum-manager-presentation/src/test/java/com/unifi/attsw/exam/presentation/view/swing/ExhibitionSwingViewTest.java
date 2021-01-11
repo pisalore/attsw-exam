@@ -22,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.unifi.attsw.exam.presentation.controller.swing.MuseumSwingController;
-import com.unifi.attsw.exam.presentation.view.swing.ExhibitionSwingView;
 import com.unifi.attsw.exam.repository.model.Exhibition;
 
 @RunWith(GUITestRunner.class)

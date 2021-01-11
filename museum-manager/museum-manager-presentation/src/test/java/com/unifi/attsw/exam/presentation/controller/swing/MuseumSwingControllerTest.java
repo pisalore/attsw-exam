@@ -16,7 +16,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import com.unifi.attsw.exam.presentation.controller.swing.MuseumSwingController;
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
 import com.unifi.attsw.exam.core.service.exception.MuseumManagerServiceException;
 import com.unifi.attsw.exam.presentation.view.swing.ExhibitionSwingView;

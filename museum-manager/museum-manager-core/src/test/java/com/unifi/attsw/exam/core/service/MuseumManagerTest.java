@@ -21,7 +21,6 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 
-import com.unifi.attsw.exam.core.service.MuseumManagerService;
 import com.unifi.attsw.exam.core.service.exception.MuseumManagerServiceException;
 import com.unifi.attsw.exam.core.service.impl.MuseumManagerServiceImpl;
 import com.unifi.attsw.exam.repository.model.Exhibition;

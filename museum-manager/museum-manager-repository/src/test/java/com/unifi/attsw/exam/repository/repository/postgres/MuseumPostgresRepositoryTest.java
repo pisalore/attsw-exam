@@ -18,7 +18,6 @@ import org.junit.Test;
 
 import com.unifi.attsw.exam.repository.model.Museum;
 import com.unifi.attsw.exam.repository.repository.MuseumRepository;
-import com.unifi.attsw.exam.repository.repository.postgres.PostgresMuseumRepository;
 
 public class MuseumPostgresRepositoryTest {
 

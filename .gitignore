@@ -1,3 +1,4 @@
 target/
 bin/
 failed-gui-tests/
+.idea/

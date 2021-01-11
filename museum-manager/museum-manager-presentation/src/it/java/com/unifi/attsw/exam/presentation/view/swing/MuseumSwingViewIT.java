@@ -21,8 +21,6 @@ import org.mockito.Mock;
 import com.unifi.attsw.exam.presentation.controller.swing.MuseumSwingController;
 import com.unifi.attsw.exam.core.service.MuseumManagerService;
 import com.unifi.attsw.exam.core.service.impl.MuseumManagerServiceImpl;
-import com.unifi.attsw.exam.presentation.view.swing.ExhibitionSwingView;
-import com.unifi.attsw.exam.presentation.view.swing.MuseumSwingView;
 import com.unifi.attsw.exam.repository.model.Museum;
 import com.unifi.attsw.exam.repository.transaction.manager.postgres.PostgresTransactionManager;
 
